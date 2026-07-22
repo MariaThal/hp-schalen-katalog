@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>HP-Schalen-Katalog</title>
+
+  <!-- Lädt das Webelement model-viewer -->
+  <script
+    type="module"
+    src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js">
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #252525;
+      background: #f2f2f0;
+    }
+
+    main {
+      width: min(1200px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+
+    header {
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 36px;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: #666;
+    }
+
+    .viewer-card {
+      overflow: hidden;
+      background: white;
+      border: 1px solid #d8d8d4;
+      border-radius: 12px;
+    }
+
+    model-viewer {
+      display: block;
+      width: 100%;
+      height: 650px;
+      background: #deded9;
+    }
+
+    .information {
+      padding: 24px;
+      border-top: 1px solid #d8d8d4;
+    }
+
+    .information h2 {
+      margin-top: 0;
+    }
+
+    .data-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 20px;
+      padding: 8px 0;
+      border-bottom: 1px solid #ededeb;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    @media (max-width: 700px) {
+      model-viewer {
+        height: 480px;
+      }
+
+      .data-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header>
+      <h1>HP-Schale 18 m N</h1>
+
+      <p class="subtitle">
+        Geometrische Rekonstruktion nach der Zulassung von 1970
+      </p>
+    </header>
+
+    <section class="viewer-card">
+      <model-viewer
+        src="models/HP-18-N.glb"
+        alt="Interaktives 3D-Modell der HP-Schale 18 m N"
+        camera-controls
+        touch-action="pan-y"
+        shadow-intensity="1"
+        exposure="1"
+        auto-rotate>
+      </model-viewer>
+
+      <div class="information">
+        <h2>Grundinformationen</h2>
+
+        <div class="data-row">
+          <div class="label">System</div>
+          <div>HP-Schale</div>
+        </div>
+
+        <div class="data-row">
+          <div class="label">Spannweite</div>
+          <div>18 m</div>
+        </div>
+
+        <div class="data-row">
+          <div class="label">Ausführung</div>
+          <div>Normalbelastung</div>
+        </div>
+
+        <div class="data-row">
+          <div class="label">Geometriestand</div>
+          <div>Zulassung 1970</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
