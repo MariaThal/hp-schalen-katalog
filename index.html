@@ -10,7 +10,6 @@
 
   <title>HP-Schalen-Katalog</title>
 
-  <!-- Lädt das Webelement model-viewer -->
   <script
     type="module"
     src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js">
@@ -48,6 +47,32 @@
       color: #666;
     }
 
+    .selection {
+      margin: 24px 0;
+      padding: 20px;
+      background: white;
+      border: 1px solid #d8d8d4;
+      border-radius: 12px;
+    }
+
+    .selection label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .selection select {
+      width: 100%;
+      max-width: 400px;
+      padding: 12px;
+      font: inherit;
+      color: #252525;
+      background: white;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
     .viewer-card {
       overflow: hidden;
       background: white;
@@ -75,7 +100,7 @@
       display: grid;
       grid-template-columns: 180px 1fr;
       gap: 20px;
-      padding: 8px 0;
+      padding: 10px 0;
       border-bottom: 1px solid #ededeb;
     }
 
@@ -84,6 +109,15 @@
     }
 
     @media (max-width: 700px) {
+      main {
+        width: min(100% - 24px, 1200px);
+        padding: 24px 0;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
       model-viewer {
         height: 480px;
       }
@@ -99,15 +133,27 @@
 <body>
   <main>
     <header>
-      <h1>HP-Schale 18 m N</h1>
+      <h1 id="model-title">HP-Schale 18 m N</h1>
 
-      <p class="subtitle">
+      <p class="subtitle" id="model-description">
         Geometrische Rekonstruktion nach der Zulassung von 1970
       </p>
     </header>
 
+    <section class="selection">
+      <label for="model-select">
+        Schale auswählen
+      </label>
+
+      <select id="model-select">
+        <option value="HP-18-N">HP-Schale 18 m N</option>
+        <option value="HP-18-Z">HP-Schale 18 m Z</option>
+      </select>
+    </section>
+
     <section class="viewer-card">
       <model-viewer
+        id="shell-viewer"
         src="models/HP-18-N.glb"
         alt="Interaktives 3D-Modell der HP-Schale 18 m N"
         camera-controls
@@ -132,7 +178,14 @@
 
         <div class="data-row">
           <div class="label">Ausführung</div>
-          <div>Normalbelastung</div>
+          <div id="model-execution">Normalbelastung</div>
+        </div>
+
+        <div class="data-row">
+          <div class="label">Besonderheit</div>
+          <div id="model-feature">
+            Ausführung ohne zusätzliche Randverstärkung
+          </div>
         </div>
 
         <div class="data-row">
@@ -142,5 +195,41 @@
       </div>
     </section>
   </main>
+
+  <script>
+    const models = {
+      "HP-18-N": {
+        title: "HP-Schale 18 m N",
+        file: "models/HP-18-N.glb",
+        alt: "Interaktives 3D-Modell der HP-Schale 18 m N",
+        execution: "Normalbelastung",
+        feature: "Ausführung ohne zusätzliche Randverstärkung"
+      },
+
+      "HP-18-Z": {
+        title: "HP-Schale 18 m Z",
+        file: "models/HP-18-Z.glb",
+        alt: "Interaktives 3D-Modell der HP-Schale 18 m Z",
+        execution: "Zusatzlast",
+        feature: "Ausführung mit zusätzlicher Randverstärkung"
+      }
+    };
+
+    const selection = document.querySelector("#model-select");
+    const viewer = document.querySelector("#shell-viewer");
+    const title = document.querySelector("#model-title");
+    const execution = document.querySelector("#model-execution");
+    const feature = document.querySelector("#model-feature");
+
+    selection.addEventListener("change", () => {
+      const selectedModel = models[selection.value];
+
+      viewer.src = selectedModel.file;
+      viewer.alt = selectedModel.alt;
+      title.textContent = selectedModel.title;
+      execution.textContent = selectedModel.execution;
+      feature.textContent = selectedModel.feature;
+    });
+  </script>
 </body>
 </html>
