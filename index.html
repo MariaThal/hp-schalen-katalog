@@ -63,7 +63,7 @@
 
     .selection select {
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
       padding: 12px;
       font: inherit;
       color: #252525;
@@ -98,7 +98,7 @@
 
     .data-row {
       display: grid;
-      grid-template-columns: 180px 1fr;
+      grid-template-columns: 190px 1fr;
       gap: 20px;
       padding: 10px 0;
       border-bottom: 1px solid #ededeb;
@@ -106,6 +106,12 @@
 
     .label {
       font-weight: bold;
+    }
+
+    .loading {
+      min-height: 24px;
+      margin: 0 0 12px;
+      color: #666;
     }
 
     @media (max-width: 700px) {
@@ -135,8 +141,8 @@
     <header>
       <h1 id="model-title">HP-Schale 18 m N</h1>
 
-      <p class="subtitle" id="model-description">
-        Geometrische Rekonstruktion nach der Zulassung von 1970
+      <p class="subtitle">
+        Geometrische Rekonstruktionen nach der Zulassung von 1970
       </p>
     </header>
 
@@ -146,8 +152,25 @@
       </label>
 
       <select id="model-select">
-        <option value="HP-18-N">HP-Schale 18 m N</option>
-        <option value="HP-18-Z">HP-Schale 18 m Z</option>
+        <optgroup label="HP-Schalen">
+          <option value="HP-12-MINI">HP-Schale 12 m mini</option>
+          <option value="HP-12-N">HP-Schale 12 m N</option>
+          <option value="HP-15-N">HP-Schale 15 m N</option>
+          <option value="HP-15-Z">HP-Schale 15 m Z</option>
+          <option value="HP-18-N" selected>HP-Schale 18 m N</option>
+          <option value="HP-18-Z">HP-Schale 18 m Z</option>
+          <option value="HP-24">HP-Schale 24 m</option>
+        </optgroup>
+
+        <optgroup label="HPZ-Schalen">
+          <option value="HPZ-OHNE-STEG">
+            HPZ-Schale ohne Steg
+          </option>
+
+          <option value="HPZ-MIT-STEG">
+            HPZ-Schale mit Steg
+          </option>
+        </optgroup>
       </select>
     </section>
 
@@ -164,16 +187,18 @@
       </model-viewer>
 
       <div class="information">
+        <p class="loading" id="loading-message"></p>
+
         <h2>Grundinformationen</h2>
 
         <div class="data-row">
           <div class="label">System</div>
-          <div>HP-Schale</div>
+          <div id="model-system">HP-Schale</div>
         </div>
 
         <div class="data-row">
-          <div class="label">Spannweite</div>
-          <div>18 m</div>
+          <div class="label" id="dimension-label">Spannweite</div>
+          <div id="model-dimension">18 m</div>
         </div>
 
         <div class="data-row">
@@ -198,10 +223,57 @@
 
   <script>
     const models = {
+      "HP-12-MINI": {
+        title: "HP-Schale 12 m mini",
+        file: "models/HP-12-MINI.glb",
+        alt: "Interaktives 3D-Modell der HP-Schale 12 m mini",
+        system: "HP-Schale",
+        dimensionLabel: "Spannweite",
+        dimension: "12 m",
+        execution: "Mini-Ausführung",
+        feature: "Kleinste Ausführung des HP-Schalen-Sortiments"
+      },
+
+      "HP-12-N": {
+        title: "HP-Schale 12 m N",
+        file: "models/HP-12-N.glb",
+        alt: "Interaktives 3D-Modell der HP-Schale 12 m N",
+        system: "HP-Schale",
+        dimensionLabel: "Spannweite",
+        dimension: "12 m",
+        execution: "Normalbelastung",
+        feature: "Ausführung ohne zusätzliche Randverstärkung"
+      },
+
+      "HP-15-N": {
+        title: "HP-Schale 15 m N",
+        file: "models/HP-15-N.glb",
+        alt: "Interaktives 3D-Modell der HP-Schale 15 m N",
+        system: "HP-Schale",
+        dimensionLabel: "Spannweite",
+        dimension: "15 m",
+        execution: "Normalbelastung",
+        feature: "Ausführung ohne zusätzliche Randverstärkung"
+      },
+
+      "HP-15-Z": {
+        title: "HP-Schale 15 m Z",
+        file: "models/HP-15-Z.glb",
+        alt: "Interaktives 3D-Modell der HP-Schale 15 m Z",
+        system: "HP-Schale",
+        dimensionLabel: "Spannweite",
+        dimension: "15 m",
+        execution: "Zusatzlast",
+        feature: "Ausführung mit zusätzlicher Randverstärkung"
+      },
+
       "HP-18-N": {
         title: "HP-Schale 18 m N",
         file: "models/HP-18-N.glb",
         alt: "Interaktives 3D-Modell der HP-Schale 18 m N",
+        system: "HP-Schale",
+        dimensionLabel: "Spannweite",
+        dimension: "18 m",
         execution: "Normalbelastung",
         feature: "Ausführung ohne zusätzliche Randverstärkung"
       },
@@ -210,25 +282,88 @@
         title: "HP-Schale 18 m Z",
         file: "models/HP-18-Z.glb",
         alt: "Interaktives 3D-Modell der HP-Schale 18 m Z",
+        system: "HP-Schale",
+        dimensionLabel: "Spannweite",
+        dimension: "18 m",
         execution: "Zusatzlast",
         feature: "Ausführung mit zusätzlicher Randverstärkung"
+      },
+
+      "HP-24": {
+        title: "HP-Schale 24 m",
+        file: "models/HP-24.glb",
+        alt: "Interaktives 3D-Modell der HP-Schale 24 m",
+        system: "HP-Schale",
+        dimensionLabel: "Spannweite",
+        dimension: "24 m",
+        execution: "24-m-Ausführung",
+        feature: "Größte Ausführung des erfassten HP-Sortiments"
+      },
+
+      "HPZ-OHNE-STEG": {
+        title: "HPZ-Schale ohne Steg",
+        file: "models/HPZ-20-OHNE-STEG.glb",
+        alt: "Interaktives 3D-Modell der HPZ-Schale ohne Steg",
+        system: "HPZ-Schale",
+        dimensionLabel: "Breite",
+        dimension: "2,0 m",
+        execution: "Ohne Steg",
+        feature: "HPZ-Ausführung ohne zusätzlichen Steg"
+      },
+
+      "HPZ-MIT-STEG": {
+        title: "HPZ-Schale mit Steg",
+        file: "models/HPZ-24-MIT-STEG.glb",
+        alt: "Interaktives 3D-Modell der HPZ-Schale mit Steg",
+        system: "HPZ-Schale",
+        dimensionLabel: "Breite",
+        dimension: "2,4 m",
+        execution: "Mit Steg",
+        feature: "HPZ-Ausführung mit zusätzlichem Steg"
       }
     };
 
     const selection = document.querySelector("#model-select");
     const viewer = document.querySelector("#shell-viewer");
     const title = document.querySelector("#model-title");
+    const system = document.querySelector("#model-system");
+    const dimensionLabel = document.querySelector("#dimension-label");
+    const dimension = document.querySelector("#model-dimension");
     const execution = document.querySelector("#model-execution");
     const feature = document.querySelector("#model-feature");
+    const loadingMessage = document.querySelector("#loading-message");
 
-    selection.addEventListener("change", () => {
-      const selectedModel = models[selection.value];
+    function showModel(modelId) {
+      const selectedModel = models[modelId];
+
+      if (!selectedModel) {
+        return;
+      }
+
+      loadingMessage.textContent = "3D-Modell wird geladen …";
 
       viewer.src = selectedModel.file;
       viewer.alt = selectedModel.alt;
+
       title.textContent = selectedModel.title;
+      system.textContent = selectedModel.system;
+      dimensionLabel.textContent = selectedModel.dimensionLabel;
+      dimension.textContent = selectedModel.dimension;
       execution.textContent = selectedModel.execution;
       feature.textContent = selectedModel.feature;
+    }
+
+    selection.addEventListener("change", () => {
+      showModel(selection.value);
+    });
+
+    viewer.addEventListener("load", () => {
+      loadingMessage.textContent = "";
+    });
+
+    viewer.addEventListener("error", () => {
+      loadingMessage.textContent =
+        "Das Modell konnte nicht geladen werden. Bitte den Dateinamen prüfen.";
     });
   </script>
 </body>
