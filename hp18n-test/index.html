@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HP-18-N – GLB-Testviewer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #ebe8e1;
+      --panel: rgba(247, 245, 240, 0.94);
+      --line: #c9c3b9;
+      --text: #242321;
+      --muted: #6e6a63;
+      --accent: #d66a2f;
+      --button: #302f2c;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    #app { position: relative; width: 100%; height: 100%; }
+    #viewer { position: absolute; inset: 0; }
+    canvas { display: block; width: 100%; height: 100%; }
+
+    .panel {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: min(360px, calc(100vw - 40px));
+      max-height: calc(100vh - 40px);
+      overflow: auto;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+      box-shadow: 0 12px 36px rgba(47, 43, 36, 0.12);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 { margin: 0; font-size: 1.15rem; letter-spacing: 0.01em; }
+    .subtitle { margin: 5px 0 16px; color: var(--muted); font-size: 0.87rem; }
+    .section { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 14px; }
+    .section-title { margin: 0 0 10px; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 10px;
+      margin: 9px 0;
+    }
+
+    label { font-size: 0.9rem; }
+    input[type="range"] { width: 145px; }
+    input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--button); }
+
+    button {
+      appearance: none;
+      border: 1px solid #302f2c;
+      border-radius: 9px;
+      background: var(--button);
+      color: white;
+      padding: 9px 12px;
+      font: inherit;
+      font-size: 0.86rem;
+      cursor: pointer;
+    }
+    button.secondary { background: transparent; color: var(--text); border-color: var(--line); }
+    button.active { background: var(--accent); border-color: var(--accent); }
+    .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    dl { display: grid; grid-template-columns: auto 1fr; gap: 5px 10px; margin: 0; font-size: 0.85rem; }
+    dt { color: var(--muted); }
+    dd { margin: 0; }
+
+    .status {
+      position: absolute;
+      right: 18px;
+      bottom: 16px;
+      padding: 8px 11px;
+      border-radius: 9px;
+      background: rgba(247, 245, 240, 0.9);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.78rem;
+      pointer-events: none;
+    }
+
+    .hint { margin: 12px 0 0; color: var(--muted); font-size: 0.78rem; line-height: 1.45; }
+    .swatch { display:inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; background: var(--accent); }
+
+    @media (max-width: 700px) {
+      .panel { top: 10px; left: 10px; width: calc(100vw - 20px); max-height: 48vh; }
+      .status { right: 10px; bottom: 10px; }
+    }
+  </style>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <div id="viewer" aria-label="Interaktiver 3D-Viewer"></div>
+
+    <aside class="panel">
+      <h1>HP-18-N</h1>
+      <p class="subtitle">Testviewer: Betonschale und eine Bewehrungsgruppe</p>
+
+      <div class="section">
+        <p class="section-title">Sichtbarkeit</p>
+        <div class="row">
+          <label for="showConcrete">Betonschale</label>
+          <input id="showConcrete" type="checkbox" checked />
+        </div>
+        <div class="row">
+          <label for="concreteOpacity">Beton-Deckkraft</label>
+          <input id="concreteOpacity" type="range" min="0.08" max="1" step="0.01" value="0.30" />
+        </div>
+        <div class="row">
+          <label for="showRebar">Bewehrung</label>
+          <input id="showRebar" type="checkbox" checked />
+        </div>
+      </div>
+
+      <div class="section">
+        <p class="section-title">Auswahl</p>
+        <div class="button-grid">
+          <button id="highlightButton" type="button">Gruppe hervorheben</button>
+          <button id="resetView" class="secondary" type="button">Ansicht zurücksetzen</button>
+        </div>
+        <p class="hint"><span class="swatch"></span>Die Randleiter können auch direkt im Modell angeklickt werden.</p>
+      </div>
+
+      <div class="section">
+        <p class="section-title">Ausgewählte Gruppe</p>
+        <dl>
+          <dt>Bereich</dt><dd>Druckgurt</dd>
+          <dt>Gruppe</dt><dd>Randleiter</dd>
+          <dt>Anzahl</dt><dd>3 Stk.</dd>
+          <dt>Durchmesser</dt><dd>8 mm</dd>
+          <dt>Stahlgüte</dt><dd>STA III</dd>
+        </dl>
+      </div>
+    </aside>
+
+    <div id="status" class="status">Modelle werden geladen …</div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    const viewer = document.getElementById('viewer');
+    const status = document.getElementById('status');
+    const showConcrete = document.getElementById('showConcrete');
+    const concreteOpacity = document.getElementById('concreteOpacity');
+    const showRebar = document.getElementById('showRebar');
+    const highlightButton = document.getElementById('highlightButton');
+    const resetViewButton = document.getElementById('resetView');
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xebe8e1);
+
+    const camera = new THREE.PerspectiveCamera(38, 1, 0.01, 500);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    viewer.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.screenSpacePanning = true;
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x7a746a, 2.0));
+    const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
+    keyLight.position.set(8, 12, 10);
+    scene.add(keyLight);
+    const fillLight = new THREE.DirectionalLight(0xc8d7ea, 1.4);
+    fillLight.position.set(-10, 4, -8);
+    scene.add(fillLight);
+
+    const loader = new GLTFLoader();
+    let concreteRoot = null;
+    let rebarRoot = null;
+    let isHighlighted = false;
+    let initialCamera = null;
+
+    const rebarMeshes = [];
+    const concreteMeshes = [];
+
+    function cloneMaterials(root, targetArray) {
+      root.traverse((object) => {
+        if (!object.isMesh) return;
+        object.material = Array.isArray(object.material)
+          ? object.material.map((material) => material.clone())
+          : object.material.clone();
+        targetArray.push(object);
+      });
+    }
+
+    function setConcreteOpacity(value) {
+      concreteMeshes.forEach((mesh) => {
+        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        materials.forEach((material) => {
+          material.opacity = value;
+          material.transparent = value < 0.999;
+          material.depthWrite = value >= 0.65;
+          material.side = THREE.DoubleSide;
+          material.needsUpdate = true;
+        });
+      });
+    }
+
+    function saveRebarBaseColors() {
+      rebarMeshes.forEach((mesh) => {
+        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        materials.forEach((material) => {
+          material.userData.baseColor = material.color.clone();
+          material.userData.baseEmissive = material.emissive?.clone?.() ?? new THREE.Color(0x000000);
+          material.side = THREE.DoubleSide;
+        });
+      });
+    }
+
+    function setHighlight(active) {
+      isHighlighted = active;
+      highlightButton.classList.toggle('active', active);
+      highlightButton.textContent = active ? 'Hervorhebung entfernen' : 'Gruppe hervorheben';
+
+      rebarMeshes.forEach((mesh) => {
+        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        materials.forEach((material) => {
+          if (active) {
+            material.color.set(0xd66a2f);
+            if (material.emissive) {
+              material.emissive.set(0x3a1004);
+              material.emissiveIntensity = 0.7;
+            }
+          } else {
+            material.color.copy(material.userData.baseColor);
+            if (material.emissive) {
+              material.emissive.copy(material.userData.baseEmissive);
+              material.emissiveIntensity = 1;
+            }
+          }
+          material.needsUpdate = true;
+        });
+      });
+    }
+
+    function fitCamera() {
+      if (!concreteRoot || !rebarRoot) return;
+
+      const box = new THREE.Box3();
+      box.expandByObject(concreteRoot);
+      box.expandByObject(rebarRoot);
+
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const maxSize = Math.max(size.x, size.y, size.z);
+      const distance = maxSize * 0.82;
+
+      camera.near = Math.max(maxSize / 5000, 0.001);
+      camera.far = maxSize * 50;
+      camera.updateProjectionMatrix();
+
+      camera.position.set(
+        center.x + distance * 0.78,
+        center.y + distance * 0.42,
+        center.z + distance * 0.78
+      );
+      controls.target.copy(center);
+      controls.update();
+
+      initialCamera = {
+        position: camera.position.clone(),
+        target: controls.target.clone()
+      };
+    }
+
+    function loadModel(url) {
+      return new Promise((resolve, reject) => {
+        loader.load(url, (gltf) => resolve(gltf.scene), undefined, reject);
+      });
+    }
+
+    try {
+      [concreteRoot, rebarRoot] = await Promise.all([
+        loadModel('./models/hp18n_betonschale.glb'),
+        loadModel('./models/hp18n_bewehrung_druckgurt_randleiter_3stk_d8_sta3.glb')
+      ]);
+
+      cloneMaterials(concreteRoot, concreteMeshes);
+      cloneMaterials(rebarRoot, rebarMeshes);
+      saveRebarBaseColors();
+      setConcreteOpacity(Number(concreteOpacity.value));
+
+      scene.add(concreteRoot, rebarRoot);
+      fitCamera();
+      status.textContent = 'Beide GLB-Dateien wurden korrekt geladen.';
+    } catch (error) {
+      console.error(error);
+      status.textContent = 'Fehler beim Laden. Seite über einen Webserver öffnen.';
+      status.style.color = '#8f2c22';
+    }
+
+    showConcrete.addEventListener('change', () => {
+      if (concreteRoot) concreteRoot.visible = showConcrete.checked;
+    });
+
+    concreteOpacity.addEventListener('input', () => {
+      setConcreteOpacity(Number(concreteOpacity.value));
+    });
+
+    showRebar.addEventListener('change', () => {
+      if (rebarRoot) rebarRoot.visible = showRebar.checked;
+    });
+
+    highlightButton.addEventListener('click', () => setHighlight(!isHighlighted));
+
+    resetViewButton.addEventListener('click', () => {
+      if (!initialCamera) return;
+      camera.position.copy(initialCamera.position);
+      controls.target.copy(initialCamera.target);
+      controls.update();
+    });
+
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+
+    renderer.domElement.addEventListener('pointerup', (event) => {
+      if (!rebarRoot || !rebarRoot.visible) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const intersections = raycaster.intersectObjects(rebarMeshes, false);
+      if (intersections.length > 0) setHighlight(!isHighlighted);
+    });
+
+    function resize() {
+      const width = viewer.clientWidth;
+      const height = viewer.clientHeight;
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    renderer.setAnimationLoop(() => {
+      controls.update();
+      renderer.render(scene, camera);
+    });
+  </script>
+</body>
+</html>
