@@ -1,11 +1,10 @@
-
 <!doctype html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>HP-Schalen nach Herbert Müller – Layout-Prototyp Warmgrau</title>
+  <title>HP-Schalen nach Herbert Müller – Katalog</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -652,18 +651,75 @@
         max-width: none;
       }
     }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .site-brand {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .site-nav a {
+      padding: 9px 12px;
+      border-radius: 9px;
+      color: #55534f;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .site-nav a:hover,
+    .site-nav a.active {
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    @media (max-width: 590px) {
+      .header-inner {
+        min-height: 62px;
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 11px 0;
+      }
+
+      .site-nav {
+        width: 100%;
+      }
+
+      .site-nav a {
+        flex: 1 1 auto;
+        padding: 8px;
+        text-align: center;
+        font-size: 13px;
+      }
+    }
+
   </style>
 </head>
 
 <body>
   <header class="site-header">
     <div class="header-inner">
-      <div class="brand">
-        <strong>HP-Schalen-Katalog</strong>
-        <span>Diplomarbeit Architektur</span>
-      </div>
+      <a class="site-brand" href="./">HP-Schalen nach Herbert Müller</a>
 
-      <div class="header-tag">Geometriestand: Zulassung 45/70 · 1970</div>
+      <nav class="site-nav" aria-label="Hauptnavigation">
+        <a href="./">Projekt</a>
+        <a class="active" href="./katalog.html">Katalog</a>
+        <a href="./hp18n-test/">Fallstudie HP-18-N</a>
+      </nav>
     </div>
   </header>
 
