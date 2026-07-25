@@ -15,6 +15,7 @@
       --accent: #d9782f;
       --accent-dark: #b65f20;
       --viewer-bg: #ddd9d0;
+      --error: #9d2b2b;
     }
 
     * {
@@ -23,7 +24,7 @@
 
     body {
       margin: 0;
-      font-family: "Open Sans", Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       background: var(--bg);
       color: var(--text);
     }
@@ -53,7 +54,7 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 360px 1fr;
+      grid-template-columns: 380px 1fr;
       gap: 20px;
       align-items: start;
     }
@@ -68,17 +69,20 @@
 
     .panel {
       padding: 18px;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      position: sticky;
+      top: 18px;
     }
 
-    .panel h2,
-    .panel h3 {
+    .panel h2 {
       margin: 0 0 12px;
       font-size: 18px;
       font-weight: 600;
     }
 
     .panel h3 {
-      margin-top: 18px;
+      margin: 18px 0 9px;
       font-size: 15px;
       color: #444;
     }
@@ -102,7 +106,7 @@
     .viewer-wrap {
       position: relative;
       flex: 1;
-      min-height: 600px;
+      min-height: 650px;
       background: var(--viewer-bg);
     }
 
@@ -110,6 +114,7 @@
       width: 100%;
       height: 100%;
       display: block;
+      touch-action: none;
     }
 
     .section {
@@ -152,6 +157,11 @@
       border: 1px solid #e7e4dd;
       border-radius: 8px;
       background: #fcfbf9;
+      cursor: pointer;
+    }
+
+    .group-item:hover {
+      background: #f7f4ef;
     }
 
     .group-item.active {
@@ -159,12 +169,19 @@
       background: #fff6ef;
     }
 
+    .group-item.load-error {
+      border-color: #d7aaaa;
+      background: #fff7f7;
+    }
+
     .group-item input[type="checkbox"] {
       margin-top: 2px;
+      cursor: pointer;
     }
 
     .group-item-text {
       flex: 1;
+      min-width: 0;
     }
 
     .group-title {
@@ -204,19 +221,9 @@
       background: #f8f6f2;
     }
 
-    button.primary {
-      border-color: var(--accent);
-      background: var(--accent);
-      color: white;
-    }
-
-    button.primary:hover {
-      background: var(--accent-dark);
-    }
-
     .info-grid {
       display: grid;
-      grid-template-columns: 140px 1fr;
+      grid-template-columns: 115px 1fr;
       gap: 8px 12px;
       font-size: 14px;
       line-height: 1.45;
@@ -224,6 +231,12 @@
 
     .info-label {
       font-weight: 600;
+    }
+
+    .file-name {
+      overflow-wrap: anywhere;
+      font-size: 12px;
+      color: var(--muted);
     }
 
     .hint {
@@ -241,9 +254,18 @@
       background: #faf9f7;
     }
 
+    .status.error {
+      color: var(--error);
+    }
+
     @media (max-width: 1100px) {
       .layout {
         grid-template-columns: 1fr;
+      }
+
+      .panel {
+        position: static;
+        max-height: none;
       }
 
       .viewer-card {
@@ -262,7 +284,7 @@
       }
 
       .viewer-wrap {
-        min-height: 440px;
+        min-height: 480px;
       }
 
       .info-grid {
@@ -271,13 +293,14 @@
     }
   </style>
 </head>
+
 <body>
   <main>
     <header>
       <h1>HP-18-N – Betonschale und Bewehrung</h1>
       <p class="subtitle">
-        Interaktive konstruktive Fallstudie zur HP-Schale 18&nbsp;m N.
-        Bewehrungsgruppen können ein- und ausgeblendet sowie durch Anklicken ausgewählt werden.
+        Interaktive konstruktive Fallstudie zur HP-Schale 18 m N.
+        Die Bewehrungsgruppen können ein- und ausgeblendet sowie durch Anklicken ausgewählt werden.
       </p>
     </header>
 
@@ -292,8 +315,16 @@
           </div>
 
           <div class="control-row">
-            <label for="concreteOpacity" style="min-width: 86px;">Betontransparenz</label>
-            <input type="range" id="concreteOpacity" min="0" max="100" value="70" />
+            <label for="concreteTransparency" style="min-width: 112px;">
+              Betontransparenz
+            </label>
+            <input
+              type="range"
+              id="concreteTransparency"
+              min="0"
+              max="90"
+              value="35"
+            />
           </div>
 
           <div class="btn-row" style="margin-top: 12px;">
@@ -317,15 +348,17 @@
 
         <div class="section">
           <h2>Ausgewählte Gruppe</h2>
+
           <div id="selectionInfo" class="info-grid">
             <div class="info-label">Status</div>
             <div>Keine Gruppe ausgewählt.</div>
           </div>
 
           <p class="hint">
-            Bedienung: Ein kurzer Linksklick auf einen Bewehrungsstab wählt die zugehörige
-            Gruppe aus. Ein Klick ins Leere hebt die Auswahl wieder auf.
-            Beim Drehen, Zoomen oder Verschieben bleibt die Auswahl erhalten.
+            Ein kurzer Linksklick auf einen Bewehrungsstab wählt die gesamte Gruppe aus.
+            Ein Klick auf eine andere Gruppe ersetzt die Auswahl. Ein Klick ins Leere oder
+            auf die Betonschale hebt die Auswahl auf. Beim Drehen, Zoomen und Verschieben
+            bleibt die Auswahl bestehen.
           </p>
         </div>
       </aside>
@@ -340,150 +373,165 @@
         </div>
 
         <div class="status" id="statusText">
-          Modelle werden geladen …
+          Viewer wird vorbereitet …
         </div>
       </section>
     </section>
   </main>
 
+  <!--
+    Import Map:
+    Sie sorgt dafür, dass Three.js und seine Erweiterungen
+    im Browser korrekt miteinander verbunden werden.
+  -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+
   <script type="module">
-    import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
-    import { OrbitControls } from "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js";
-    import { GLTFLoader } from "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
+    import * as THREE from "three";
+    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+    import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
     const MODEL_PATH = "./models/";
 
-    // ------------------------------------------------------------
-    // DATENBLOCK
-    // Falls ein Dateiname bei dir minimal anders heißt,
-    // musst du nur hier den jeweiligen "file"-Wert anpassen.
-    // ------------------------------------------------------------
+    const CONCRETE = {
+      file: "hp18n_betonschale.glb",
+      label: "Betonschale"
+    };
+
+    /*
+      Die Dateinamen in diesem Datenblock entsprechen den Dateien
+      im GitHub-Ordner hp18n-test/models.
+    */
     const GROUPS = [
-      // Druckgurt
       {
-        id: "dg_randleiter_querstaebe_d6p5",
+        id: "dg-randleiter-quer",
         category: "druckgurt",
         label: "Randleiter – Querstäbe d6.5",
-        shortLabel: "Querstäbe d6.5",
+        shortLabel: "Randleiter – Querstäbe d6.5",
         file: "hp18n_bewehrung_druckgurt_randleiter_querstaebe_d6p5.glb",
         bereich: "Druckgurt",
         gruppe: "Randleiter",
         details: "Querstäbe, d6.5"
       },
       {
-        id: "dg_randleiter_3stk_d8_sta3",
+        id: "dg-randleiter-laengs",
         category: "druckgurt",
         label: "Randleiter – 3 Stk. d8 STA III",
-        shortLabel: "3 Stk. d8 STA III",
+        shortLabel: "Randleiter – 3 Stk. d8 STA III",
         file: "hp18n_bewehrung_druckgurt_randleiter_3stk_d8_sta3.glb",
         bereich: "Druckgurt",
         gruppe: "Randleiter",
         details: "3 Stäbe, d8, STA III"
       },
       {
-        id: "dg_quer_unten_kassettenbereich_2stk_pro_rippe_d6p5_sta1",
+        id: "dg-quer-unten-kassetten",
         category: "druckgurt",
-        label: "Querbewehrung unten – Kassettenbereich 2 Stk./Rippe d6.5 STA I",
-        shortLabel: "Quer unten – Kassettenbereich 2 Stk./Rippe",
+        label: "Querbewehrung unten – Kassettenbereich",
+        shortLabel: "Quer unten – Kassettenbereich",
         file: "hp18n_bewehrung_druckgurt_quer_unten_kassettenbereich_2stk_pro_rippe_d6p5_sta1.glb",
         bereich: "Druckgurt",
-        gruppe: "Querbewehrung unten",
+        gruppe: "Querbewehrung – untere Lage",
         details: "Kassettenbereich, 2 Stk./Rippe, d6.5, STA I"
       },
       {
-        id: "dg_quer_unten_endfeld_d6p5_e125_sta1",
+        id: "dg-quer-unten-endfeld-125",
         category: "druckgurt",
-        label: "Querbewehrung unten – Endfeld d6.5 e125 STA I",
+        label: "Querbewehrung unten – Endfeld e125",
         shortLabel: "Quer unten – Endfeld e125",
         file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e125_sta1.glb",
         bereich: "Druckgurt",
-        gruppe: "Querbewehrung unten",
+        gruppe: "Querbewehrung – untere Lage",
         details: "Endfeld, d6.5, e125, STA I"
       },
       {
-        id: "dg_quer_unten_endfeld_d6p5_e75_sta1",
+        id: "dg-quer-unten-endfeld-75",
         category: "druckgurt",
-        label: "Querbewehrung unten – Endfeld d6.5 e75 STA I",
+        label: "Querbewehrung unten – Endfeld e75",
         shortLabel: "Quer unten – Endfeld e75",
         file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e75_sta1.glb",
         bereich: "Druckgurt",
-        gruppe: "Querbewehrung unten",
+        gruppe: "Querbewehrung – untere Lage",
         details: "Endfeld, d6.5, e75, STA I"
       },
       {
-        id: "dg_quer_oben_kassettenbereich_1bzw2stk_pro_rippe_d6p5_sta1",
+        id: "dg-quer-oben-kassetten",
         category: "druckgurt",
-        label: "Querbewehrung oben – Kassettenbereich 1 bzw. 2 Stk./Rippe d6.5 STA I",
-        shortLabel: "Quer oben – Kassettenbereich 1 bzw. 2 Stk./Rippe",
+        label: "Querbewehrung oben – Kassettenbereich",
+        shortLabel: "Quer oben – Kassettenbereich",
         file: "hp18n_bewehrung_druckgurt_quer_oben_kassettenbereich_1bzw2stk_pro_rippe_d6p5_sta1.glb",
         bereich: "Druckgurt",
-        gruppe: "Querbewehrung oben",
+        gruppe: "Querbewehrung – obere Lage",
         details: "Kassettenbereich, 1 bzw. 2 Stk./Rippe, d6.5, STA I"
       },
       {
-        id: "dg_quer_oben_endfeld_d6p5_e125_sta1",
+        id: "dg-quer-oben-endfeld-125",
         category: "druckgurt",
-        label: "Querbewehrung oben – Endfeld d6.5 e125 STA I",
+        label: "Querbewehrung oben – Endfeld e125",
         shortLabel: "Quer oben – Endfeld e125",
         file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e125_sta1.glb",
         bereich: "Druckgurt",
-        gruppe: "Querbewehrung oben",
+        gruppe: "Querbewehrung – obere Lage",
         details: "Endfeld, d6.5, e125, STA I"
       },
       {
-        id: "dg_quer_oben_endfeld_d6p5_e75_sta1",
+        id: "dg-quer-oben-endfeld-75",
         category: "druckgurt",
-        label: "Querbewehrung oben – Endfeld d6.5 e75 STA I",
+        label: "Querbewehrung oben – Endfeld e75",
         shortLabel: "Quer oben – Endfeld e75",
         file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e75_sta1.glb",
         bereich: "Druckgurt",
-        gruppe: "Querbewehrung oben",
+        gruppe: "Querbewehrung – obere Lage",
         details: "Endfeld, d6.5, e75, STA I"
       },
       {
-        id: "dg_laengs_mittig_gesamte_laenge_d8",
+        id: "dg-laengs-d8",
         category: "druckgurt",
         label: "Längsbewehrung mittig – gesamte Länge d8",
         shortLabel: "Längs mittig – gesamte Länge d8",
         file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d8.glb",
         bereich: "Druckgurt",
-        gruppe: "Längsbewehrung mittig",
-        details: "gesamte Länge, d8"
+        gruppe: "Längsbewehrung – mittlere Lage",
+        details: "über die gesamte Länge, d8"
       },
       {
-        id: "dg_laengs_mittig_gesamte_laenge_d6p5",
+        id: "dg-laengs-d6p5",
         category: "druckgurt",
         label: "Längsbewehrung mittig – gesamte Länge d6.5",
         shortLabel: "Längs mittig – gesamte Länge d6.5",
         file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d6p5.glb",
         bereich: "Druckgurt",
-        gruppe: "Längsbewehrung mittig",
-        details: "gesamte Länge, d6.5"
+        gruppe: "Längsbewehrung – mittlere Lage",
+        details: "über die gesamte Länge, d6.5"
       },
       {
-        id: "dg_laengs_mittig_endfeld_5bzw4stk_d6p5",
+        id: "dg-laengs-endfeld",
         category: "druckgurt",
-        label: "Längsbewehrung mittig – Endfeld 5 bzw. 4 Stk. d6.5",
-        shortLabel: "Längs mittig – Endfeld 5 bzw. 4 Stk.",
+        label: "Längsbewehrung mittig – Endfeld",
+        shortLabel: "Längs mittig – Endfeld",
         file: "hp18n_bewehrung_druckgurt_laengs_mittig_endfeld_5bzw4stk_d6p5.glb",
         bereich: "Druckgurt",
-        gruppe: "Längsbewehrung mittig",
+        gruppe: "Längsbewehrung – mittlere Lage",
         details: "Endfeld, 5 bzw. 4 Stäbe, d6.5"
       },
       {
-        id: "dg_herausstehende_rundstaehle_d6p5_e600",
+        id: "dg-herausstehend",
         category: "druckgurt",
         label: "Herausstehende Rundstähle d6.5 e600",
-        shortLabel: "Herausstehende Rundstähle e600",
+        shortLabel: "Herausstehende Rundstähle",
         file: "hp18n_bewehrung_druckgurt_herausstehende_rundstaehle_d6p5_e600.glb",
         bereich: "Druckgurt",
         gruppe: "Herausstehende Rundstähle",
         details: "d6.5, e600"
       },
-
-      // Steg
       {
-        id: "steg_laengsstaebe_d8",
+        id: "steg-laengs",
         category: "steg",
         label: "Steg – Längsstäbe d8",
         shortLabel: "Längsstäbe d8",
@@ -493,7 +541,7 @@
         details: "d8"
       },
       {
-        id: "steg_hauptzugbewehrung_d28_sta3",
+        id: "steg-hauptzug",
         category: "steg",
         label: "Steg – Hauptzugbewehrung d28 STA III",
         shortLabel: "Hauptzugbewehrung d28 STA III",
@@ -503,7 +551,7 @@
         details: "d28, STA III"
       },
       {
-        id: "steg_buegel_d6p5_e300_250_200_160",
+        id: "steg-buegel",
         category: "steg",
         label: "Steg – Bügel d6.5 e300/250/200/160",
         shortLabel: "Bügel d6.5 e300/250/200/160",
@@ -512,30 +560,28 @@
         gruppe: "Bügel",
         details: "d6.5, e300–250–200–160"
       },
-
-      // Auflager
       {
-        id: "auflager_unten_4stk_d12",
+        id: "auflager-unten",
         category: "auflager",
         label: "Auflagerbereich – untere Lage 4 Stk. d12",
-        shortLabel: "Untere Lage 4 Stk. d12",
+        shortLabel: "Untere Lage – 4 Stk. d12",
         file: "hp18n_bewehrung_auflager_unten_4stk_d12.glb",
         bereich: "Auflagerbereich",
         gruppe: "Untere Lage",
         details: "4 Stäbe, d12"
       },
       {
-        id: "auflager_oben_4stk_d12",
+        id: "auflager-oben",
         category: "auflager",
         label: "Auflagerbereich – obere Lage 4 Stk. d12",
-        shortLabel: "Obere Lage 4 Stk. d12",
+        shortLabel: "Obere Lage – 4 Stk. d12",
         file: "hp18n_bewehrung_auflager_oben_4stk_d12.glb",
         bereich: "Auflagerbereich",
         gruppe: "Obere Lage",
         details: "4 Stäbe, d12"
       },
       {
-        id: "auflager_montageoese_d20",
+        id: "auflager-oese",
         category: "auflager",
         label: "Auflagerbereich – Montageöse d20",
         shortLabel: "Montageöse d20",
@@ -545,7 +591,7 @@
         details: "d20"
       },
       {
-        id: "auflager_buegel_d8",
+        id: "auflager-buegel",
         category: "auflager",
         label: "Auflagerbereich – Bügel d8",
         shortLabel: "Bügel d8",
@@ -556,11 +602,6 @@
       }
     ];
 
-    const CONCRETE = {
-      file: "hp18n_betonschale.glb",
-      label: "Betonschale"
-    };
-
     const REBAR_COLOR = 0x4a4a4a;
     const REBAR_HIGHLIGHT = 0xd9782f;
     const CONCRETE_COLOR = 0xcdcac3;
@@ -569,7 +610,7 @@
     const statusText = document.getElementById("statusText");
     const selectionInfo = document.getElementById("selectionInfo");
     const toggleConcrete = document.getElementById("toggleConcrete");
-    const concreteOpacity = document.getElementById("concreteOpacity");
+    const concreteTransparency = document.getElementById("concreteTransparency");
     const btnClearSelection = document.getElementById("btnClearSelection");
     const btnResetView = document.getElementById("btnResetView");
 
@@ -580,101 +621,115 @@
       canvas,
       antialias: true
     });
+
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 5000);
-    camera.position.set(20, 14, 24);
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100000);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.target.set(0, 0, 0);
+    controls.dampingFactor = 0.08;
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.15);
+    const ambientLight = new THREE.HemisphereLight(0xffffff, 0x777777, 1.7);
     scene.add(ambientLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.15);
-    dirLight1.position.set(25, 40, 20);
-    scene.add(dirLight1);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 2.0);
+    directionalLight.position.set(1, 2, 1);
+    scene.add(directionalLight);
 
-    const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.45);
-    dirLight2.position.set(-20, 15, -15);
-    scene.add(dirLight2);
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    fillLight.position.set(-1, 0.5, -1);
+    scene.add(fillLight);
 
     const root = new THREE.Group();
     scene.add(root);
-
-    const loader = new GLTFLoader();
-    const raycaster = new THREE.Raycaster();
-    const pointer = new THREE.Vector2();
 
     const concreteGroup = new THREE.Group();
     root.add(concreteGroup);
 
     const concreteMaterial = new THREE.MeshStandardMaterial({
       color: CONCRETE_COLOR,
-      roughness: 0.9,
-      metalness: 0.0,
+      roughness: 0.88,
+      metalness: 0,
       transparent: true,
-      opacity: 0.70,
-      side: THREE.DoubleSide
+      opacity: 0.65,
+      side: THREE.DoubleSide,
+      depthWrite: false
     });
 
     const rebarBaseMaterial = new THREE.MeshStandardMaterial({
       color: REBAR_COLOR,
       roughness: 0.7,
-      metalness: 0.0,
+      metalness: 0,
       side: THREE.DoubleSide
     });
 
     const rebarHighlightMaterial = new THREE.MeshStandardMaterial({
       color: REBAR_HIGHLIGHT,
-      roughness: 0.65,
-      metalness: 0.0,
+      roughness: 0.62,
+      metalness: 0,
       side: THREE.DoubleSide
     });
 
+    const loader = new GLTFLoader();
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+
     const loadedGroups = new Map();
     const clickableMeshes = [];
+    const failedGroups = [];
+
     let selectedGroupId = null;
-    let boundsComputed = false;
+    let hasFramedScene = false;
 
-    let pointerDownPos = { x: 0, y: 0 };
-    let pointerMoved = false;
+    let pointerDownPosition = { x: 0, y: 0 };
+    let pointerWasDragged = false;
 
-    function setStatus(text) {
-      statusText.textContent = text;
+    function setStatus(message, isError = false) {
+      statusText.textContent = message;
+      statusText.classList.toggle("error", isError);
     }
 
     function resizeRenderer() {
-      const wrap = canvas.parentElement;
-      const width = wrap.clientWidth;
-      const height = wrap.clientHeight;
+      const wrapper = canvas.parentElement;
+      const width = Math.max(1, wrapper.clientWidth);
+      const height = Math.max(1, wrapper.clientHeight);
+
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
     }
 
-    window.addEventListener("resize", resizeRenderer);
-
     function applyConcreteMaterial(object) {
       object.traverse((child) => {
-        if (child.isMesh) {
-          child.material = concreteMaterial;
-          child.castShadow = false;
-          child.receiveShadow = false;
-        }
+        if (!child.isMesh) return;
+
+        child.material = concreteMaterial;
+        child.castShadow = false;
+        child.receiveShadow = false;
       });
     }
 
     function applyRebarMaterial(object, groupId) {
       object.traverse((child) => {
-        if (child.isMesh) {
-          child.material = rebarBaseMaterial.clone();
-          child.userData.groupId = groupId;
-          clickableMeshes.push(child);
-        }
+        if (!child.isMesh) return;
+
+        child.material = rebarBaseMaterial;
+        child.userData.groupId = groupId;
+        clickableMeshes.push(child);
       });
+    }
+
+    function isEffectivelyVisible(object) {
+      let current = object;
+
+      while (current) {
+        if (!current.visible) return false;
+        current = current.parent;
+      }
+
+      return true;
     }
 
     function setGroupHighlighted(groupId, highlighted) {
@@ -684,16 +739,17 @@
       entry.object.traverse((child) => {
         if (child.isMesh) {
           child.material = highlighted
-            ? rebarHighlightMaterial.clone()
-            : rebarBaseMaterial.clone();
+            ? rebarHighlightMaterial
+            : rebarBaseMaterial;
         }
       });
     }
 
     function clearSelection() {
-      if (selectedGroupId && loadedGroups.has(selectedGroupId)) {
+      if (selectedGroupId) {
         setGroupHighlighted(selectedGroupId, false);
       }
+
       selectedGroupId = null;
       updateSelectionUI();
     }
@@ -712,7 +768,10 @@
 
     function updateSelectionUI() {
       document.querySelectorAll(".group-item").forEach((item) => {
-        item.classList.remove("active");
+        item.classList.toggle(
+          "active",
+          Boolean(selectedGroupId && item.dataset.groupId === selectedGroupId)
+        );
       });
 
       if (!selectedGroupId) {
@@ -723,14 +782,9 @@
         return;
       }
 
-      const meta = GROUPS.find((g) => g.id === selectedGroupId);
-      const row = document.querySelector(`.group-item[data-group-id="${selectedGroupId}"]`);
-      if (row) row.classList.add("active");
+      const meta = GROUPS.find((group) => group.id === selectedGroupId);
 
       selectionInfo.innerHTML = `
-        <div class="info-label">Status</div>
-        <div>Gruppe ausgewählt</div>
-
         <div class="info-label">Bereich</div>
         <div>${meta.bereich}</div>
 
@@ -743,8 +797,8 @@
         <div class="info-label">Details</div>
         <div>${meta.details}</div>
 
-        <div class="info-label">Datei</div>
-        <div>${meta.file}</div>
+        <div class="info-label">GLB-Datei</div>
+        <div class="file-name">${meta.file}</div>
       `;
     }
 
@@ -752,9 +806,9 @@
       concreteGroup.visible = toggleConcrete.checked;
     }
 
-    function updateConcreteOpacity() {
-      const value = Number(concreteOpacity.value) / 100;
-      concreteMaterial.opacity = value;
+    function updateConcreteTransparency() {
+      const transparency = Number(concreteTransparency.value) / 100;
+      concreteMaterial.opacity = 1 - transparency;
       concreteMaterial.needsUpdate = true;
     }
 
@@ -766,21 +820,30 @@
       };
 
       GROUPS.forEach((group) => {
-        const wrapper = document.createElement("label");
-        wrapper.className = "group-item";
-        wrapper.dataset.groupId = group.id;
+        const row = document.createElement("div");
+        row.className = "group-item";
+        row.dataset.groupId = group.id;
 
-        wrapper.innerHTML = `
-          <input type="checkbox" checked data-toggle-id="${group.id}">
+        row.innerHTML = `
+          <input
+            type="checkbox"
+            checked
+            aria-label="${group.shortLabel} anzeigen"
+          />
           <span class="group-item-text">
             <span class="group-title">${group.shortLabel}</span>
             <span class="group-meta">${group.details}</span>
           </span>
         `;
 
-        containers[group.category].appendChild(wrapper);
+        containers[group.category].appendChild(row);
 
-        const checkbox = wrapper.querySelector("input");
+        const checkbox = row.querySelector("input");
+
+        checkbox.addEventListener("click", (event) => {
+          event.stopPropagation();
+        });
+
         checkbox.addEventListener("change", () => {
           const entry = loadedGroups.get(group.id);
           if (!entry) return;
@@ -792,149 +855,208 @@
           }
         });
 
-        wrapper.addEventListener("click", (event) => {
-          if (event.target.tagName.toLowerCase() === "input") return;
-          if (loadedGroups.has(group.id)) {
-            selectGroup(group.id);
+        row.addEventListener("click", () => {
+          const entry = loadedGroups.get(group.id);
+          if (!entry) return;
+
+          if (!entry.object.visible) {
+            entry.object.visible = true;
+            checkbox.checked = true;
           }
+
+          selectGroup(group.id);
         });
       });
     }
 
+    function markGroupLoadError(groupId) {
+      const row = document.querySelector(
+        `.group-item[data-group-id="${groupId}"]`
+      );
+
+      if (!row) return;
+
+      row.classList.add("load-error");
+      const checkbox = row.querySelector("input");
+      checkbox.checked = false;
+      checkbox.disabled = true;
+
+      const meta = row.querySelector(".group-meta");
+      meta.textContent = "Datei konnte nicht geladen werden.";
+    }
+
     function frameScene() {
       const box = new THREE.Box3().setFromObject(root);
-      if (box.isEmpty()) return;
+
+      if (box.isEmpty()) {
+        setStatus("Es wurde noch keine sichtbare Geometrie geladen.", true);
+        return;
+      }
 
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
-      const maxDim = Math.max(size.x, size.y, size.z);
+      const maxDimension = Math.max(size.x, size.y, size.z);
+
+      const fieldOfView = THREE.MathUtils.degToRad(camera.fov);
+      let cameraDistance = maxDimension / (2 * Math.tan(fieldOfView / 2));
+      cameraDistance *= 1.35;
+
+      camera.position.set(
+        center.x + cameraDistance * 0.65,
+        center.y + cameraDistance * 0.45,
+        center.z + cameraDistance
+      );
 
       controls.target.copy(center);
-      camera.position.set(
-        center.x + maxDim * 1.25,
-        center.y + maxDim * 0.8,
-        center.z + maxDim * 1.3
-      );
-      camera.near = Math.max(0.01, maxDim / 500);
-      camera.far = Math.max(1000, maxDim * 20);
+
+      camera.near = Math.max(maxDimension / 10000, 0.01);
+      camera.far = Math.max(cameraDistance * 20, maxDimension * 20);
       camera.updateProjectionMatrix();
+
       controls.update();
     }
 
-    async function loadConcrete() {
+    function loadGLB(url) {
       return new Promise((resolve, reject) => {
-        loader.load(
-          MODEL_PATH + CONCRETE.file,
-          (gltf) => {
-            const model = gltf.scene;
-            applyConcreteMaterial(model);
-            concreteGroup.add(model);
-            resolve();
-          },
-          undefined,
-          reject
-        );
+        loader.load(url, resolve, undefined, reject);
       });
+    }
+
+    async function loadConcrete() {
+      const gltf = await loadGLB(MODEL_PATH + CONCRETE.file);
+      applyConcreteMaterial(gltf.scene);
+      concreteGroup.add(gltf.scene);
     }
 
     async function loadRebarGroup(group) {
-      return new Promise((resolve, reject) => {
-        loader.load(
-          MODEL_PATH + group.file,
-          (gltf) => {
-            const groupObject = new THREE.Group();
-            groupObject.name = group.id;
-            groupObject.userData.groupId = group.id;
+      const gltf = await loadGLB(MODEL_PATH + group.file);
 
-            const model = gltf.scene;
-            applyRebarMaterial(model, group.id);
-            groupObject.add(model);
+      const groupObject = new THREE.Group();
+      groupObject.name = group.id;
+      groupObject.userData.groupId = group.id;
 
-            root.add(groupObject);
+      applyRebarMaterial(gltf.scene, group.id);
+      groupObject.add(gltf.scene);
+      root.add(groupObject);
 
-            loadedGroups.set(group.id, {
-              meta: group,
-              object: groupObject
-            });
-
-            resolve();
-          },
-          undefined,
-          reject
-        );
+      loadedGroups.set(group.id, {
+        meta: group,
+        object: groupObject
       });
     }
 
-    async function init() {
+    async function initialiseViewer() {
       createGroupList();
       resizeRenderer();
       updateConcreteVisibility();
-      updateConcreteOpacity();
+      updateConcreteTransparency();
+
+      let loadedCount = 0;
 
       try {
         setStatus("Betonschale wird geladen …");
         await loadConcrete();
-
-        for (let i = 0; i < GROUPS.length; i++) {
-          const group = GROUPS[i];
-          setStatus(`Bewehrungsgruppe wird geladen (${i + 1}/${GROUPS.length}) …`);
-          await loadRebarGroup(group);
-        }
-
-        if (!boundsComputed) {
-          frameScene();
-          boundsComputed = true;
-        }
-
-        setStatus("Modelle geladen. Bewehrungsgruppe durch Anklicken auswählbar.");
+        loadedCount += 1;
       } catch (error) {
-        console.error(error);
-        setStatus("Fehler beim Laden der Modelle. Bitte Dateinamen und Pfade prüfen.");
+        console.error("Betonschale konnte nicht geladen werden:", error);
+        setStatus(
+          `Betonschale konnte nicht geladen werden: ${CONCRETE.file}`,
+          true
+        );
+      }
+
+      for (let index = 0; index < GROUPS.length; index += 1) {
+        const group = GROUPS[index];
+
+        setStatus(
+          `Bewehrungsgruppen werden geladen: ${index + 1} von ${GROUPS.length} …`
+        );
+
+        try {
+          await loadRebarGroup(group);
+          loadedCount += 1;
+        } catch (error) {
+          console.error(`Fehler bei ${group.file}:`, error);
+          failedGroups.push(group.file);
+          markGroupLoadError(group.id);
+        }
+      }
+
+      if (loadedCount > 0 && !hasFramedScene) {
+        frameScene();
+        hasFramedScene = true;
+      }
+
+      if (failedGroups.length === 0) {
+        setStatus(
+          `Alle Modelle wurden geladen: Betonschale und ${GROUPS.length} Bewehrungsgruppen.`
+        );
+      } else {
+        setStatus(
+          `${loadedCount} Modelle geladen. ${failedGroups.length} Datei(en) konnten nicht geladen werden. Die betroffenen Gruppen sind links markiert.`,
+          true
+        );
       }
     }
 
     toggleConcrete.addEventListener("change", updateConcreteVisibility);
-    concreteOpacity.addEventListener("input", updateConcreteOpacity);
+    concreteTransparency.addEventListener(
+      "input",
+      updateConcreteTransparency
+    );
 
-    btnClearSelection.addEventListener("click", () => {
-      clearSelection();
-    });
-
-    btnResetView.addEventListener("click", () => {
-      frameScene();
-    });
+    btnClearSelection.addEventListener("click", clearSelection);
+    btnResetView.addEventListener("click", frameScene);
 
     canvas.addEventListener("pointerdown", (event) => {
-      pointerDownPos = { x: event.clientX, y: event.clientY };
-      pointerMoved = false;
+      if (event.button !== 0) return;
+
+      pointerDownPosition = {
+        x: event.clientX,
+        y: event.clientY
+      };
+
+      pointerWasDragged = false;
     });
 
     canvas.addEventListener("pointermove", (event) => {
-      const dx = event.clientX - pointerDownPos.x;
-      const dy = event.clientY - pointerDownPos.y;
-      if (Math.sqrt(dx * dx + dy * dy) > 4) {
-        pointerMoved = true;
+      const deltaX = event.clientX - pointerDownPosition.x;
+      const deltaY = event.clientY - pointerDownPosition.y;
+      const movement = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+      if (movement > 5) {
+        pointerWasDragged = true;
       }
     });
 
     canvas.addEventListener("pointerup", (event) => {
-      if (pointerMoved) return;
+      if (event.button !== 0 || pointerWasDragged) return;
 
-      const rect = canvas.getBoundingClientRect();
-      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      const rectangle = canvas.getBoundingClientRect();
+
+      pointer.x =
+        ((event.clientX - rectangle.left) / rectangle.width) * 2 - 1;
+
+      pointer.y =
+        -((event.clientY - rectangle.top) / rectangle.height) * 2 + 1;
 
       raycaster.setFromCamera(pointer, camera);
 
-      const visibleMeshes = clickableMeshes.filter((mesh) => mesh.visible && mesh.parent.visible);
-      const hits = raycaster.intersectObjects(visibleMeshes, false);
+      const visibleMeshes = clickableMeshes.filter(isEffectivelyVisible);
+      const intersections = raycaster.intersectObjects(
+        visibleMeshes,
+        false
+      );
 
-      if (hits.length > 0) {
-        const hit = hits[0].object;
-        const groupId = hit.userData.groupId;
-        if (groupId) {
-          selectGroup(groupId);
-        }
+      if (intersections.length === 0) {
+        clearSelection();
+        return;
+      }
+
+      const groupId = intersections[0].object.userData.groupId;
+
+      if (groupId) {
+        selectGroup(groupId);
       } else {
         clearSelection();
       }
@@ -946,7 +1068,9 @@
       renderer.render(scene, camera);
     }
 
-    init();
+    window.addEventListener("resize", resizeRenderer);
+
+    initialiseViewer();
     animate();
   </script>
 </body>
