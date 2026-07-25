@@ -26,3 +26,4 @@ Bedienung:
 - Rechte Maustaste: verschieben
 - Bewehrung anklicken: ganze Testgruppe orange hervorheben
 - Beton-Deckkraft über den Regler verändern
+GitHub-Pages-Testviewer
