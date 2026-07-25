@@ -13,14 +13,11 @@
       --text: #2b2b2b;
       --muted: #6c6c6c;
       --accent: #d9782f;
-      --accent-dark: #b65f20;
       --viewer-bg: #ddd9d0;
       --error: #9d2b2b;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -35,9 +32,7 @@
       padding: 24px 0 40px;
     }
 
-    header {
-      margin-bottom: 18px;
-    }
+    header { margin-bottom: 18px; }
 
     h1 {
       margin: 0 0 6px;
@@ -105,16 +100,27 @@
 
     .viewer-wrap {
       position: relative;
-      flex: 1;
       min-height: 650px;
       background: var(--viewer-bg);
     }
 
     #viewer {
       width: 100%;
-      height: 100%;
+      height: 650px;
       display: block;
       touch-action: none;
+    }
+
+    .viewer-info {
+      padding: 18px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .viewer-info h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 600;
     }
 
     .section {
@@ -150,14 +156,15 @@
     }
 
     .group-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 8px 10px;
+      display: block;
+      padding: 10px 12px;
       border: 1px solid #e7e4dd;
       border-radius: 8px;
       background: #fcfbf9;
       cursor: pointer;
+      font-size: 14px;
+      line-height: 1.35;
+      font-weight: 600;
     }
 
     .group-item:hover {
@@ -172,31 +179,7 @@
     .group-item.load-error {
       border-color: #d7aaaa;
       background: #fff7f7;
-    }
-
-    .group-item input[type="checkbox"] {
-      margin-top: 2px;
-      cursor: pointer;
-    }
-
-    .group-item-text {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .group-title {
-      display: block;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 1.35;
-    }
-
-    .group-meta {
-      display: block;
-      margin-top: 2px;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.35;
+      color: var(--error);
     }
 
     .btn-row {
@@ -223,15 +206,13 @@
 
     .info-grid {
       display: grid;
-      grid-template-columns: 115px 1fr;
+      grid-template-columns: 120px 1fr;
       gap: 8px 12px;
       font-size: 14px;
       line-height: 1.45;
     }
 
-    .info-label {
-      font-weight: 600;
-    }
+    .info-label { font-weight: 600; }
 
     .file-name {
       overflow-wrap: anywhere;
@@ -240,7 +221,7 @@
     }
 
     .hint {
-      margin-top: 12px;
+      margin-top: 14px;
       font-size: 13px;
       color: var(--muted);
       line-height: 1.45;
@@ -254,23 +235,15 @@
       background: #faf9f7;
     }
 
-    .status.error {
-      color: var(--error);
-    }
+    .status.error { color: var(--error); }
 
     @media (max-width: 1100px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
+      .layout { grid-template-columns: 1fr; }
       .panel {
         position: static;
         max-height: none;
       }
-
-      .viewer-card {
-        min-height: 620px;
-      }
+      .viewer-card { min-height: 620px; }
     }
 
     @media (max-width: 700px) {
@@ -278,29 +251,20 @@
         width: min(100% - 20px, 1400px);
         padding-top: 18px;
       }
-
-      h1 {
-        font-size: 25px;
-      }
-
-      .viewer-wrap {
-        min-height: 480px;
-      }
-
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
+      h1 { font-size: 25px; }
+      #viewer { height: 480px; }
+      .viewer-wrap { min-height: 480px; }
+      .info-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
-
 <body>
   <main>
     <header>
       <h1>HP-18-N – Betonschale und Bewehrung</h1>
       <p class="subtitle">
         Interaktive konstruktive Fallstudie zur HP-Schale 18 m N.
-        Die Bewehrungsgruppen können ein- und ausgeblendet sowie durch Anklicken ausgewählt werden.
+        Die Bewehrungsgruppen können durch Anklicken ausgewählt und hervorgehoben werden.
       </p>
     </header>
 
@@ -318,13 +282,7 @@
             <label for="concreteTransparency" style="min-width: 112px;">
               Betontransparenz
             </label>
-            <input
-              type="range"
-              id="concreteTransparency"
-              min="0"
-              max="90"
-              value="35"
-            />
+            <input type="range" id="concreteTransparency" min="0" max="90" value="35" />
           </div>
 
           <div class="btn-row" style="margin-top: 12px;">
@@ -345,10 +303,19 @@
           <h3>Auflagerbereich</h3>
           <div id="groupList-auflager" class="group-list"></div>
         </div>
+      </aside>
 
-        <div class="section">
+      <section class="viewer-card">
+        <div class="viewer-toolbar">
+          <strong>3D-Ansicht</strong>
+        </div>
+
+        <div class="viewer-wrap">
+          <canvas id="viewer"></canvas>
+        </div>
+
+        <div class="viewer-info">
           <h2>Ausgewählte Gruppe</h2>
-
           <div id="selectionInfo" class="info-grid">
             <div class="info-label">Status</div>
             <div>Keine Gruppe ausgewählt.</div>
@@ -361,29 +328,12 @@
             bleibt die Auswahl bestehen.
           </p>
         </div>
-      </aside>
 
-      <section class="viewer-card">
-        <div class="viewer-toolbar">
-          <strong>3D-Ansicht</strong>
-        </div>
-
-        <div class="viewer-wrap">
-          <canvas id="viewer"></canvas>
-        </div>
-
-        <div class="status" id="statusText">
-          Viewer wird vorbereitet …
-        </div>
+        <div class="status" id="statusText">Viewer wird vorbereitet …</div>
       </section>
     </section>
   </main>
 
-  <!--
-    Import Map:
-    Sie sorgt dafür, dass Three.js und seine Erweiterungen
-    im Browser korrekt miteinander verbunden werden.
-  -->
   <script type="importmap">
   {
     "imports": {
@@ -405,201 +355,26 @@
       label: "Betonschale"
     };
 
-    /*
-      Die Dateinamen in diesem Datenblock entsprechen den Dateien
-      im GitHub-Ordner hp18n-test/models.
-    */
     const GROUPS = [
-      {
-        id: "dg-randleiter-quer",
-        category: "druckgurt",
-        label: "Randleiter – Querstäbe d6.5",
-        shortLabel: "Randleiter – Querstäbe d6.5",
-        file: "hp18n_bewehrung_druckgurt_randleiter_querstaebe_d6p5.glb",
-        bereich: "Druckgurt",
-        gruppe: "Randleiter",
-        details: "Querstäbe, d6.5"
-      },
-      {
-        id: "dg-randleiter-laengs",
-        category: "druckgurt",
-        label: "Randleiter – 3 Stk. d8 STA III",
-        shortLabel: "Randleiter – 3 Stk. d8 STA III",
-        file: "hp18n_bewehrung_druckgurt_randleiter_3stk_d8_sta3.glb",
-        bereich: "Druckgurt",
-        gruppe: "Randleiter",
-        details: "3 Stäbe, d8, STA III"
-      },
-      {
-        id: "dg-quer-unten-kassetten",
-        category: "druckgurt",
-        label: "Querbewehrung unten – Kassettenbereich",
-        shortLabel: "Quer unten – Kassettenbereich",
-        file: "hp18n_bewehrung_druckgurt_quer_unten_kassettenbereich_2stk_pro_rippe_d6p5_sta1.glb",
-        bereich: "Druckgurt",
-        gruppe: "Querbewehrung – untere Lage",
-        details: "Kassettenbereich, 2 Stk./Rippe, d6.5, STA I"
-      },
-      {
-        id: "dg-quer-unten-endfeld-125",
-        category: "druckgurt",
-        label: "Querbewehrung unten – Endfeld e125",
-        shortLabel: "Quer unten – Endfeld e125",
-        file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e125_sta1.glb",
-        bereich: "Druckgurt",
-        gruppe: "Querbewehrung – untere Lage",
-        details: "Endfeld, d6.5, e125, STA I"
-      },
-      {
-        id: "dg-quer-unten-endfeld-75",
-        category: "druckgurt",
-        label: "Querbewehrung unten – Endfeld e75",
-        shortLabel: "Quer unten – Endfeld e75",
-        file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e75_sta1.glb",
-        bereich: "Druckgurt",
-        gruppe: "Querbewehrung – untere Lage",
-        details: "Endfeld, d6.5, e75, STA I"
-      },
-      {
-        id: "dg-quer-oben-kassetten",
-        category: "druckgurt",
-        label: "Querbewehrung oben – Kassettenbereich",
-        shortLabel: "Quer oben – Kassettenbereich",
-        file: "hp18n_bewehrung_druckgurt_quer_oben_kassettenbereich_1bzw2stk_pro_rippe_d6p5_sta1.glb",
-        bereich: "Druckgurt",
-        gruppe: "Querbewehrung – obere Lage",
-        details: "Kassettenbereich, 1 bzw. 2 Stk./Rippe, d6.5, STA I"
-      },
-      {
-        id: "dg-quer-oben-endfeld-125",
-        category: "druckgurt",
-        label: "Querbewehrung oben – Endfeld e125",
-        shortLabel: "Quer oben – Endfeld e125",
-        file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e125_sta1.glb",
-        bereich: "Druckgurt",
-        gruppe: "Querbewehrung – obere Lage",
-        details: "Endfeld, d6.5, e125, STA I"
-      },
-      {
-        id: "dg-quer-oben-endfeld-75",
-        category: "druckgurt",
-        label: "Querbewehrung oben – Endfeld e75",
-        shortLabel: "Quer oben – Endfeld e75",
-        file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e75_sta1.glb",
-        bereich: "Druckgurt",
-        gruppe: "Querbewehrung – obere Lage",
-        details: "Endfeld, d6.5, e75, STA I"
-      },
-      {
-        id: "dg-laengs-d8",
-        category: "druckgurt",
-        label: "Längsbewehrung mittig – gesamte Länge d8",
-        shortLabel: "Längs mittig – gesamte Länge d8",
-        file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d8.glb",
-        bereich: "Druckgurt",
-        gruppe: "Längsbewehrung – mittlere Lage",
-        details: "über die gesamte Länge, d8"
-      },
-      {
-        id: "dg-laengs-d6p5",
-        category: "druckgurt",
-        label: "Längsbewehrung mittig – gesamte Länge d6.5",
-        shortLabel: "Längs mittig – gesamte Länge d6.5",
-        file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d6p5.glb",
-        bereich: "Druckgurt",
-        gruppe: "Längsbewehrung – mittlere Lage",
-        details: "über die gesamte Länge, d6.5"
-      },
-      {
-        id: "dg-laengs-endfeld",
-        category: "druckgurt",
-        label: "Längsbewehrung mittig – Endfeld",
-        shortLabel: "Längs mittig – Endfeld",
-        file: "hp18n_bewehrung_druckgurt_laengs_mittig_endfeld_5bzw4stk_d6p5.glb",
-        bereich: "Druckgurt",
-        gruppe: "Längsbewehrung – mittlere Lage",
-        details: "Endfeld, 5 bzw. 4 Stäbe, d6.5"
-      },
-      {
-        id: "dg-herausstehend",
-        category: "druckgurt",
-        label: "Herausstehende Rundstähle d6.5 e600",
-        shortLabel: "Herausstehende Rundstähle",
-        file: "hp18n_bewehrung_druckgurt_herausstehende_rundstaehle_d6p5_e600.glb",
-        bereich: "Druckgurt",
-        gruppe: "Herausstehende Rundstähle",
-        details: "d6.5, e600"
-      },
-      {
-        id: "steg-laengs",
-        category: "steg",
-        label: "Steg – Längsstäbe d8",
-        shortLabel: "Längsstäbe d8",
-        file: "hp18n_bewehrung_steg_laengsstaebe_d8.glb",
-        bereich: "Steg",
-        gruppe: "Längsstäbe",
-        details: "d8"
-      },
-      {
-        id: "steg-hauptzug",
-        category: "steg",
-        label: "Steg – Hauptzugbewehrung d28 STA III",
-        shortLabel: "Hauptzugbewehrung d28 STA III",
-        file: "hp18n_bewehrung_steg_hauptzugbewehrung_d28_sta3.glb",
-        bereich: "Steg",
-        gruppe: "Hauptzugbewehrung",
-        details: "d28, STA III"
-      },
-      {
-        id: "steg-buegel",
-        category: "steg",
-        label: "Steg – Bügel d6.5 e300/250/200/160",
-        shortLabel: "Bügel d6.5 e300/250/200/160",
-        file: "hp18n_bewehrung_steg_buegel_d6p5_e300_250_200_160.glb",
-        bereich: "Steg",
-        gruppe: "Bügel",
-        details: "d6.5, e300–250–200–160"
-      },
-      {
-        id: "auflager-unten",
-        category: "auflager",
-        label: "Auflagerbereich – untere Lage 4 Stk. d12",
-        shortLabel: "Untere Lage – 4 Stk. d12",
-        file: "hp18n_bewehrung_auflager_unten_4stk_d12.glb",
-        bereich: "Auflagerbereich",
-        gruppe: "Untere Lage",
-        details: "4 Stäbe, d12"
-      },
-      {
-        id: "auflager-oben",
-        category: "auflager",
-        label: "Auflagerbereich – obere Lage 4 Stk. d12",
-        shortLabel: "Obere Lage – 4 Stk. d12",
-        file: "hp18n_bewehrung_auflager_oben_4stk_d12.glb",
-        bereich: "Auflagerbereich",
-        gruppe: "Obere Lage",
-        details: "4 Stäbe, d12"
-      },
-      {
-        id: "auflager-oese",
-        category: "auflager",
-        label: "Auflagerbereich – Montageöse d20",
-        shortLabel: "Montageöse d20",
-        file: "hp18n_bewehrung_auflager_montageoese_d20.glb",
-        bereich: "Auflagerbereich",
-        gruppe: "Montageöse",
-        details: "d20"
-      },
-      {
-        id: "auflager-buegel",
-        category: "auflager",
-        label: "Auflagerbereich – Bügel d8",
-        shortLabel: "Bügel d8",
-        file: "hp18n_bewehrung_auflager_buegel_d8.glb",
-        bereich: "Auflagerbereich",
-        gruppe: "Bügel",
-        details: "d8"
-      }
+      { id: "dg-randleiter-quer", category: "druckgurt", label: "Randleiter – Querstäbe d6.5", file: "hp18n_bewehrung_druckgurt_randleiter_querstaebe_d6p5.glb", bereich: "Druckgurt", gruppe: "Randleiter", details: "Querstäbe, d6.5" },
+      { id: "dg-randleiter-laengs", category: "druckgurt", label: "Randleiter – 3 Stk. d8 STA III", file: "hp18n_bewehrung_druckgurt_randleiter_3stk_d8_sta3.glb", bereich: "Druckgurt", gruppe: "Randleiter", details: "3 Stäbe, d8, STA III" },
+      { id: "dg-quer-unten-kassetten", category: "druckgurt", label: "Querbewehrung unten – Kassettenbereich", file: "hp18n_bewehrung_druckgurt_quer_unten_kassettenbereich_2stk_pro_rippe_d6p5_sta1.glb", bereich: "Druckgurt", gruppe: "Querbewehrung – untere Lage", details: "Kassettenbereich, 2 Stk./Rippe, d6.5, STA I" },
+      { id: "dg-quer-unten-endfeld-125", category: "druckgurt", label: "Querbewehrung unten – Endfeld e125", file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e125_sta1.glb", bereich: "Druckgurt", gruppe: "Querbewehrung – untere Lage", details: "Endfeld, d6.5, e125, STA I" },
+      { id: "dg-quer-unten-endfeld-75", category: "druckgurt", label: "Querbewehrung unten – Endfeld e75", file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e75_sta1.glb", bereich: "Druckgurt", gruppe: "Querbewehrung – untere Lage", details: "Endfeld, d6.5, e75, STA I" },
+      { id: "dg-quer-oben-kassetten", category: "druckgurt", label: "Querbewehrung oben – Kassettenbereich", file: "hp18n_bewehrung_druckgurt_quer_oben_kassettenbereich_1bzw2stk_pro_rippe_d6p5_sta1.glb", bereich: "Druckgurt", gruppe: "Querbewehrung – obere Lage", details: "Kassettenbereich, 1 bzw. 2 Stk./Rippe, d6.5, STA I" },
+      { id: "dg-quer-oben-endfeld-125", category: "druckgurt", label: "Querbewehrung oben – Endfeld e125", file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e125_sta1.glb", bereich: "Druckgurt", gruppe: "Querbewehrung – obere Lage", details: "Endfeld, d6.5, e125, STA I" },
+      { id: "dg-quer-oben-endfeld-75", category: "druckgurt", label: "Querbewehrung oben – Endfeld e75", file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e75_sta1.glb", bereich: "Druckgurt", gruppe: "Querbewehrung – obere Lage", details: "Endfeld, d6.5, e75, STA I" },
+      { id: "dg-laengs-d8", category: "druckgurt", label: "Längsbewehrung mittig – gesamte Länge d8", file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d8.glb", bereich: "Druckgurt", gruppe: "Längsbewehrung – mittlere Lage", details: "über die gesamte Länge, d8" },
+      { id: "dg-laengs-d6p5", category: "druckgurt", label: "Längsbewehrung mittig – gesamte Länge d6.5", file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d6p5.glb", bereich: "Druckgurt", gruppe: "Längsbewehrung – mittlere Lage", details: "über die gesamte Länge, d6.5" },
+      { id: "dg-laengs-endfeld", category: "druckgurt", label: "Längsbewehrung mittig – Endfeld", file: "hp18n_bewehrung_druckgurt_laengs_mittig_endfeld_5bzw4stk_d6p5.glb", bereich: "Druckgurt", gruppe: "Längsbewehrung – mittlere Lage", details: "Endfeld, 5 bzw. 4 Stäbe, d6.5" },
+      { id: "dg-herausstehend", category: "druckgurt", label: "Herausstehende Rundstähle d6.5 e600", file: "hp18n_bewehrung_druckgurt_herausstehende_rundstaehle_d6p5_e600.glb", bereich: "Druckgurt", gruppe: "Herausstehende Rundstähle", details: "d6.5, e600" },
+      { id: "steg-laengs", category: "steg", label: "Steg – Längsstäbe d8", file: "hp18n_bewehrung_steg_laengsstaebe_d8.glb", bereich: "Steg", gruppe: "Längsstäbe", details: "d8" },
+      { id: "steg-hauptzug", category: "steg", label: "Steg – Hauptzugbewehrung d28 STA III", file: "hp18n_bewehrung_steg_hauptzugbewehrung_d28_sta3.glb", bereich: "Steg", gruppe: "Hauptzugbewehrung", details: "d28, STA III" },
+      { id: "steg-buegel", category: "steg", label: "Steg – Bügel d6.5 e300/250/200/160", file: "hp18n_bewehrung_steg_buegel_d6p5_e300_250_200_160.glb", bereich: "Steg", gruppe: "Bügel", details: "d6.5, e300–250–200–160" },
+      { id: "auflager-unten", category: "auflager", label: "Auflagerbereich – untere Lage 4 Stk. d12", file: "hp18n_bewehrung_auflager_unten_4stk_d12.glb", bereich: "Auflagerbereich", gruppe: "Untere Lage", details: "4 Stäbe, d12" },
+      { id: "auflager-oben", category: "auflager", label: "Auflagerbereich – obere Lage 4 Stk. d12", file: "hp18n_bewehrung_auflager_oben_4stk_d12.glb", bereich: "Auflagerbereich", gruppe: "Obere Lage", details: "4 Stäbe, d12" },
+      { id: "auflager-oese", category: "auflager", label: "Auflagerbereich – Montageöse d20", file: "hp18n_bewehrung_auflager_montageoese_d20.glb", bereich: "Auflagerbereich", gruppe: "Montageöse", details: "d20" },
+      { id: "auflager-buegel", category: "auflager", label: "Auflagerbereich – Bügel d8", file: "hp18n_bewehrung_auflager_buegel_d8.glb", bereich: "Auflagerbereich", gruppe: "Bügel", details: "d8" }
     ];
 
     const REBAR_COLOR = 0x4a4a4a;
@@ -617,11 +392,7 @@
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xddd9d0);
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true
-    });
-
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
@@ -652,10 +423,11 @@
       color: CONCRETE_COLOR,
       roughness: 0.88,
       metalness: 0,
-      transparent: true,
-      opacity: 0.65,
+      transparent: false,
+      opacity: 1,
       side: THREE.DoubleSide,
-      depthWrite: false
+      depthWrite: true,
+      depthTest: true
     });
 
     const rebarBaseMaterial = new THREE.MeshStandardMaterial({
@@ -682,7 +454,6 @@
 
     let selectedGroupId = null;
     let hasFramedScene = false;
-
     let pointerDownPosition = { x: 0, y: 0 };
     let pointerWasDragged = false;
 
@@ -695,7 +466,6 @@
       const wrapper = canvas.parentElement;
       const width = Math.max(1, wrapper.clientWidth);
       const height = Math.max(1, wrapper.clientHeight);
-
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
@@ -704,63 +474,51 @@
     function applyConcreteMaterial(object) {
       object.traverse((child) => {
         if (!child.isMesh) return;
-
         child.material = concreteMaterial;
-        child.castShadow = false;
-        child.receiveShadow = false;
+        child.renderOrder = 0;
       });
     }
 
     function applyRebarMaterial(object, groupId) {
       object.traverse((child) => {
         if (!child.isMesh) return;
-
         child.material = rebarBaseMaterial;
         child.userData.groupId = groupId;
+        child.renderOrder = 1;
         clickableMeshes.push(child);
       });
     }
 
     function isEffectivelyVisible(object) {
       let current = object;
-
       while (current) {
         if (!current.visible) return false;
         current = current.parent;
       }
-
       return true;
     }
 
     function setGroupHighlighted(groupId, highlighted) {
       const entry = loadedGroups.get(groupId);
       if (!entry) return;
-
       entry.object.traverse((child) => {
         if (child.isMesh) {
-          child.material = highlighted
-            ? rebarHighlightMaterial
-            : rebarBaseMaterial;
+          child.material = highlighted ? rebarHighlightMaterial : rebarBaseMaterial;
         }
       });
     }
 
     function clearSelection() {
-      if (selectedGroupId) {
-        setGroupHighlighted(selectedGroupId, false);
-      }
-
+      if (selectedGroupId) setGroupHighlighted(selectedGroupId, false);
       selectedGroupId = null;
       updateSelectionUI();
     }
 
     function selectGroup(groupId) {
       if (!loadedGroups.has(groupId)) return;
-
       if (selectedGroupId && selectedGroupId !== groupId) {
         setGroupHighlighted(selectedGroupId, false);
       }
-
       selectedGroupId = groupId;
       setGroupHighlighted(groupId, true);
       updateSelectionUI();
@@ -768,10 +526,7 @@
 
     function updateSelectionUI() {
       document.querySelectorAll(".group-item").forEach((item) => {
-        item.classList.toggle(
-          "active",
-          Boolean(selectedGroupId && item.dataset.groupId === selectedGroupId)
-        );
+        item.classList.toggle("active", Boolean(selectedGroupId && item.dataset.groupId === selectedGroupId));
       });
 
       if (!selectedGroupId) {
@@ -783,7 +538,6 @@
       }
 
       const meta = GROUPS.find((group) => group.id === selectedGroupId);
-
       selectionInfo.innerHTML = `
         <div class="info-label">Bereich</div>
         <div>${meta.bereich}</div>
@@ -808,7 +562,10 @@
 
     function updateConcreteTransparency() {
       const transparency = Number(concreteTransparency.value) / 100;
-      concreteMaterial.opacity = 1 - transparency;
+      const opacity = 1 - transparency;
+      concreteMaterial.opacity = opacity;
+      concreteMaterial.transparent = opacity < 0.999;
+      concreteMaterial.depthWrite = true;
       concreteMaterial.needsUpdate = true;
     }
 
@@ -823,71 +580,25 @@
         const row = document.createElement("div");
         row.className = "group-item";
         row.dataset.groupId = group.id;
-
-        row.innerHTML = `
-          <input
-            type="checkbox"
-            checked
-            aria-label="${group.shortLabel} anzeigen"
-          />
-          <span class="group-item-text">
-            <span class="group-title">${group.shortLabel}</span>
-            <span class="group-meta">${group.details}</span>
-          </span>
-        `;
-
+        row.textContent = group.label;
         containers[group.category].appendChild(row);
 
-        const checkbox = row.querySelector("input");
-
-        checkbox.addEventListener("click", (event) => {
-          event.stopPropagation();
-        });
-
-        checkbox.addEventListener("change", () => {
-          const entry = loadedGroups.get(group.id);
-          if (!entry) return;
-
-          entry.object.visible = checkbox.checked;
-
-          if (!checkbox.checked && selectedGroupId === group.id) {
-            clearSelection();
-          }
-        });
-
         row.addEventListener("click", () => {
-          const entry = loadedGroups.get(group.id);
-          if (!entry) return;
-
-          if (!entry.object.visible) {
-            entry.object.visible = true;
-            checkbox.checked = true;
-          }
-
+          if (!loadedGroups.has(group.id)) return;
           selectGroup(group.id);
         });
       });
     }
 
     function markGroupLoadError(groupId) {
-      const row = document.querySelector(
-        `.group-item[data-group-id="${groupId}"]`
-      );
-
+      const row = document.querySelector(`.group-item[data-group-id="${groupId}"]`);
       if (!row) return;
-
       row.classList.add("load-error");
-      const checkbox = row.querySelector("input");
-      checkbox.checked = false;
-      checkbox.disabled = true;
-
-      const meta = row.querySelector(".group-meta");
-      meta.textContent = "Datei konnte nicht geladen werden.";
+      row.textContent = `${row.textContent} – Datei konnte nicht geladen werden`;
     }
 
     function frameScene() {
       const box = new THREE.Box3().setFromObject(root);
-
       if (box.isEmpty()) {
         setStatus("Es wurde noch keine sichtbare Geometrie geladen.", true);
         return;
@@ -896,7 +607,6 @@
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
       const maxDimension = Math.max(size.x, size.y, size.z);
-
       const fieldOfView = THREE.MathUtils.degToRad(camera.fov);
       let cameraDistance = maxDimension / (2 * Math.tan(fieldOfView / 2));
       cameraDistance *= 1.35;
@@ -908,11 +618,9 @@
       );
 
       controls.target.copy(center);
-
       camera.near = Math.max(maxDimension / 10000, 0.01);
       camera.far = Math.max(cameraDistance * 20, maxDimension * 20);
       camera.updateProjectionMatrix();
-
       controls.update();
     }
 
@@ -930,19 +638,13 @@
 
     async function loadRebarGroup(group) {
       const gltf = await loadGLB(MODEL_PATH + group.file);
-
       const groupObject = new THREE.Group();
       groupObject.name = group.id;
       groupObject.userData.groupId = group.id;
-
       applyRebarMaterial(gltf.scene, group.id);
       groupObject.add(gltf.scene);
       root.add(groupObject);
-
-      loadedGroups.set(group.id, {
-        meta: group,
-        object: groupObject
-      });
+      loadedGroups.set(group.id, { meta: group, object: groupObject });
     }
 
     async function initialiseViewer() {
@@ -959,19 +661,12 @@
         loadedCount += 1;
       } catch (error) {
         console.error("Betonschale konnte nicht geladen werden:", error);
-        setStatus(
-          `Betonschale konnte nicht geladen werden: ${CONCRETE.file}`,
-          true
-        );
+        setStatus(`Betonschale konnte nicht geladen werden: ${CONCRETE.file}`, true);
       }
 
       for (let index = 0; index < GROUPS.length; index += 1) {
         const group = GROUPS[index];
-
-        setStatus(
-          `Bewehrungsgruppen werden geladen: ${index + 1} von ${GROUPS.length} …`
-        );
-
+        setStatus(`Bewehrungsgruppen werden geladen: ${index + 1} von ${GROUPS.length} …`);
         try {
           await loadRebarGroup(group);
           loadedCount += 1;
@@ -988,34 +683,20 @@
       }
 
       if (failedGroups.length === 0) {
-        setStatus(
-          `Alle Modelle wurden geladen: Betonschale und ${GROUPS.length} Bewehrungsgruppen.`
-        );
+        setStatus(`Alle Modelle wurden geladen: Betonschale und ${GROUPS.length} Bewehrungsgruppen.`);
       } else {
-        setStatus(
-          `${loadedCount} Modelle geladen. ${failedGroups.length} Datei(en) konnten nicht geladen werden. Die betroffenen Gruppen sind links markiert.`,
-          true
-        );
+        setStatus(`${loadedCount} Modelle geladen. ${failedGroups.length} Datei(en) konnten nicht geladen werden. Die betroffenen Gruppen sind links markiert.`, true);
       }
     }
 
     toggleConcrete.addEventListener("change", updateConcreteVisibility);
-    concreteTransparency.addEventListener(
-      "input",
-      updateConcreteTransparency
-    );
-
+    concreteTransparency.addEventListener("input", updateConcreteTransparency);
     btnClearSelection.addEventListener("click", clearSelection);
     btnResetView.addEventListener("click", frameScene);
 
     canvas.addEventListener("pointerdown", (event) => {
       if (event.button !== 0) return;
-
-      pointerDownPosition = {
-        x: event.clientX,
-        y: event.clientY
-      };
-
+      pointerDownPosition = { x: event.clientX, y: event.clientY };
       pointerWasDragged = false;
     });
 
@@ -1023,30 +704,19 @@
       const deltaX = event.clientX - pointerDownPosition.x;
       const deltaY = event.clientY - pointerDownPosition.y;
       const movement = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-      if (movement > 5) {
-        pointerWasDragged = true;
-      }
+      if (movement > 5) pointerWasDragged = true;
     });
 
     canvas.addEventListener("pointerup", (event) => {
       if (event.button !== 0 || pointerWasDragged) return;
 
       const rectangle = canvas.getBoundingClientRect();
-
-      pointer.x =
-        ((event.clientX - rectangle.left) / rectangle.width) * 2 - 1;
-
-      pointer.y =
-        -((event.clientY - rectangle.top) / rectangle.height) * 2 + 1;
+      pointer.x = ((event.clientX - rectangle.left) / rectangle.width) * 2 - 1;
+      pointer.y = -((event.clientY - rectangle.top) / rectangle.height) * 2 + 1;
 
       raycaster.setFromCamera(pointer, camera);
-
       const visibleMeshes = clickableMeshes.filter(isEffectivelyVisible);
-      const intersections = raycaster.intersectObjects(
-        visibleMeshes,
-        false
-      );
+      const intersections = raycaster.intersectObjects(visibleMeshes, false);
 
       if (intersections.length === 0) {
         clearSelection();
@@ -1054,12 +724,8 @@
       }
 
       const groupId = intersections[0].object.userData.groupId;
-
-      if (groupId) {
-        selectGroup(groupId);
-      } else {
-        clearSelection();
-      }
+      if (groupId) selectGroup(groupId);
+      else clearSelection();
     });
 
     function animate() {
@@ -1069,7 +735,6 @@
     }
 
     window.addEventListener("resize", resizeRenderer);
-
     initialiseViewer();
     animate();
   </script>
