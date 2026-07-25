@@ -1,374 +1,953 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HP-18-N – GLB-Testviewer</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HP-18-N – Betonschale und Bewehrung</title>
+
   <style>
     :root {
-      color-scheme: light;
-      --bg: #ebe8e1;
-      --panel: rgba(247, 245, 240, 0.94);
-      --line: #c9c3b9;
-      --text: #242321;
-      --muted: #6e6a63;
-      --accent: #d66a2f;
-      --button: #302f2c;
+      --bg: #f2f1ed;
+      --card: #ffffff;
+      --line: #d9d7d1;
+      --text: #2b2b2b;
+      --muted: #6c6c6c;
+      --accent: #d9782f;
+      --accent-dark: #b65f20;
+      --viewer-bg: #ddd9d0;
     }
 
-    * { box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      font-family: "Open Sans", Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
     }
 
-    #app { position: relative; width: 100%; height: 100%; }
-    #viewer { position: absolute; inset: 0; }
-    canvas { display: block; width: 100%; height: 100%; }
+    main {
+      width: min(1400px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+
+    header {
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 30px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel,
+    .viewer-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
 
     .panel {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      width: min(360px, calc(100vw - 40px));
-      max-height: calc(100vh - 40px);
-      overflow: auto;
       padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--panel);
-      box-shadow: 0 12px 36px rgba(47, 43, 36, 0.12);
-      backdrop-filter: blur(10px);
     }
 
-    h1 { margin: 0; font-size: 1.15rem; letter-spacing: 0.01em; }
-    .subtitle { margin: 5px 0 16px; color: var(--muted); font-size: 0.87rem; }
-    .section { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 14px; }
-    .section-title { margin: 0 0 10px; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .panel h2,
+    .panel h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 600;
+    }
 
-    .row {
-      display: grid;
-      grid-template-columns: 1fr auto;
+    .panel h3 {
+      margin-top: 18px;
+      font-size: 15px;
+      color: #444;
+    }
+
+    .viewer-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 760px;
+    }
+
+    .viewer-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #faf9f7;
+    }
+
+    .viewer-wrap {
+      position: relative;
+      flex: 1;
+      min-height: 600px;
+      background: var(--viewer-bg);
+    }
+
+    #viewer {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .section {
+      margin-bottom: 18px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid #eceae5;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .control-row {
+      display: flex;
       align-items: center;
       gap: 10px;
-      margin: 9px 0;
+      margin-bottom: 10px;
     }
 
-    label { font-size: 0.9rem; }
-    input[type="range"] { width: 145px; }
-    input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--button); }
+    .control-row label {
+      font-size: 14px;
+    }
+
+    .control-row input[type="range"] {
+      width: 100%;
+    }
+
+    .group-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .group-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid #e7e4dd;
+      border-radius: 8px;
+      background: #fcfbf9;
+    }
+
+    .group-item.active {
+      border-color: var(--accent);
+      background: #fff6ef;
+    }
+
+    .group-item input[type="checkbox"] {
+      margin-top: 2px;
+    }
+
+    .group-item-text {
+      flex: 1;
+    }
+
+    .group-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .group-meta {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
     button {
       appearance: none;
-      border: 1px solid #302f2c;
-      border-radius: 9px;
-      background: var(--button);
-      color: white;
+      border: 1px solid #cfcac0;
+      background: white;
+      color: var(--text);
+      border-radius: 8px;
       padding: 9px 12px;
       font: inherit;
-      font-size: 0.86rem;
+      font-size: 14px;
       cursor: pointer;
     }
-    button.secondary { background: transparent; color: var(--text); border-color: var(--line); }
-    button.active { background: var(--accent); border-color: var(--accent); }
-    .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-    dl { display: grid; grid-template-columns: auto 1fr; gap: 5px 10px; margin: 0; font-size: 0.85rem; }
-    dt { color: var(--muted); }
-    dd { margin: 0; }
+    button:hover {
+      background: #f8f6f2;
+    }
+
+    button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+    }
+
+    button.primary:hover {
+      background: var(--accent-dark);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 8px 12px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .info-label {
+      font-weight: 600;
+    }
+
+    .hint {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
 
     .status {
-      position: absolute;
-      right: 18px;
-      bottom: 16px;
-      padding: 8px 11px;
-      border-radius: 9px;
-      background: rgba(247, 245, 240, 0.9);
-      border: 1px solid var(--line);
+      font-size: 13px;
       color: var(--muted);
-      font-size: 0.78rem;
-      pointer-events: none;
+      padding: 12px 16px;
+      border-top: 1px solid var(--line);
+      background: #faf9f7;
     }
 
-    .hint { margin: 12px 0 0; color: var(--muted); font-size: 0.78rem; line-height: 1.45; }
-    .swatch { display:inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; background: var(--accent); }
+    @media (max-width: 1100px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
 
-    @media (max-width: 700px) {
-      .panel { top: 10px; left: 10px; width: calc(100vw - 20px); max-height: 48vh; }
-      .status { right: 10px; bottom: 10px; }
-    }
-  </style>
-
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+      .viewer-card {
+        min-height: 620px;
       }
     }
-  </script>
+
+    @media (max-width: 700px) {
+      main {
+        width: min(100% - 20px, 1400px);
+        padding-top: 18px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      .viewer-wrap {
+        min-height: 440px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div id="app">
-    <div id="viewer" aria-label="Interaktiver 3D-Viewer"></div>
+  <main>
+    <header>
+      <h1>HP-18-N – Betonschale und Bewehrung</h1>
+      <p class="subtitle">
+        Interaktive konstruktive Fallstudie zur HP-Schale 18&nbsp;m N.
+        Bewehrungsgruppen können ein- und ausgeblendet sowie durch Anklicken ausgewählt werden.
+      </p>
+    </header>
 
-    <aside class="panel">
-      <h1>HP-18-N</h1>
-      <p class="subtitle">Testviewer: Betonschale und eine Bewehrungsgruppe</p>
+    <section class="layout">
+      <aside class="panel">
+        <div class="section">
+          <h2>Darstellung</h2>
 
-      <div class="section">
-        <p class="section-title">Sichtbarkeit</p>
-        <div class="row">
-          <label for="showConcrete">Betonschale</label>
-          <input id="showConcrete" type="checkbox" checked />
+          <div class="control-row">
+            <input type="checkbox" id="toggleConcrete" checked />
+            <label for="toggleConcrete">Betonschale anzeigen</label>
+          </div>
+
+          <div class="control-row">
+            <label for="concreteOpacity" style="min-width: 86px;">Betontransparenz</label>
+            <input type="range" id="concreteOpacity" min="0" max="100" value="70" />
+          </div>
+
+          <div class="btn-row" style="margin-top: 12px;">
+            <button id="btnClearSelection">Auswahl aufheben</button>
+            <button id="btnResetView">Ansicht zurücksetzen</button>
+          </div>
         </div>
-        <div class="row">
-          <label for="concreteOpacity">Beton-Deckkraft</label>
-          <input id="concreteOpacity" type="range" min="0.08" max="1" step="0.01" value="0.30" />
-        </div>
-        <div class="row">
-          <label for="showRebar">Bewehrung</label>
-          <input id="showRebar" type="checkbox" checked />
-        </div>
-      </div>
 
-      <div class="section">
-        <p class="section-title">Auswahl</p>
-        <div class="button-grid">
-          <button id="highlightButton" type="button">Gruppe hervorheben</button>
-          <button id="resetView" class="secondary" type="button">Ansicht zurücksetzen</button>
+        <div class="section">
+          <h2>Bewehrungsgruppen</h2>
+
+          <h3>Druckgurt</h3>
+          <div id="groupList-druckgurt" class="group-list"></div>
+
+          <h3>Steg</h3>
+          <div id="groupList-steg" class="group-list"></div>
+
+          <h3>Auflagerbereich</h3>
+          <div id="groupList-auflager" class="group-list"></div>
         </div>
-        <p class="hint"><span class="swatch"></span>Die Randleiter können auch direkt im Modell angeklickt werden.</p>
-      </div>
 
-      <div class="section">
-        <p class="section-title">Ausgewählte Gruppe</p>
-        <dl>
-          <dt>Bereich</dt><dd>Druckgurt</dd>
-          <dt>Gruppe</dt><dd>Randleiter</dd>
-          <dt>Anzahl</dt><dd>3 Stk.</dd>
-          <dt>Durchmesser</dt><dd>8 mm</dd>
-          <dt>Stahlgüte</dt><dd>STA III</dd>
-        </dl>
-      </div>
-    </aside>
+        <div class="section">
+          <h2>Ausgewählte Gruppe</h2>
+          <div id="selectionInfo" class="info-grid">
+            <div class="info-label">Status</div>
+            <div>Keine Gruppe ausgewählt.</div>
+          </div>
 
-    <div id="status" class="status">Modelle werden geladen …</div>
-  </div>
+          <p class="hint">
+            Bedienung: Ein kurzer Linksklick auf einen Bewehrungsstab wählt die zugehörige
+            Gruppe aus. Ein Klick ins Leere hebt die Auswahl wieder auf.
+            Beim Drehen, Zoomen oder Verschieben bleibt die Auswahl erhalten.
+          </p>
+        </div>
+      </aside>
+
+      <section class="viewer-card">
+        <div class="viewer-toolbar">
+          <strong>3D-Ansicht</strong>
+        </div>
+
+        <div class="viewer-wrap">
+          <canvas id="viewer"></canvas>
+        </div>
+
+        <div class="status" id="statusText">
+          Modelle werden geladen …
+        </div>
+      </section>
+    </section>
+  </main>
 
   <script type="module">
-    import * as THREE from 'three';
-    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+    import { OrbitControls } from "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+    import { GLTFLoader } from "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
 
-    const viewer = document.getElementById('viewer');
-    const status = document.getElementById('status');
-    const showConcrete = document.getElementById('showConcrete');
-    const concreteOpacity = document.getElementById('concreteOpacity');
-    const showRebar = document.getElementById('showRebar');
-    const highlightButton = document.getElementById('highlightButton');
-    const resetViewButton = document.getElementById('resetView');
+    const MODEL_PATH = "./models/";
+
+    // ------------------------------------------------------------
+    // DATENBLOCK
+    // Falls ein Dateiname bei dir minimal anders heißt,
+    // musst du nur hier den jeweiligen "file"-Wert anpassen.
+    // ------------------------------------------------------------
+    const GROUPS = [
+      // Druckgurt
+      {
+        id: "dg_randleiter_querstaebe_d6p5",
+        category: "druckgurt",
+        label: "Randleiter – Querstäbe d6.5",
+        shortLabel: "Querstäbe d6.5",
+        file: "hp18n_bewehrung_druckgurt_randleiter_querstaebe_d6p5.glb",
+        bereich: "Druckgurt",
+        gruppe: "Randleiter",
+        details: "Querstäbe, d6.5"
+      },
+      {
+        id: "dg_randleiter_3stk_d8_sta3",
+        category: "druckgurt",
+        label: "Randleiter – 3 Stk. d8 STA III",
+        shortLabel: "3 Stk. d8 STA III",
+        file: "hp18n_bewehrung_druckgurt_randleiter_3stk_d8_sta3.glb",
+        bereich: "Druckgurt",
+        gruppe: "Randleiter",
+        details: "3 Stäbe, d8, STA III"
+      },
+      {
+        id: "dg_quer_unten_kassettenbereich_2stk_pro_rippe_d6p5_sta1",
+        category: "druckgurt",
+        label: "Querbewehrung unten – Kassettenbereich 2 Stk./Rippe d6.5 STA I",
+        shortLabel: "Quer unten – Kassettenbereich 2 Stk./Rippe",
+        file: "hp18n_bewehrung_druckgurt_quer_unten_kassettenbereich_2stk_pro_rippe_d6p5_sta1.glb",
+        bereich: "Druckgurt",
+        gruppe: "Querbewehrung unten",
+        details: "Kassettenbereich, 2 Stk./Rippe, d6.5, STA I"
+      },
+      {
+        id: "dg_quer_unten_endfeld_d6p5_e125_sta1",
+        category: "druckgurt",
+        label: "Querbewehrung unten – Endfeld d6.5 e125 STA I",
+        shortLabel: "Quer unten – Endfeld e125",
+        file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e125_sta1.glb",
+        bereich: "Druckgurt",
+        gruppe: "Querbewehrung unten",
+        details: "Endfeld, d6.5, e125, STA I"
+      },
+      {
+        id: "dg_quer_unten_endfeld_d6p5_e75_sta1",
+        category: "druckgurt",
+        label: "Querbewehrung unten – Endfeld d6.5 e75 STA I",
+        shortLabel: "Quer unten – Endfeld e75",
+        file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e75_sta1.glb",
+        bereich: "Druckgurt",
+        gruppe: "Querbewehrung unten",
+        details: "Endfeld, d6.5, e75, STA I"
+      },
+      {
+        id: "dg_quer_oben_kassettenbereich_1bzw2stk_pro_rippe_d6p5_sta1",
+        category: "druckgurt",
+        label: "Querbewehrung oben – Kassettenbereich 1 bzw. 2 Stk./Rippe d6.5 STA I",
+        shortLabel: "Quer oben – Kassettenbereich 1 bzw. 2 Stk./Rippe",
+        file: "hp18n_bewehrung_druckgurt_quer_oben_kassettenbereich_1bzw2stk_pro_rippe_d6p5_sta1.glb",
+        bereich: "Druckgurt",
+        gruppe: "Querbewehrung oben",
+        details: "Kassettenbereich, 1 bzw. 2 Stk./Rippe, d6.5, STA I"
+      },
+      {
+        id: "dg_quer_oben_endfeld_d6p5_e125_sta1",
+        category: "druckgurt",
+        label: "Querbewehrung oben – Endfeld d6.5 e125 STA I",
+        shortLabel: "Quer oben – Endfeld e125",
+        file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e125_sta1.glb",
+        bereich: "Druckgurt",
+        gruppe: "Querbewehrung oben",
+        details: "Endfeld, d6.5, e125, STA I"
+      },
+      {
+        id: "dg_quer_oben_endfeld_d6p5_e75_sta1",
+        category: "druckgurt",
+        label: "Querbewehrung oben – Endfeld d6.5 e75 STA I",
+        shortLabel: "Quer oben – Endfeld e75",
+        file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e75_sta1.glb",
+        bereich: "Druckgurt",
+        gruppe: "Querbewehrung oben",
+        details: "Endfeld, d6.5, e75, STA I"
+      },
+      {
+        id: "dg_laengs_mittig_gesamte_laenge_d8",
+        category: "druckgurt",
+        label: "Längsbewehrung mittig – gesamte Länge d8",
+        shortLabel: "Längs mittig – gesamte Länge d8",
+        file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d8.glb",
+        bereich: "Druckgurt",
+        gruppe: "Längsbewehrung mittig",
+        details: "gesamte Länge, d8"
+      },
+      {
+        id: "dg_laengs_mittig_gesamte_laenge_d6p5",
+        category: "druckgurt",
+        label: "Längsbewehrung mittig – gesamte Länge d6.5",
+        shortLabel: "Längs mittig – gesamte Länge d6.5",
+        file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d6p5.glb",
+        bereich: "Druckgurt",
+        gruppe: "Längsbewehrung mittig",
+        details: "gesamte Länge, d6.5"
+      },
+      {
+        id: "dg_laengs_mittig_endfeld_5bzw4stk_d6p5",
+        category: "druckgurt",
+        label: "Längsbewehrung mittig – Endfeld 5 bzw. 4 Stk. d6.5",
+        shortLabel: "Längs mittig – Endfeld 5 bzw. 4 Stk.",
+        file: "hp18n_bewehrung_druckgurt_laengs_mittig_endfeld_5bzw4stk_d6p5.glb",
+        bereich: "Druckgurt",
+        gruppe: "Längsbewehrung mittig",
+        details: "Endfeld, 5 bzw. 4 Stäbe, d6.5"
+      },
+      {
+        id: "dg_herausstehende_rundstaehle_d6p5_e600",
+        category: "druckgurt",
+        label: "Herausstehende Rundstähle d6.5 e600",
+        shortLabel: "Herausstehende Rundstähle e600",
+        file: "hp18n_bewehrung_druckgurt_herausstehende_rundstaehle_d6p5_e600.glb",
+        bereich: "Druckgurt",
+        gruppe: "Herausstehende Rundstähle",
+        details: "d6.5, e600"
+      },
+
+      // Steg
+      {
+        id: "steg_laengsstaebe_d8",
+        category: "steg",
+        label: "Steg – Längsstäbe d8",
+        shortLabel: "Längsstäbe d8",
+        file: "hp18n_bewehrung_steg_laengsstaebe_d8.glb",
+        bereich: "Steg",
+        gruppe: "Längsstäbe",
+        details: "d8"
+      },
+      {
+        id: "steg_hauptzugbewehrung_d28_sta3",
+        category: "steg",
+        label: "Steg – Hauptzugbewehrung d28 STA III",
+        shortLabel: "Hauptzugbewehrung d28 STA III",
+        file: "hp18n_bewehrung_steg_hauptzugbewehrung_d28_sta3.glb",
+        bereich: "Steg",
+        gruppe: "Hauptzugbewehrung",
+        details: "d28, STA III"
+      },
+      {
+        id: "steg_buegel_d6p5_e300_250_200_160",
+        category: "steg",
+        label: "Steg – Bügel d6.5 e300/250/200/160",
+        shortLabel: "Bügel d6.5 e300/250/200/160",
+        file: "hp18n_bewehrung_steg_buegel_d6p5_e300_250_200_160.glb",
+        bereich: "Steg",
+        gruppe: "Bügel",
+        details: "d6.5, e300–250–200–160"
+      },
+
+      // Auflager
+      {
+        id: "auflager_unten_4stk_d12",
+        category: "auflager",
+        label: "Auflagerbereich – untere Lage 4 Stk. d12",
+        shortLabel: "Untere Lage 4 Stk. d12",
+        file: "hp18n_bewehrung_auflager_unten_4stk_d12.glb",
+        bereich: "Auflagerbereich",
+        gruppe: "Untere Lage",
+        details: "4 Stäbe, d12"
+      },
+      {
+        id: "auflager_oben_4stk_d12",
+        category: "auflager",
+        label: "Auflagerbereich – obere Lage 4 Stk. d12",
+        shortLabel: "Obere Lage 4 Stk. d12",
+        file: "hp18n_bewehrung_auflager_oben_4stk_d12.glb",
+        bereich: "Auflagerbereich",
+        gruppe: "Obere Lage",
+        details: "4 Stäbe, d12"
+      },
+      {
+        id: "auflager_montageoese_d20",
+        category: "auflager",
+        label: "Auflagerbereich – Montageöse d20",
+        shortLabel: "Montageöse d20",
+        file: "hp18n_bewehrung_auflager_montageoese_d20.glb",
+        bereich: "Auflagerbereich",
+        gruppe: "Montageöse",
+        details: "d20"
+      },
+      {
+        id: "auflager_buegel_d8",
+        category: "auflager",
+        label: "Auflagerbereich – Bügel d8",
+        shortLabel: "Bügel d8",
+        file: "hp18n_bewehrung_auflager_buegel_d8.glb",
+        bereich: "Auflagerbereich",
+        gruppe: "Bügel",
+        details: "d8"
+      }
+    ];
+
+    const CONCRETE = {
+      file: "hp18n_betonschale.glb",
+      label: "Betonschale"
+    };
+
+    const REBAR_COLOR = 0x4a4a4a;
+    const REBAR_HIGHLIGHT = 0xd9782f;
+    const CONCRETE_COLOR = 0xcdcac3;
+
+    const canvas = document.getElementById("viewer");
+    const statusText = document.getElementById("statusText");
+    const selectionInfo = document.getElementById("selectionInfo");
+    const toggleConcrete = document.getElementById("toggleConcrete");
+    const concreteOpacity = document.getElementById("concreteOpacity");
+    const btnClearSelection = document.getElementById("btnClearSelection");
+    const btnResetView = document.getElementById("btnResetView");
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xebe8e1);
+    scene.background = new THREE.Color(0xddd9d0);
 
-    const camera = new THREE.PerspectiveCamera(38, 1, 0.01, 500);
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true
+    });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
-    viewer.appendChild(renderer.domElement);
+
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 5000);
+    camera.position.set(20, 14, 24);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.dampingFactor = 0.06;
-    controls.screenSpacePanning = true;
+    controls.target.set(0, 0, 0);
 
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x7a746a, 2.0));
-    const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
-    keyLight.position.set(8, 12, 10);
-    scene.add(keyLight);
-    const fillLight = new THREE.DirectionalLight(0xc8d7ea, 1.4);
-    fillLight.position.set(-10, 4, -8);
-    scene.add(fillLight);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.15);
+    scene.add(ambientLight);
+
+    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.15);
+    dirLight1.position.set(25, 40, 20);
+    scene.add(dirLight1);
+
+    const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.45);
+    dirLight2.position.set(-20, 15, -15);
+    scene.add(dirLight2);
+
+    const root = new THREE.Group();
+    scene.add(root);
 
     const loader = new GLTFLoader();
-    let concreteRoot = null;
-    let rebarRoot = null;
-    let isHighlighted = false;
-    let initialCamera = null;
-
-    const rebarMeshes = [];
-    const concreteMeshes = [];
-
-    function cloneMaterials(root, targetArray) {
-      root.traverse((object) => {
-        if (!object.isMesh) return;
-        object.material = Array.isArray(object.material)
-          ? object.material.map((material) => material.clone())
-          : object.material.clone();
-        targetArray.push(object);
-      });
-    }
-
-    function setConcreteOpacity(value) {
-      concreteMeshes.forEach((mesh) => {
-        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-        materials.forEach((material) => {
-          material.opacity = value;
-          material.transparent = value < 0.999;
-          material.depthWrite = value >= 0.65;
-          material.side = THREE.DoubleSide;
-          material.needsUpdate = true;
-        });
-      });
-    }
-
-    function saveRebarBaseColors() {
-      rebarMeshes.forEach((mesh) => {
-        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-        materials.forEach((material) => {
-          material.userData.baseColor = material.color.clone();
-          material.userData.baseEmissive = material.emissive?.clone?.() ?? new THREE.Color(0x000000);
-          material.side = THREE.DoubleSide;
-        });
-      });
-    }
-
-    function setHighlight(active) {
-      isHighlighted = active;
-      highlightButton.classList.toggle('active', active);
-      highlightButton.textContent = active ? 'Hervorhebung entfernen' : 'Gruppe hervorheben';
-
-      rebarMeshes.forEach((mesh) => {
-        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-        materials.forEach((material) => {
-          if (active) {
-            material.color.set(0xd66a2f);
-            if (material.emissive) {
-              material.emissive.set(0x3a1004);
-              material.emissiveIntensity = 0.7;
-            }
-          } else {
-            material.color.copy(material.userData.baseColor);
-            if (material.emissive) {
-              material.emissive.copy(material.userData.baseEmissive);
-              material.emissiveIntensity = 1;
-            }
-          }
-          material.needsUpdate = true;
-        });
-      });
-    }
-
-    function fitCamera() {
-      if (!concreteRoot || !rebarRoot) return;
-
-      const box = new THREE.Box3();
-      box.expandByObject(concreteRoot);
-      box.expandByObject(rebarRoot);
-
-      const center = box.getCenter(new THREE.Vector3());
-      const size = box.getSize(new THREE.Vector3());
-      const maxSize = Math.max(size.x, size.y, size.z);
-      const distance = maxSize * 0.82;
-
-      camera.near = Math.max(maxSize / 5000, 0.001);
-      camera.far = maxSize * 50;
-      camera.updateProjectionMatrix();
-
-      camera.position.set(
-        center.x + distance * 0.78,
-        center.y + distance * 0.42,
-        center.z + distance * 0.78
-      );
-      controls.target.copy(center);
-      controls.update();
-
-      initialCamera = {
-        position: camera.position.clone(),
-        target: controls.target.clone()
-      };
-    }
-
-    function loadModel(url) {
-      return new Promise((resolve, reject) => {
-        loader.load(url, (gltf) => resolve(gltf.scene), undefined, reject);
-      });
-    }
-
-    try {
-      [concreteRoot, rebarRoot] = await Promise.all([
-        loadModel('./models/hp18n_betonschale.glb'),
-        loadModel('./models/hp18n_bewehrung_druckgurt_randleiter_3stk_d8_sta3.glb')
-      ]);
-
-      cloneMaterials(concreteRoot, concreteMeshes);
-      cloneMaterials(rebarRoot, rebarMeshes);
-      saveRebarBaseColors();
-      setConcreteOpacity(Number(concreteOpacity.value));
-
-      scene.add(concreteRoot, rebarRoot);
-      fitCamera();
-      status.textContent = 'Beide GLB-Dateien wurden korrekt geladen.';
-    } catch (error) {
-      console.error(error);
-      status.textContent = 'Fehler beim Laden. Seite über einen Webserver öffnen.';
-      status.style.color = '#8f2c22';
-    }
-
-    showConcrete.addEventListener('change', () => {
-      if (concreteRoot) concreteRoot.visible = showConcrete.checked;
-    });
-
-    concreteOpacity.addEventListener('input', () => {
-      setConcreteOpacity(Number(concreteOpacity.value));
-    });
-
-    showRebar.addEventListener('change', () => {
-      if (rebarRoot) rebarRoot.visible = showRebar.checked;
-    });
-
-    highlightButton.addEventListener('click', () => setHighlight(!isHighlighted));
-
-    resetViewButton.addEventListener('click', () => {
-      if (!initialCamera) return;
-      camera.position.copy(initialCamera.position);
-      controls.target.copy(initialCamera.target);
-      controls.update();
-    });
-
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
 
-    renderer.domElement.addEventListener('pointerup', (event) => {
-      if (!rebarRoot || !rebarRoot.visible) return;
-      const rect = renderer.domElement.getBoundingClientRect();
-      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-      raycaster.setFromCamera(pointer, camera);
-      const intersections = raycaster.intersectObjects(rebarMeshes, false);
-      if (intersections.length > 0) setHighlight(!isHighlighted);
+    const concreteGroup = new THREE.Group();
+    root.add(concreteGroup);
+
+    const concreteMaterial = new THREE.MeshStandardMaterial({
+      color: CONCRETE_COLOR,
+      roughness: 0.9,
+      metalness: 0.0,
+      transparent: true,
+      opacity: 0.70,
+      side: THREE.DoubleSide
     });
 
-    function resize() {
-      const width = viewer.clientWidth;
-      const height = viewer.clientHeight;
+    const rebarBaseMaterial = new THREE.MeshStandardMaterial({
+      color: REBAR_COLOR,
+      roughness: 0.7,
+      metalness: 0.0,
+      side: THREE.DoubleSide
+    });
+
+    const rebarHighlightMaterial = new THREE.MeshStandardMaterial({
+      color: REBAR_HIGHLIGHT,
+      roughness: 0.65,
+      metalness: 0.0,
+      side: THREE.DoubleSide
+    });
+
+    const loadedGroups = new Map();
+    const clickableMeshes = [];
+    let selectedGroupId = null;
+    let boundsComputed = false;
+
+    let pointerDownPos = { x: 0, y: 0 };
+    let pointerMoved = false;
+
+    function setStatus(text) {
+      statusText.textContent = text;
+    }
+
+    function resizeRenderer() {
+      const wrap = canvas.parentElement;
+      const width = wrap.clientWidth;
+      const height = wrap.clientHeight;
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
     }
 
-    window.addEventListener('resize', resize);
-    resize();
+    window.addEventListener("resize", resizeRenderer);
 
-    renderer.setAnimationLoop(() => {
+    function applyConcreteMaterial(object) {
+      object.traverse((child) => {
+        if (child.isMesh) {
+          child.material = concreteMaterial;
+          child.castShadow = false;
+          child.receiveShadow = false;
+        }
+      });
+    }
+
+    function applyRebarMaterial(object, groupId) {
+      object.traverse((child) => {
+        if (child.isMesh) {
+          child.material = rebarBaseMaterial.clone();
+          child.userData.groupId = groupId;
+          clickableMeshes.push(child);
+        }
+      });
+    }
+
+    function setGroupHighlighted(groupId, highlighted) {
+      const entry = loadedGroups.get(groupId);
+      if (!entry) return;
+
+      entry.object.traverse((child) => {
+        if (child.isMesh) {
+          child.material = highlighted
+            ? rebarHighlightMaterial.clone()
+            : rebarBaseMaterial.clone();
+        }
+      });
+    }
+
+    function clearSelection() {
+      if (selectedGroupId && loadedGroups.has(selectedGroupId)) {
+        setGroupHighlighted(selectedGroupId, false);
+      }
+      selectedGroupId = null;
+      updateSelectionUI();
+    }
+
+    function selectGroup(groupId) {
+      if (!loadedGroups.has(groupId)) return;
+
+      if (selectedGroupId && selectedGroupId !== groupId) {
+        setGroupHighlighted(selectedGroupId, false);
+      }
+
+      selectedGroupId = groupId;
+      setGroupHighlighted(groupId, true);
+      updateSelectionUI();
+    }
+
+    function updateSelectionUI() {
+      document.querySelectorAll(".group-item").forEach((item) => {
+        item.classList.remove("active");
+      });
+
+      if (!selectedGroupId) {
+        selectionInfo.innerHTML = `
+          <div class="info-label">Status</div>
+          <div>Keine Gruppe ausgewählt.</div>
+        `;
+        return;
+      }
+
+      const meta = GROUPS.find((g) => g.id === selectedGroupId);
+      const row = document.querySelector(`.group-item[data-group-id="${selectedGroupId}"]`);
+      if (row) row.classList.add("active");
+
+      selectionInfo.innerHTML = `
+        <div class="info-label">Status</div>
+        <div>Gruppe ausgewählt</div>
+
+        <div class="info-label">Bereich</div>
+        <div>${meta.bereich}</div>
+
+        <div class="info-label">Gruppe</div>
+        <div>${meta.gruppe}</div>
+
+        <div class="info-label">Bezeichnung</div>
+        <div>${meta.label}</div>
+
+        <div class="info-label">Details</div>
+        <div>${meta.details}</div>
+
+        <div class="info-label">Datei</div>
+        <div>${meta.file}</div>
+      `;
+    }
+
+    function updateConcreteVisibility() {
+      concreteGroup.visible = toggleConcrete.checked;
+    }
+
+    function updateConcreteOpacity() {
+      const value = Number(concreteOpacity.value) / 100;
+      concreteMaterial.opacity = value;
+      concreteMaterial.needsUpdate = true;
+    }
+
+    function createGroupList() {
+      const containers = {
+        druckgurt: document.getElementById("groupList-druckgurt"),
+        steg: document.getElementById("groupList-steg"),
+        auflager: document.getElementById("groupList-auflager")
+      };
+
+      GROUPS.forEach((group) => {
+        const wrapper = document.createElement("label");
+        wrapper.className = "group-item";
+        wrapper.dataset.groupId = group.id;
+
+        wrapper.innerHTML = `
+          <input type="checkbox" checked data-toggle-id="${group.id}">
+          <span class="group-item-text">
+            <span class="group-title">${group.shortLabel}</span>
+            <span class="group-meta">${group.details}</span>
+          </span>
+        `;
+
+        containers[group.category].appendChild(wrapper);
+
+        const checkbox = wrapper.querySelector("input");
+        checkbox.addEventListener("change", () => {
+          const entry = loadedGroups.get(group.id);
+          if (!entry) return;
+
+          entry.object.visible = checkbox.checked;
+
+          if (!checkbox.checked && selectedGroupId === group.id) {
+            clearSelection();
+          }
+        });
+
+        wrapper.addEventListener("click", (event) => {
+          if (event.target.tagName.toLowerCase() === "input") return;
+          if (loadedGroups.has(group.id)) {
+            selectGroup(group.id);
+          }
+        });
+      });
+    }
+
+    function frameScene() {
+      const box = new THREE.Box3().setFromObject(root);
+      if (box.isEmpty()) return;
+
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+
+      controls.target.copy(center);
+      camera.position.set(
+        center.x + maxDim * 1.25,
+        center.y + maxDim * 0.8,
+        center.z + maxDim * 1.3
+      );
+      camera.near = Math.max(0.01, maxDim / 500);
+      camera.far = Math.max(1000, maxDim * 20);
+      camera.updateProjectionMatrix();
+      controls.update();
+    }
+
+    async function loadConcrete() {
+      return new Promise((resolve, reject) => {
+        loader.load(
+          MODEL_PATH + CONCRETE.file,
+          (gltf) => {
+            const model = gltf.scene;
+            applyConcreteMaterial(model);
+            concreteGroup.add(model);
+            resolve();
+          },
+          undefined,
+          reject
+        );
+      });
+    }
+
+    async function loadRebarGroup(group) {
+      return new Promise((resolve, reject) => {
+        loader.load(
+          MODEL_PATH + group.file,
+          (gltf) => {
+            const groupObject = new THREE.Group();
+            groupObject.name = group.id;
+            groupObject.userData.groupId = group.id;
+
+            const model = gltf.scene;
+            applyRebarMaterial(model, group.id);
+            groupObject.add(model);
+
+            root.add(groupObject);
+
+            loadedGroups.set(group.id, {
+              meta: group,
+              object: groupObject
+            });
+
+            resolve();
+          },
+          undefined,
+          reject
+        );
+      });
+    }
+
+    async function init() {
+      createGroupList();
+      resizeRenderer();
+      updateConcreteVisibility();
+      updateConcreteOpacity();
+
+      try {
+        setStatus("Betonschale wird geladen …");
+        await loadConcrete();
+
+        for (let i = 0; i < GROUPS.length; i++) {
+          const group = GROUPS[i];
+          setStatus(`Bewehrungsgruppe wird geladen (${i + 1}/${GROUPS.length}) …`);
+          await loadRebarGroup(group);
+        }
+
+        if (!boundsComputed) {
+          frameScene();
+          boundsComputed = true;
+        }
+
+        setStatus("Modelle geladen. Bewehrungsgruppe durch Anklicken auswählbar.");
+      } catch (error) {
+        console.error(error);
+        setStatus("Fehler beim Laden der Modelle. Bitte Dateinamen und Pfade prüfen.");
+      }
+    }
+
+    toggleConcrete.addEventListener("change", updateConcreteVisibility);
+    concreteOpacity.addEventListener("input", updateConcreteOpacity);
+
+    btnClearSelection.addEventListener("click", () => {
+      clearSelection();
+    });
+
+    btnResetView.addEventListener("click", () => {
+      frameScene();
+    });
+
+    canvas.addEventListener("pointerdown", (event) => {
+      pointerDownPos = { x: event.clientX, y: event.clientY };
+      pointerMoved = false;
+    });
+
+    canvas.addEventListener("pointermove", (event) => {
+      const dx = event.clientX - pointerDownPos.x;
+      const dy = event.clientY - pointerDownPos.y;
+      if (Math.sqrt(dx * dx + dy * dy) > 4) {
+        pointerMoved = true;
+      }
+    });
+
+    canvas.addEventListener("pointerup", (event) => {
+      if (pointerMoved) return;
+
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(pointer, camera);
+
+      const visibleMeshes = clickableMeshes.filter((mesh) => mesh.visible && mesh.parent.visible);
+      const hits = raycaster.intersectObjects(visibleMeshes, false);
+
+      if (hits.length > 0) {
+        const hit = hits[0].object;
+        const groupId = hit.userData.groupId;
+        if (groupId) {
+          selectGroup(groupId);
+        }
+      } else {
+        clearSelection();
+      }
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
       controls.update();
       renderer.render(scene, camera);
-    });
+    }
+
+    init();
+    animate();
   </script>
 </body>
 </html>
