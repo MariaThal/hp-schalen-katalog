@@ -318,6 +318,13 @@
         </div>
 
         <div class="section">
+          <h2>Bauteil</h2>
+          <div class="group-list">
+            <div id="concreteListItem" class="group-item">Betonschale</div>
+          </div>
+        </div>
+
+        <div class="section">
           <h2>Bewehrungsgruppen</h2>
 
           <h3>Druckgurt</h3>
@@ -341,10 +348,10 @@
         </div>
 
         <div class="viewer-info">
-          <h2>Ausgewählte Gruppe</h2>
+          <h2>Ausgewähltes Element</h2>
           <div id="selectionInfo" class="info-grid">
             <div class="info-label">Status</div>
-            <div>Keine Gruppe ausgewählt.</div>
+            <div>Kein Element ausgewählt.</div>
           </div>
         </div>
 
@@ -370,8 +377,27 @@
     const MODEL_PATH = "./models/";
 
     const CONCRETE = {
+      id: "HP18N-BT-01",
       file: "hp18n_betonschale.glb",
-      label: "Betonschale"
+      designation: "HP-18-N Betonschale",
+      componentType: "Stahlbeton-HP-Schale",
+      concreteGrade: "B300",
+      reinforcingSteel: "St A-I, St A-III, St B-IV",
+      coverStegSide: "10 mm",
+      coverStegBottom: "15 mm",
+      coverPressureChord: "10 mm",
+      concreteVolume: "2,085 m³",
+      rawDensity: "2,4 Mp/m³",
+      rawDensityStatus: "Historische Rohwichte; entspricht näherungsweise 23,5 kN/m³ beziehungsweise 2.400 kg/m³.",
+      steelDemandSta1: "234 kg",
+      steelDemandSta3: "235 kg",
+      variantStb4: "59 kg",
+      variantSta1: "143 kg",
+      variantSta3: "235 kg",
+      mass: "5536 kg",
+      mainReinforcementNote: "Mindestens zwei Stäbe; in einem Querschnitt darf ein Stab durch Stumpfnahtverbindung gestoßen werden.",
+      source: "Excel-Arbeitsblatt „Daten Betonschale“",
+      informationStatus: "Aus dem Excel-Arbeitsblatt „Daten Betonschale“ übernommen. Das Betonvolumen wurde als 2,085 m³ normalisiert; die Rohwichte 2,4 Mp/m³ wird als historische Angabe geführt."
     };
 
     const GROUPS = [
@@ -760,12 +786,15 @@
     const REBAR_COLOR = 0x4a4a4a;
     const REBAR_HIGHLIGHT = 0xd9782f;
     const CONCRETE_COLOR = 0xcdcac3;
+    const CONCRETE_HIGHLIGHT = 0xe0a06a;
+    const CONCRETE_HIGHLIGHT_EMISSIVE = 0x4a2108;
 
     const canvas = document.getElementById("viewer");
     const statusText = document.getElementById("statusText");
     const selectionInfo = document.getElementById("selectionInfo");
     const toggleConcrete = document.getElementById("toggleConcrete");
     const concreteTransparency = document.getElementById("concreteTransparency");
+    const concreteListItem = document.getElementById("concreteListItem");
     const btnClearSelection = document.getElementById("btnClearSelection");
     const btnResetView = document.getElementById("btnResetView");
 
@@ -807,7 +836,9 @@
       opacity: 1,
       side: THREE.DoubleSide,
       depthWrite: true,
-      depthTest: true
+      depthTest: true,
+      emissive: 0x000000,
+      emissiveIntensity: 0
     });
 
     const rebarBaseMaterial = new THREE.MeshStandardMaterial({
@@ -830,8 +861,10 @@
 
     const loadedGroups = new Map();
     const clickableMeshes = [];
+    const concreteMeshes = [];
     const failedGroups = [];
 
+    let selectedElementType = null;
     let selectedGroupId = null;
     let hasFramedScene = false;
     let pointerDownPosition = { x: 0, y: 0 };
@@ -856,6 +889,8 @@
         if (!child.isMesh) return;
         child.material = concreteMaterial;
         child.renderOrder = 0;
+        child.userData.elementType = "concrete";
+        concreteMeshes.push(child);
       });
     }
 
@@ -878,6 +913,17 @@
       return true;
     }
 
+    function setConcreteHighlighted(highlighted) {
+      concreteMaterial.color.setHex(
+        highlighted ? CONCRETE_HIGHLIGHT : CONCRETE_COLOR
+      );
+      concreteMaterial.emissive.setHex(
+        highlighted ? CONCRETE_HIGHLIGHT_EMISSIVE : 0x000000
+      );
+      concreteMaterial.emissiveIntensity = highlighted ? 0.18 : 0;
+      concreteMaterial.needsUpdate = true;
+    }
+
     function setGroupHighlighted(groupId, highlighted) {
       const entry = loadedGroups.get(groupId);
       if (!entry) return;
@@ -889,18 +935,43 @@
     }
 
     function clearSelection() {
-      if (selectedGroupId) setGroupHighlighted(selectedGroupId, false);
+      if (selectedGroupId) {
+        setGroupHighlighted(selectedGroupId, false);
+      }
+
+      setConcreteHighlighted(false);
+      selectedElementType = null;
       selectedGroupId = null;
       updateSelectionUI();
     }
 
     function selectGroup(groupId) {
       if (!loadedGroups.has(groupId)) return;
+
       if (selectedGroupId && selectedGroupId !== groupId) {
         setGroupHighlighted(selectedGroupId, false);
       }
+
+      setConcreteHighlighted(false);
+      selectedElementType = "rebar";
       selectedGroupId = groupId;
       setGroupHighlighted(groupId, true);
+      updateSelectionUI();
+    }
+
+    function selectConcrete() {
+      if (selectedGroupId) {
+        setGroupHighlighted(selectedGroupId, false);
+      }
+
+      if (!concreteGroup.visible) {
+        concreteGroup.visible = true;
+        toggleConcrete.checked = true;
+      }
+
+      selectedElementType = "concrete";
+      selectedGroupId = null;
+      setConcreteHighlighted(true);
       updateSelectionUI();
     }
 
@@ -929,22 +1000,72 @@
       document.querySelectorAll(".group-item").forEach((item) => {
         item.classList.toggle(
           "active",
-          Boolean(selectedGroupId && item.dataset.groupId === selectedGroupId)
+          Boolean(
+            selectedElementType === "rebar" &&
+            selectedGroupId &&
+            item.dataset.groupId === selectedGroupId
+          )
         );
       });
 
-      if (!selectedGroupId) {
+      concreteListItem.classList.toggle(
+        "active",
+        selectedElementType === "concrete"
+      );
+
+      if (!selectedElementType) {
         selectionInfo.className = "info-grid";
         selectionInfo.innerHTML = `
           <div class="info-label">Status</div>
-          <div>Keine Gruppe ausgewählt.</div>
+          <div>Kein Element ausgewählt.</div>
         `;
+        return;
+      }
+
+      selectionInfo.className = "property-sections";
+
+      if (selectedElementType === "concrete") {
+        selectionInfo.innerHTML = [
+          propertySection("Identifikation", [
+            propertyRow("Bezeichnung", CONCRETE.designation),
+            propertyRow("Modell-ID", CONCRETE.id),
+            propertyRow("Bauteiltyp", CONCRETE.componentType)
+          ]),
+          propertySection("Material", [
+            propertyRow("Beton", CONCRETE.concreteGrade),
+            propertyRow("Betonstahl", CONCRETE.reinforcingSteel)
+          ]),
+          propertySection("Betondeckung", [
+            propertyRow("Bügel im Steg – seitlich", CONCRETE.coverStegSide),
+            propertyRow("Bügel im Steg – nach unten", CONCRETE.coverStegBottom),
+            propertyRow("Schalendruckgurt – oben und unten", CONCRETE.coverPressureChord)
+          ]),
+          propertySection("Mengen und Masse", [
+            propertyRow("Betonvolumen", CONCRETE.concreteVolume),
+            propertyRow("Rohwichte", CONCRETE.rawDensity),
+            propertyRow("Prüfhinweis Rohwichte", CONCRETE.rawDensityStatus, true),
+            propertyRow("Gesamtmasse", CONCRETE.mass)
+          ]),
+          propertySection("Stahlbedarf und Varianten", [
+            propertyRow("Stahlbedarf STA-I", CONCRETE.steelDemandSta1),
+            propertyRow("Stahlbedarf STA-III", CONCRETE.steelDemandSta3),
+            propertyRow("Bewehrungsvariante St B-IV", CONCRETE.variantStb4),
+            propertyRow("Bewehrungsvariante St A-I", CONCRETE.variantSta1),
+            propertyRow("Bewehrungsvariante St A-III", CONCRETE.variantSta3)
+          ]),
+          propertySection("Konstruktive Vorgabe", [
+            propertyRow("Haupttragbewehrung", CONCRETE.mainReinforcementNote)
+          ]),
+          propertySection("Dokumentation", [
+            propertyRow("Quelle", CONCRETE.source),
+            propertyRow("Informationsstatus", CONCRETE.informationStatus, true)
+          ])
+        ].join("");
         return;
       }
 
       const meta = GROUPS.find((group) => group.id === selectedGroupId);
 
-      selectionInfo.className = "property-sections";
       selectionInfo.innerHTML = [
         propertySection("Identifikation", [
           propertyRow("Bezeichnung", meta.designation),
@@ -974,6 +1095,10 @@
 
     function updateConcreteVisibility() {
       concreteGroup.visible = toggleConcrete.checked;
+
+      if (!toggleConcrete.checked && selectedElementType === "concrete") {
+        clearSelection();
+      }
     }
 
     function updateConcreteTransparency() {
@@ -1105,6 +1230,7 @@
       }
     }
 
+    concreteListItem.addEventListener("click", selectConcrete);
     toggleConcrete.addEventListener("change", updateConcreteVisibility);
     concreteTransparency.addEventListener("input", updateConcreteTransparency);
     btnClearSelection.addEventListener("click", clearSelection);
@@ -1131,17 +1257,33 @@
       pointer.y = -((event.clientY - rectangle.top) / rectangle.height) * 2 + 1;
 
       raycaster.setFromCamera(pointer, camera);
-      const visibleMeshes = clickableMeshes.filter(isEffectivelyVisible);
-      const intersections = raycaster.intersectObjects(visibleMeshes, false);
 
-      if (intersections.length === 0) {
-        clearSelection();
+      const visibleRebarMeshes = clickableMeshes.filter(isEffectivelyVisible);
+      const rebarIntersections = raycaster.intersectObjects(
+        visibleRebarMeshes,
+        false
+      );
+
+      if (rebarIntersections.length > 0) {
+        const groupId = rebarIntersections[0].object.userData.groupId;
+        if (groupId) {
+          selectGroup(groupId);
+          return;
+        }
+      }
+
+      const visibleConcreteMeshes = concreteMeshes.filter(isEffectivelyVisible);
+      const concreteIntersections = raycaster.intersectObjects(
+        visibleConcreteMeshes,
+        false
+      );
+
+      if (concreteIntersections.length > 0) {
+        selectConcrete();
         return;
       }
 
-      const groupId = intersections[0].object.userData.groupId;
-      if (groupId) selectGroup(groupId);
-      else clearSelection();
+      clearSelection();
     });
 
     function animate() {
