@@ -4,7 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>HP-Schalen nach Herbert Müller</title>
+  <title>HP-Schalen nach Herbert Müller – Projekt</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
 
   <style>
     :root {
@@ -13,10 +19,7 @@
       --ink: #252525;
       --muted: #666b70;
       --line: #d9d9d2;
-      --soft: #e9e8e2;
       --accent: #484642;
-      --accent-soft: #e5e2dd;
-      --highlight: #d9782f;
       --shadow: 0 8px 24px rgba(0, 0, 0, 0.055);
       --radius: 16px;
     }
@@ -44,16 +47,16 @@
     .site-header {
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 40;
       border-bottom: 1px solid var(--line);
       background: rgba(242, 241, 237, 0.95);
       backdrop-filter: blur(12px);
     }
 
     .header-inner,
-    .page-width,
+    main,
     .footer-inner {
-      width: min(1440px, calc(100% - 48px));
+      width: min(1240px, calc(100% - 48px));
       margin: 0 auto;
     }
 
@@ -65,7 +68,8 @@
       gap: 24px;
     }
 
-    .brand {
+    .site-brand {
+      color: var(--ink);
       text-decoration: none;
       font-size: 16px;
       font-weight: 700;
@@ -93,12 +97,16 @@
       background: var(--paper);
     }
 
+    main {
+      padding: 58px 0 72px;
+    }
+
     .intro {
       display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
-      gap: 34px;
+      grid-template-columns: minmax(0, 1.15fr) minmax(290px, 0.85fr);
+      gap: 42px;
       align-items: end;
-      padding: 42px 0 32px;
+      margin-bottom: 34px;
     }
 
     .eyebrow {
@@ -111,50 +119,54 @@
     }
 
     h1 {
-      max-width: 900px;
+      max-width: 780px;
       margin: 0;
-      font-size: clamp(30px, 4vw, 46px);
+      font-size: clamp(34px, 5vw, 58px);
       font-weight: 600;
-      line-height: 1.12;
-      letter-spacing: -0.03em;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
     }
 
     .intro-text {
       margin: 0;
       color: var(--muted);
-      font-size: 15px;
-      line-height: 1.65;
+      font-size: 16px;
+      line-height: 1.7;
     }
 
-    .catalog-section {
-      scroll-margin-top: 88px;
-    }
-
-    .catalog-frame-shell {
-      overflow: hidden;
+    .project-card {
+      margin-bottom: 24px;
+      padding: clamp(24px, 4vw, 38px);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: var(--page);
+      background: var(--paper);
       box-shadow: var(--shadow);
     }
 
-    #catalogFrame {
-      display: block;
-      width: 100%;
-      height: 900px;
-      border: 0;
-      background: var(--page);
-      overflow: hidden;
+    .project-card h2 {
+      margin: 0 0 12px;
+      font-size: clamp(23px, 3vw, 32px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
     }
 
-    .study-section {
-      scroll-margin-top: 88px;
-      padding: 34px 0 18px;
+    .project-card p {
+      max-width: 900px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
     }
 
-    .study-card {
+    .page-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .page-card {
+      display: flex;
+      min-height: 280px;
+      flex-direction: column;
       overflow: hidden;
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -162,76 +174,47 @@
       box-shadow: var(--shadow);
     }
 
-    .study-content {
-      padding: clamp(26px, 5vw, 48px);
+    .page-card-visual {
+      min-height: 125px;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 55% 38%, rgba(255, 255, 255, 0.94), transparent 35%),
+        linear-gradient(145deg, #e8e5df, #d2cec6);
     }
 
-    .study-content h2 {
+    .page-card.case .page-card-visual {
+      background:
+        radial-gradient(circle at 55% 38%, rgba(255, 255, 255, 0.90), transparent 35%),
+        linear-gradient(145deg, #e4dfd7, #c8b9a9);
+    }
+
+    .page-card-content {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: 25px;
+    }
+
+    .page-card h2 {
       margin: 0;
-      font-size: clamp(26px, 3.5vw, 40px);
+      font-size: 25px;
       font-weight: 600;
-      line-height: 1.2;
-      letter-spacing: -0.025em;
+      letter-spacing: -0.02em;
     }
 
-    .study-content p {
-      max-width: 760px;
-      margin: 17px 0 0;
+    .page-card p {
+      margin: 13px 0 0;
       color: var(--muted);
       line-height: 1.65;
-    }
-
-    .study-features {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin: 24px 0 28px;
-    }
-
-    .study-feature {
-      padding: 11px 13px;
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      background: #faf9f7;
-      font-size: 13px;
-    }
-
-    .study-visual {
-      min-height: 330px;
-      display: flex;
-      align-items: end;
-      padding: 27px;
-      background:
-        radial-gradient(circle at 55% 32%, rgba(255, 255, 255, 0.88), transparent 34%),
-        linear-gradient(150deg, #e4dfd7, #c7b8a7);
-    }
-
-    .study-label {
-      max-width: 310px;
-      padding: 15px;
-      border: 1px solid rgba(70, 63, 53, 0.18);
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.72);
-      backdrop-filter: blur(8px);
-    }
-
-    .study-label strong,
-    .study-label span {
-      display: block;
-    }
-
-    .study-label span {
-      margin-top: 5px;
-      color: #65615a;
-      font-size: 13px;
-      line-height: 1.45;
     }
 
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      align-self: flex-start;
       min-height: 42px;
+      margin-top: auto;
       padding: 10px 15px;
       border: 1px solid var(--accent);
       border-radius: 9px;
@@ -244,31 +227,6 @@
 
     .button:hover {
       background: #34322f;
-    }
-
-    .project-section {
-      scroll-margin-top: 88px;
-      padding: 26px 0 56px;
-    }
-
-    .project-card {
-      padding: 25px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--paper);
-      box-shadow: var(--shadow);
-    }
-
-    .project-card h2 {
-      margin: 0 0 10px;
-      font-size: 22px;
-    }
-
-    .project-card p {
-      max-width: 900px;
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.65;
     }
 
     .site-footer {
@@ -285,26 +243,20 @@
       font-size: 12px;
     }
 
-    .catalog-error {
-      padding: 32px;
-      color: #8c2d2d;
-      background: #fff5f5;
-    }
-
     @media (max-width: 820px) {
       .header-inner,
-      .page-width,
+      main,
       .footer-inner {
-        width: min(100% - 28px, 1440px);
+        width: min(100% - 28px, 1240px);
       }
 
       .intro,
-      .study-card {
+      .page-grid {
         grid-template-columns: 1fr;
       }
 
-      .study-features {
-        grid-template-columns: 1fr;
+      .intro {
+        gap: 22px;
       }
 
       .footer-inner {
@@ -312,7 +264,7 @@
       }
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 590px) {
       .header-inner {
         min-height: 62px;
         align-items: flex-start;
@@ -331,8 +283,8 @@
         font-size: 13px;
       }
 
-      .intro {
-        padding-top: 30px;
+      main {
+        padding-top: 38px;
       }
     }
   </style>
@@ -341,152 +293,80 @@
 <body>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="./">HP-Schalen nach Herbert Müller</a>
+      <a class="site-brand" href="./">HP-Schalen nach Herbert Müller</a>
 
       <nav class="site-nav" aria-label="Hauptnavigation">
-        <a class="active" href="#katalog">Katalog</a>
+        <a class="active" href="./">Projekt</a>
+        <a href="./katalog.html">Katalog</a>
         <a href="./hp18n-test/">Fallstudie HP-18-N</a>
-        <a href="#projekt">Projekt</a>
       </nav>
     </div>
   </header>
 
-  <main class="page-width">
+  <main>
     <section class="intro">
       <div>
-        <p class="eyebrow">Digitaler Typenkatalog und konstruktive Fallstudie</p>
+        <p class="eyebrow">Projekt</p>
         <h1>HP-Schalen nach Herbert Müller</h1>
       </div>
 
       <p class="intro-text">
-        Die Website verbindet den vergleichenden Katalog der geometrisch
-        rekonstruierten HP- und HPZ-Schalen mit einer vertieften konstruktiven
-        Untersuchung der HP-18-N und ihrer Bewehrung.
+        Digitaler Typenkatalog und konstruktive Fallstudie im Rahmen einer
+        architekturwissenschaftlichen Diplomarbeit.
       </p>
     </section>
 
-    <section id="katalog" class="catalog-section">
-      <div class="catalog-frame-shell">
-        <iframe
-          id="catalogFrame"
-          title="HP-Schalen-Katalog"
-          src="./katalog.html"
-          scrolling="no">
-        </iframe>
-      </div>
+    <section class="project-card">
+      <p class="eyebrow">Projektstruktur</p>
+      <h2>Vom Typenkatalog zur konstruktiven Fallstudie</h2>
+      <p>
+        Der Katalog bildet die gemeinsame typologische Ebene. Die Fallstudie
+        ergänzt diese um eine detaillierte Untersuchung eines ausgewählten
+        Schalentypus. Beide Bereiche teilen dieselbe Webadresse, Navigation
+        und gestalterische Sprache.
+      </p>
     </section>
 
-    <section class="study-section">
-      <article class="study-card">
-        <div class="study-content">
-          <p class="eyebrow">Konstruktive Vertiefung</p>
-          <h2>Fallstudie HP-18-N</h2>
+    <section class="page-grid" aria-label="Bereiche der Website">
+      <article class="page-card">
 
+        <div class="page-card-content">
+          <p class="eyebrow">Typologische Übersicht</p>
+          <h2>Katalog</h2>
           <p>
-            Die HP-18-N wird als konstruktives Gesamtsystem aus Betonschale
-            und Bewehrung untersucht. Bauteil und Bewehrungsgruppen können
-            im 3D-Modell ausgewählt und mit historischen, geometrischen und
-            BIM-/IFC-orientierten Eigenschaften betrachtet werden.
+            Der digitale Katalog versammelt die geometrisch rekonstruierten
+            HP- und HPZ-Schalentypen. Die Modelle können interaktiv betrachtet
+            und anhand ihrer konstruktiven Kenndaten sowie historischen
+            Dokumentstände verglichen werden.
           </p>
 
-          <div class="study-features">
-            <div class="study-feature">Anklickbare Betonschale mit Bauteildaten</div>
-            <div class="study-feature">Separat auswählbare Bewehrungsgruppen</div>
-            <div class="study-feature">Historische Planangaben</div>
-            <div class="study-feature">BIM-/IFC-orientierte Datenstruktur</div>
-          </div>
-
-          <a class="button" href="./hp18n-test/">
-            Interaktive Fallstudie öffnen
-          </a>
-        </div>
-
-        <div class="study-visual" aria-hidden="true">
-          <div class="study-label">
-            <strong>HP-18-N</strong>
-            <span>
-              Detailmodell mit Betonschale, Druckgurt-, Steg-
-              und Auflagerbewehrung
-            </span>
-          </div>
+          <a class="button" href="./katalog.html">Katalog öffnen</a>
         </div>
       </article>
-    </section>
 
-    <section id="projekt" class="project-section">
-      <div class="project-card">
-        <p class="eyebrow">Projekt</p>
-        <h2>Vom Typenkatalog zur konstruktiven Fallstudie</h2>
-        <p>
-          Der Katalog bildet die gemeinsame typologische Ebene. Die Fallstudie
-          ergänzt diese um eine detaillierte Untersuchung eines ausgewählten
-          Schalentypus. Beide Bereiche teilen dieselbe Webadresse, Navigation
-          und gestalterische Sprache.
-        </p>
-      </div>
+      <article class="page-card case">
+
+        <div class="page-card-content">
+          <p class="eyebrow">Konstruktive Vertiefung</p>
+          <h2>Fallstudie HP-18-N</h2>
+          <p>
+            Die Fallstudie untersucht die HP-18-N als konstruktives Gesamtsystem
+            aus Betonschale und Bewehrung. Bauteil und Bewehrungsgruppen können
+            im 3D-Modell ausgewählt und mit ihren historischen, geometrischen
+            und BIM-/IFC-orientierten Daten betrachtet werden.
+          </p>
+
+          <a class="button" href="./hp18n-test/">Fallstudie öffnen</a>
+        </div>
+      </article>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <span>Digitaler Katalog der HP- und HPZ-Schalen nach Herbert Müller</span>
-      <span>Typenkatalog · Fallstudie HP-18-N</span>
+      <span>HP-Schalen nach Herbert Müller</span>
+      <span>Projekt · Katalog · Fallstudie HP-18-N</span>
     </div>
   </footer>
-
-  <script>
-    const catalogFrame = document.getElementById("catalogFrame");
-
-    function prepareCatalogFrame() {
-      try {
-        const doc = catalogFrame.contentDocument;
-        if (!doc) return;
-
-        const originalHeader = doc.querySelector(".site-header");
-        const originalFooter = doc.querySelector(".site-footer");
-
-        if (originalHeader) originalHeader.style.display = "none";
-        if (originalFooter) originalFooter.style.display = "none";
-
-        doc.documentElement.style.overflow = "hidden";
-        doc.body.style.overflow = "hidden";
-        doc.body.style.background = "transparent";
-
-        const main = doc.querySelector("main");
-        if (main) {
-          main.style.paddingTop = "28px";
-          main.style.paddingBottom = "36px";
-        }
-
-        const resize = () => {
-          const height = Math.max(
-            doc.body.scrollHeight,
-            doc.documentElement.scrollHeight
-          );
-          catalogFrame.style.height = `${height + 4}px`;
-        };
-
-        resize();
-
-        if ("ResizeObserver" in window) {
-          const observer = new ResizeObserver(resize);
-          observer.observe(doc.body);
-          observer.observe(doc.documentElement);
-        }
-
-        doc.addEventListener("click", () => {
-          window.setTimeout(resize, 60);
-          window.setTimeout(resize, 350);
-        });
-
-        window.setTimeout(resize, 800);
-        window.setTimeout(resize, 2000);
-      } catch (error) {
-        console.error("Der Katalog konnte nicht eingebunden werden:", error);
-      }
-    }
-
-    catalogFrame.addEventListener("load", prepareCatalogFrame);
-  </script>
 </body>
 </html>
