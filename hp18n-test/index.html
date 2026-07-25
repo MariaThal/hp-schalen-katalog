@@ -198,43 +198,6 @@
       width: 100%;
     }
 
-    .control-description {
-      margin: -2px 0 12px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .range-control {
-      display: grid;
-      grid-template-columns: 112px minmax(0, 1fr) 48px;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .range-control label {
-      font-size: 14px;
-    }
-
-    .range-control input[type="range"] {
-      width: 100%;
-    }
-
-    .range-value {
-      color: var(--muted);
-      font-size: 13px;
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .control-row input:disabled,
-    .range-control input:disabled,
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
-
     .group-list {
       display: grid;
       gap: 8px;
@@ -412,40 +375,6 @@
 
     <section class="layout">
       <aside class="panel">
-        <div class="section">
-          <h2>Schnittebene</h2>
-          <p class="control-description">
-            Vertikaler Querschnitt in der XY-Ebene, verschiebbar entlang der Schalenlänge auf der Z-Achse.
-          </p>
-
-          <div class="control-row">
-            <input type="checkbox" id="toggleClipping" />
-            <label for="toggleClipping">Schnitt aktiv</label>
-          </div>
-
-          <div class="range-control">
-            <label for="clipPosition">Schnittposition</label>
-            <input
-              type="range"
-              id="clipPosition"
-              min="0"
-              max="100"
-              value="50"
-              step="0.1"
-              disabled />
-            <output id="clipPositionValue" class="range-value">50 %</output>
-          </div>
-
-          <div class="control-row">
-            <input type="checkbox" id="clipReverse" disabled />
-            <label for="clipReverse">Schnittrichtung umkehren</label>
-          </div>
-
-          <div class="btn-row" style="margin-top: 12px;">
-            <button id="btnResetClipping" disabled>Schnitt zurücksetzen</button>
-          </div>
-        </div>
-
         <div class="section">
           <h2>Darstellung</h2>
 
@@ -938,7 +867,6 @@
     const CONCRETE_COLOR = 0xcdcac3;
     const CONCRETE_HIGHLIGHT = 0xe0a06a;
     const CONCRETE_HIGHLIGHT_EMISSIVE = 0x4a2108;
-    const CONCRETE_CUT_COLOR = 0x9c9890;
 
     const canvas = document.getElementById("viewer");
     const statusText = document.getElementById("statusText");
@@ -948,23 +876,13 @@
     const concreteListItem = document.getElementById("concreteListItem");
     const btnClearSelection = document.getElementById("btnClearSelection");
     const btnResetView = document.getElementById("btnResetView");
-    const toggleClipping = document.getElementById("toggleClipping");
-    const clipPosition = document.getElementById("clipPosition");
-    const clipPositionValue = document.getElementById("clipPositionValue");
-    const clipReverse = document.getElementById("clipReverse");
-    const btnResetClipping = document.getElementById("btnResetClipping");
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xddd9d0);
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      stencil: true
-    });
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.localClippingEnabled = true;
 
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100000);
 
@@ -1016,76 +934,6 @@
       side: THREE.DoubleSide
     });
 
-    function createCapMaterial(color) {
-      return new THREE.MeshStandardMaterial({
-        color,
-        roughness: 0.9,
-        metalness: 0,
-        side: THREE.DoubleSide,
-        depthTest: true,
-        depthWrite: true,
-        depthFunc: THREE.LessEqualDepth,
-        stencilWrite: true,
-        stencilRef: 0,
-        stencilFunc: THREE.NotEqualStencilFunc,
-        stencilFail: THREE.ReplaceStencilOp,
-        stencilZFail: THREE.ReplaceStencilOp,
-        stencilZPass: THREE.ReplaceStencilOp
-      });
-    }
-
-    const concreteCapMaterial = createCapMaterial(CONCRETE_CUT_COLOR);
-    const rebarCapBaseMaterial = createCapMaterial(REBAR_COLOR);
-    const rebarCapHighlightMaterial = createCapMaterial(REBAR_HIGHLIGHT);
-
-    // GLB-Achsen:
-    // X = Schalenbreite, Y = Höhe, Z = Schalenlänge.
-    // Ein echter Querschnitt liegt deshalb in der XY-Ebene
-    // und wird entlang der Z-Achse verschoben.
-    const clipPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-
-    function createStencilMaterial(side, stencilOperation) {
-      return new THREE.MeshBasicMaterial({
-        depthWrite: false,
-        depthTest: false,
-        colorWrite: false,
-        side,
-        clippingPlanes: [clipPlane],
-        stencilWrite: true,
-        stencilFunc: THREE.AlwaysStencilFunc,
-        stencilFail: stencilOperation,
-        stencilZFail: stencilOperation,
-        stencilZPass: stencilOperation
-      });
-    }
-
-    const stencilBackMaterial = createStencilMaterial(
-      THREE.BackSide,
-      THREE.IncrementWrapStencilOp
-    );
-
-    const stencilFrontMaterial = createStencilMaterial(
-      THREE.FrontSide,
-      THREE.DecrementWrapStencilOp
-    );
-
-    const clippingHelpers = new THREE.Group();
-    clippingHelpers.name = "ClippingHelpers";
-    scene.add(clippingHelpers);
-
-    const clipEntries = new Map();
-    const clipCenter = new THREE.Vector3();
-    const clipPoint = new THREE.Vector3();
-    const clipNormal = new THREE.Vector3(0, 0, 1);
-    const planeNormalReference = new THREE.Vector3(0, 0, 1);
-    const planeQuaternion = new THREE.Quaternion();
-
-    let capPlaneGeometry = null;
-    let clippingReady = false;
-    let clipMinZ = 0;
-    let clipMaxZ = 1;
-    let clippingTolerance = 0.0001;
-
     const loader = new GLTFLoader();
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
@@ -1115,220 +963,11 @@
       camera.updateProjectionMatrix();
     }
 
-    function createStencilClone(sourceMesh, material) {
-      let clone;
-
-      if (sourceMesh.isInstancedMesh) {
-        clone = new THREE.InstancedMesh(
-          sourceMesh.geometry,
-          material,
-          sourceMesh.count
-        );
-        clone.instanceMatrix.copy(sourceMesh.instanceMatrix);
-        clone.count = sourceMesh.count;
-      } else {
-        clone = new THREE.Mesh(sourceMesh.geometry, material);
-      }
-
-      clone.matrixAutoUpdate = false;
-      clone.matrix.copy(sourceMesh.matrixWorld);
-      clone.frustumCulled = false;
-      return clone;
-    }
-
-    function createCapEntry(key, sourceObject, capMaterial, renderOrder, type) {
-      sourceObject.updateWorldMatrix(true, true);
-
-      const stencilGroup = new THREE.Group();
-      stencilGroup.name = `Stencil-${key}`;
-
-      sourceObject.traverse((child) => {
-        if (!child.isMesh || !child.geometry) return;
-
-        const backMesh = createStencilClone(child, stencilBackMaterial);
-        const frontMesh = createStencilClone(child, stencilFrontMaterial);
-
-        backMesh.renderOrder = renderOrder;
-        frontMesh.renderOrder = renderOrder;
-
-        stencilGroup.add(backMesh, frontMesh);
-      });
-
-      if (stencilGroup.children.length === 0) return null;
-
-      const capMesh = new THREE.Mesh(capPlaneGeometry, capMaterial);
-      capMesh.name = `Schnittfläche-${key}`;
-      capMesh.renderOrder = renderOrder + 0.1;
-      capMesh.frustumCulled = false;
-      capMesh.onAfterRender = (activeRenderer) => {
-        activeRenderer.clearStencil();
-      };
-
-      clippingHelpers.add(stencilGroup, capMesh);
-
-      const entry = {
-        key,
-        type,
-        sourceObject,
-        stencilGroup,
-        capMesh
-      };
-
-      clipEntries.set(key, entry);
-      return entry;
-    }
-
-    function setClippingMaterials(active) {
-      const planes = active ? [clipPlane] : [];
-
-      [
-        concreteMaterial,
-        rebarBaseMaterial,
-        rebarHighlightMaterial
-      ].forEach((material) => {
-        material.clippingPlanes = planes;
-        material.clipIntersection = false;
-        material.needsUpdate = true;
-      });
-    }
-
-    function updateClippingVisibility() {
-      const active = clippingReady && toggleClipping.checked;
-
-      clipEntries.forEach((entry) => {
-        const visible =
-          active &&
-          isEffectivelyVisible(entry.sourceObject);
-
-        entry.stencilGroup.visible = visible;
-        entry.capMesh.visible = visible;
-      });
-    }
-
-    function updateClippingControls() {
-      const active = clippingReady && toggleClipping.checked;
-
-      clipPosition.disabled = !active;
-      clipReverse.disabled = !active;
-      btnResetClipping.disabled = !clippingReady;
-    }
-
-    function updateClippingPlane() {
-      if (!clippingReady) return;
-
-      const percentage = Number(clipPosition.value);
-      const interpolation = percentage / 100;
-      const currentZ = THREE.MathUtils.lerp(
-        clipMinZ,
-        clipMaxZ,
-        interpolation
-      );
-
-      clipNormal.set(0, 0, clipReverse.checked ? -1 : 1);
-      clipPoint.set(clipCenter.x, clipCenter.y, currentZ);
-      clipPlane.setFromNormalAndCoplanarPoint(clipNormal, clipPoint);
-
-      planeQuaternion.setFromUnitVectors(
-        planeNormalReference,
-        clipPlane.normal
-      );
-
-      clipEntries.forEach((entry) => {
-        entry.capMesh.quaternion.copy(planeQuaternion);
-        entry.capMesh.position.copy(clipPoint);
-
-        entry.capMesh.updateMatrixWorld(true);
-      });
-
-      clipPositionValue.textContent = `${Math.round(percentage)} %`;
-      updateClippingVisibility();
-    }
-
-    function updateClippingState() {
-      const active = clippingReady && toggleClipping.checked;
-      setClippingMaterials(active);
-      updateClippingControls();
-
-      if (active) {
-        updateClippingPlane();
-      } else {
-        updateClippingVisibility();
-      }
-    }
-
-    function resetClipping() {
-      clipPosition.value = "50";
-      clipReverse.checked = false;
-      updateClippingPlane();
-    }
-
-    function setupClippingSystem() {
-      concreteGroup.updateWorldMatrix(true, true);
-
-      const box = new THREE.Box3().setFromObject(concreteGroup);
-      if (box.isEmpty()) return;
-
-      const size = box.getSize(new THREE.Vector3());
-      box.getCenter(clipCenter);
-
-      clipMinZ = box.min.z;
-      clipMaxZ = box.max.z;
-
-      const maxDimension = Math.max(size.x, size.y, size.z, 1);
-      clippingTolerance = maxDimension * 0.000001;
-
-      // PlaneGeometry liegt standardmäßig in der XY-Ebene.
-      // Breite = X-Ausdehnung, Höhe = Y-Ausdehnung der Schale.
-      const planeWidth = Math.max(size.x * 1.5, 1);
-      const planeHeight = Math.max(size.y * 1.5, 1);
-      capPlaneGeometry = new THREE.PlaneGeometry(
-        planeWidth,
-        planeHeight
-      );
-
-      createCapEntry(
-        "concrete",
-        concreteGroup,
-        concreteCapMaterial,
-        10,
-        "concrete"
-      );
-
-      GROUPS.forEach((group, index) => {
-        const loadedEntry = loadedGroups.get(group.id);
-        if (!loadedEntry) return;
-
-        createCapEntry(
-          group.id,
-          loadedEntry.object,
-          rebarCapBaseMaterial,
-          20 + index * 2,
-          "rebar"
-        );
-      });
-
-      clippingReady = true;
-      updateClippingState();
-    }
-
-    function isIntersectionVisibleAtClipPlane(intersection) {
-      if (!clippingReady || !toggleClipping.checked) return true;
-
-      return (
-        clipPlane.distanceToPoint(intersection.point) >=
-        -clippingTolerance
-      );
-    }
-
-    function firstVisibleIntersection(intersections) {
-      return intersections.find(isIntersectionVisibleAtClipPlane) || null;
-    }
-
     function applyConcreteMaterial(object) {
       object.traverse((child) => {
         if (!child.isMesh) return;
         child.material = concreteMaterial;
-        child.renderOrder = 1000;
+        child.renderOrder = 0;
         child.userData.elementType = "concrete";
         concreteMeshes.push(child);
       });
@@ -1339,7 +978,7 @@
         if (!child.isMesh) return;
         child.material = rebarBaseMaterial;
         child.userData.groupId = groupId;
-        child.renderOrder = 1001;
+        child.renderOrder = 1;
         clickableMeshes.push(child);
       });
     }
@@ -1367,19 +1006,11 @@
     function setGroupHighlighted(groupId, highlighted) {
       const entry = loadedGroups.get(groupId);
       if (!entry) return;
-
       entry.object.traverse((child) => {
         if (child.isMesh) {
           child.material = highlighted ? rebarHighlightMaterial : rebarBaseMaterial;
         }
       });
-
-      const clipEntry = clipEntries.get(groupId);
-      if (clipEntry) {
-        clipEntry.capMesh.material = highlighted
-          ? rebarCapHighlightMaterial
-          : rebarCapBaseMaterial;
-      }
     }
 
     function clearSelection() {
@@ -1547,8 +1178,6 @@
       if (!toggleConcrete.checked && selectedElementType === "concrete") {
         clearSelection();
       }
-
-      updateClippingVisibility();
     }
 
     function updateConcreteTransparency() {
@@ -1668,10 +1297,6 @@
         }
       }
 
-      if (loadedCount > 0) {
-        setupClippingSystem();
-      }
-
       if (loadedCount > 0 && !hasFramedScene) {
         frameScene();
         hasFramedScene = true;
@@ -1689,10 +1314,6 @@
     concreteTransparency.addEventListener("input", updateConcreteTransparency);
     btnClearSelection.addEventListener("click", clearSelection);
     btnResetView.addEventListener("click", frameScene);
-    toggleClipping.addEventListener("change", updateClippingState);
-    clipPosition.addEventListener("input", updateClippingPlane);
-    clipReverse.addEventListener("change", updateClippingPlane);
-    btnResetClipping.addEventListener("click", resetClipping);
 
     canvas.addEventListener("pointerdown", (event) => {
       if (event.button !== 0) return;
@@ -1722,12 +1343,8 @@
         false
       );
 
-      const rebarIntersection = firstVisibleIntersection(
-        rebarIntersections
-      );
-
-      if (rebarIntersection) {
-        const groupId = rebarIntersection.object.userData.groupId;
+      if (rebarIntersections.length > 0) {
+        const groupId = rebarIntersections[0].object.userData.groupId;
         if (groupId) {
           selectGroup(groupId);
           return;
@@ -1739,11 +1356,8 @@
         visibleConcreteMeshes,
         false
       );
-      const concreteIntersection = firstVisibleIntersection(
-        concreteIntersections
-      );
 
-      if (concreteIntersection) {
+      if (concreteIntersections.length > 0) {
         selectConcrete();
         return;
       }
