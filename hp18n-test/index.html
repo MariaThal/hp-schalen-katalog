@@ -413,27 +413,6 @@
     <section class="layout">
       <aside class="panel">
         <div class="section">
-          <h2>Darstellung</h2>
-
-          <div class="control-row">
-            <input type="checkbox" id="toggleConcrete" checked />
-            <label for="toggleConcrete">Betonschale anzeigen</label>
-          </div>
-
-          <div class="control-row">
-            <label for="concreteTransparency" style="min-width: 112px;">
-              Betontransparenz
-            </label>
-            <input type="range" id="concreteTransparency" min="0" max="90" value="35" />
-          </div>
-
-          <div class="btn-row" style="margin-top: 12px;">
-            <button id="btnClearSelection">Auswahl aufheben</button>
-            <button id="btnResetView">Ansicht zurücksetzen</button>
-          </div>
-        </div>
-
-        <div class="section">
           <h2>Schnittebene</h2>
           <p class="control-description">
             Vertikaler Querschnitt in der XY-Ebene, verschiebbar entlang der Schalenlänge auf der Z-Achse.
@@ -441,7 +420,7 @@
 
           <div class="control-row">
             <input type="checkbox" id="toggleClipping" />
-            <label for="toggleClipping">Betonschnitt aktiv</label>
+            <label for="toggleClipping">Schnitt aktiv</label>
           </div>
 
           <div class="range-control">
@@ -464,6 +443,27 @@
 
           <div class="btn-row" style="margin-top: 12px;">
             <button id="btnResetClipping" disabled>Schnitt zurücksetzen</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Darstellung</h2>
+
+          <div class="control-row">
+            <input type="checkbox" id="toggleConcrete" checked />
+            <label for="toggleConcrete">Betonschale anzeigen</label>
+          </div>
+
+          <div class="control-row">
+            <label for="concreteTransparency" style="min-width: 112px;">
+              Betontransparenz
+            </label>
+            <input type="range" id="concreteTransparency" min="0" max="90" value="35" />
+          </div>
+
+          <div class="btn-row" style="margin-top: 12px;">
+            <button id="btnClearSelection">Auswahl aufheben</button>
+            <button id="btnResetView">Ansicht zurücksetzen</button>
           </div>
         </div>
 
@@ -938,7 +938,7 @@
     const CONCRETE_COLOR = 0xcdcac3;
     const CONCRETE_HIGHLIGHT = 0xe0a06a;
     const CONCRETE_HIGHLIGHT_EMISSIVE = 0x4a2108;
-    const CONCRETE_CUT_COLOR = 0x5c5954;
+    const CONCRETE_CUT_COLOR = 0x9c9890;
 
     const canvas = document.getElementById("viewer");
     const statusText = document.getElementById("statusText");
@@ -1035,6 +1035,8 @@
     }
 
     const concreteCapMaterial = createCapMaterial(CONCRETE_CUT_COLOR);
+    const rebarCapBaseMaterial = createCapMaterial(REBAR_COLOR);
+    const rebarCapHighlightMaterial = createCapMaterial(REBAR_HIGHLIGHT);
 
     // GLB-Achsen:
     // X = Schalenbreite, Y = Höhe, Z = Schalenlänge.
@@ -1177,15 +1179,17 @@
     }
 
     function setClippingMaterials(active) {
-      concreteMaterial.clippingPlanes = active ? [clipPlane] : [];
-      concreteMaterial.clipIntersection = false;
-      concreteMaterial.needsUpdate = true;
+      const planes = active ? [clipPlane] : [];
 
-      // Die Bewehrung bleibt in dieser Testversion vollständig sichtbar.
-      rebarBaseMaterial.clippingPlanes = [];
-      rebarHighlightMaterial.clippingPlanes = [];
-      rebarBaseMaterial.needsUpdate = true;
-      rebarHighlightMaterial.needsUpdate = true;
+      [
+        concreteMaterial,
+        rebarBaseMaterial,
+        rebarHighlightMaterial
+      ].forEach((material) => {
+        material.clippingPlanes = planes;
+        material.clipIntersection = false;
+        material.needsUpdate = true;
+      });
     }
 
     function updateClippingVisibility() {
@@ -1194,7 +1198,6 @@
       clipEntries.forEach((entry) => {
         const visible =
           active &&
-          entry.type === "concrete" &&
           isEffectivelyVisible(entry.sourceObject);
 
         entry.stencilGroup.visible = visible;
@@ -1291,6 +1294,19 @@
         "concrete"
       );
 
+      GROUPS.forEach((group, index) => {
+        const loadedEntry = loadedGroups.get(group.id);
+        if (!loadedEntry) return;
+
+        createCapEntry(
+          group.id,
+          loadedEntry.object,
+          rebarCapBaseMaterial,
+          20 + index * 2,
+          "rebar"
+        );
+      });
+
       clippingReady = true;
       updateClippingState();
     }
@@ -1351,12 +1367,19 @@
     function setGroupHighlighted(groupId, highlighted) {
       const entry = loadedGroups.get(groupId);
       if (!entry) return;
+
       entry.object.traverse((child) => {
         if (child.isMesh) {
           child.material = highlighted ? rebarHighlightMaterial : rebarBaseMaterial;
         }
       });
 
+      const clipEntry = clipEntries.get(groupId);
+      if (clipEntry) {
+        clipEntry.capMesh.material = highlighted
+          ? rebarCapHighlightMaterial
+          : rebarCapBaseMaterial;
+      }
     }
 
     function clearSelection() {
@@ -1699,7 +1722,9 @@
         false
       );
 
-      const rebarIntersection = rebarIntersections[0] || null;
+      const rebarIntersection = firstVisibleIntersection(
+        rebarIntersections
+      );
 
       if (rebarIntersection) {
         const groupId = rebarIntersection.object.userData.groupId;
