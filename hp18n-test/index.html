@@ -436,12 +436,12 @@
         <div class="section">
           <h2>Schnittebene</h2>
           <p class="control-description">
-            Vertikaler Querschnitt in der ZX-Ebene, verschiebbar entlang der Y-Achse.
+            Vertikaler Querschnitt in der XY-Ebene, verschiebbar entlang der Schalenlänge auf der Z-Achse.
           </p>
 
           <div class="control-row">
             <input type="checkbox" id="toggleClipping" />
-            <label for="toggleClipping">Schnitt aktiv</label>
+            <label for="toggleClipping">Betonschnitt aktiv</label>
           </div>
 
           <div class="range-control">
@@ -460,11 +460,6 @@
           <div class="control-row">
             <input type="checkbox" id="clipReverse" disabled />
             <label for="clipReverse">Schnittrichtung umkehren</label>
-          </div>
-
-          <div class="control-row">
-            <input type="checkbox" id="toggleRebarCaps" checked disabled />
-            <label for="toggleRebarCaps">Bewehrungs-Schnittflächen schließen</label>
           </div>
 
           <div class="btn-row" style="margin-top: 12px;">
@@ -957,7 +952,6 @@
     const clipPosition = document.getElementById("clipPosition");
     const clipPositionValue = document.getElementById("clipPositionValue");
     const clipReverse = document.getElementById("clipReverse");
-    const toggleRebarCaps = document.getElementById("toggleRebarCaps");
     const btnResetClipping = document.getElementById("btnResetClipping");
 
     const scene = new THREE.Scene();
@@ -1041,10 +1035,12 @@
     }
 
     const concreteCapMaterial = createCapMaterial(CONCRETE_CUT_COLOR);
-    const rebarCapBaseMaterial = createCapMaterial(REBAR_COLOR);
-    const rebarCapHighlightMaterial = createCapMaterial(REBAR_HIGHLIGHT);
 
-    const clipPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    // GLB-Achsen:
+    // X = Schalenbreite, Y = Höhe, Z = Schalenlänge.
+    // Ein echter Querschnitt liegt deshalb in der XY-Ebene
+    // und wird entlang der Z-Achse verschoben.
+    const clipPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
 
     function createStencilMaterial(side, stencilOperation) {
       return new THREE.MeshBasicMaterial({
@@ -1078,15 +1074,14 @@
     const clipEntries = new Map();
     const clipCenter = new THREE.Vector3();
     const clipPoint = new THREE.Vector3();
-    const clipNormal = new THREE.Vector3(0, 1, 0);
+    const clipNormal = new THREE.Vector3(0, 0, 1);
     const planeNormalReference = new THREE.Vector3(0, 0, 1);
     const planeQuaternion = new THREE.Quaternion();
 
     let capPlaneGeometry = null;
     let clippingReady = false;
-    let clipMinY = 0;
-    let clipMaxY = 1;
-    let clipDepthOffset = 0.001;
+    let clipMinZ = 0;
+    let clipMaxZ = 1;
     let clippingTolerance = 0.0001;
 
     const loader = new GLTFLoader();
@@ -1182,27 +1177,25 @@
     }
 
     function setClippingMaterials(active) {
-      const planes = active ? [clipPlane] : [];
+      concreteMaterial.clippingPlanes = active ? [clipPlane] : [];
+      concreteMaterial.clipIntersection = false;
+      concreteMaterial.needsUpdate = true;
 
-      [
-        concreteMaterial,
-        rebarBaseMaterial,
-        rebarHighlightMaterial
-      ].forEach((material) => {
-        material.clippingPlanes = planes;
-        material.clipIntersection = false;
-        material.needsUpdate = true;
-      });
+      // Die Bewehrung bleibt in dieser Testversion vollständig sichtbar.
+      rebarBaseMaterial.clippingPlanes = [];
+      rebarHighlightMaterial.clippingPlanes = [];
+      rebarBaseMaterial.needsUpdate = true;
+      rebarHighlightMaterial.needsUpdate = true;
     }
 
     function updateClippingVisibility() {
       const active = clippingReady && toggleClipping.checked;
 
       clipEntries.forEach((entry) => {
-        const sourceVisible = isEffectivelyVisible(entry.sourceObject);
-        const capsAllowed =
-          entry.type === "concrete" || toggleRebarCaps.checked;
-        const visible = active && sourceVisible && capsAllowed;
+        const visible =
+          active &&
+          entry.type === "concrete" &&
+          isEffectivelyVisible(entry.sourceObject);
 
         entry.stencilGroup.visible = visible;
         entry.capMesh.visible = visible;
@@ -1214,7 +1207,6 @@
 
       clipPosition.disabled = !active;
       clipReverse.disabled = !active;
-      toggleRebarCaps.disabled = !active;
       btnResetClipping.disabled = !clippingReady;
     }
 
@@ -1223,14 +1215,14 @@
 
       const percentage = Number(clipPosition.value);
       const interpolation = percentage / 100;
-      const currentY = THREE.MathUtils.lerp(
-        clipMinY,
-        clipMaxY,
+      const currentZ = THREE.MathUtils.lerp(
+        clipMinZ,
+        clipMaxZ,
         interpolation
       );
 
-      clipNormal.set(0, clipReverse.checked ? -1 : 1, 0);
-      clipPoint.set(clipCenter.x, currentY, clipCenter.z);
+      clipNormal.set(0, 0, clipReverse.checked ? -1 : 1);
+      clipPoint.set(clipCenter.x, clipCenter.y, currentZ);
       clipPlane.setFromNormalAndCoplanarPoint(clipNormal, clipPoint);
 
       planeQuaternion.setFromUnitVectors(
@@ -1241,13 +1233,6 @@
       clipEntries.forEach((entry) => {
         entry.capMesh.quaternion.copy(planeQuaternion);
         entry.capMesh.position.copy(clipPoint);
-
-        if (entry.type === "rebar") {
-          entry.capMesh.position.addScaledVector(
-            clipPlane.normal,
-            clipDepthOffset
-          );
-        }
 
         entry.capMesh.updateMatrixWorld(true);
       });
@@ -1275,23 +1260,24 @@
     }
 
     function setupClippingSystem() {
-      root.updateWorldMatrix(true, true);
+      concreteGroup.updateWorldMatrix(true, true);
 
-      const box = new THREE.Box3().setFromObject(root);
+      const box = new THREE.Box3().setFromObject(concreteGroup);
       if (box.isEmpty()) return;
 
       const size = box.getSize(new THREE.Vector3());
       box.getCenter(clipCenter);
 
-      clipMinY = box.min.y;
-      clipMaxY = box.max.y;
+      clipMinZ = box.min.z;
+      clipMaxZ = box.max.z;
 
       const maxDimension = Math.max(size.x, size.y, size.z, 1);
-      clipDepthOffset = maxDimension * 0.00001;
       clippingTolerance = maxDimension * 0.000001;
 
-      const planeWidth = Math.max(size.x * 1.35, 1);
-      const planeHeight = Math.max(size.z * 1.35, 1);
+      // PlaneGeometry liegt standardmäßig in der XY-Ebene.
+      // Breite = X-Ausdehnung, Höhe = Y-Ausdehnung der Schale.
+      const planeWidth = Math.max(size.x * 1.5, 1);
+      const planeHeight = Math.max(size.y * 1.5, 1);
       capPlaneGeometry = new THREE.PlaneGeometry(
         planeWidth,
         planeHeight
@@ -1304,19 +1290,6 @@
         10,
         "concrete"
       );
-
-      GROUPS.forEach((group, index) => {
-        const loadedEntry = loadedGroups.get(group.id);
-        if (!loadedEntry) return;
-
-        createCapEntry(
-          group.id,
-          loadedEntry.object,
-          rebarCapBaseMaterial,
-          20 + index * 2,
-          "rebar"
-        );
-      });
 
       clippingReady = true;
       updateClippingState();
@@ -1384,12 +1357,6 @@
         }
       });
 
-      const clipEntry = clipEntries.get(groupId);
-      if (clipEntry) {
-        clipEntry.capMesh.material = highlighted
-          ? rebarCapHighlightMaterial
-          : rebarCapBaseMaterial;
-      }
     }
 
     function clearSelection() {
@@ -1702,7 +1669,6 @@
     toggleClipping.addEventListener("change", updateClippingState);
     clipPosition.addEventListener("input", updateClippingPlane);
     clipReverse.addEventListener("change", updateClippingPlane);
-    toggleRebarCaps.addEventListener("change", updateClippingVisibility);
     btnResetClipping.addEventListener("click", resetClipping);
 
     canvas.addEventListener("pointerdown", (event) => {
@@ -1733,9 +1699,7 @@
         false
       );
 
-      const rebarIntersection = firstVisibleIntersection(
-        rebarIntersections
-      );
+      const rebarIntersection = rebarIntersections[0] || null;
 
       if (rebarIntersection) {
         const groupId = rebarIntersection.object.userData.groupId;
