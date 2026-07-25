@@ -206,18 +206,44 @@
 
     .info-grid {
       display: grid;
-      grid-template-columns: 120px 1fr;
-      gap: 8px 12px;
+      grid-template-columns: 150px 1fr;
+      gap: 8px 14px;
       font-size: 14px;
       line-height: 1.45;
     }
 
-    .info-label { font-weight: 600; }
+    .info-label {
+      font-weight: 600;
+      color: #444;
+    }
 
-    .file-name {
+    .property-sections {
+      display: grid;
+      gap: 16px;
+    }
+
+    .property-section {
+      padding: 14px 16px;
+      border: 1px solid #e5e1da;
+      border-radius: 9px;
+      background: #fbfaf8;
+    }
+
+    .property-section h3 {
+      margin: 0 0 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #444;
+    }
+
+    .property-value {
+      min-width: 0;
       overflow-wrap: anywhere;
-      font-size: 12px;
+    }
+
+    .property-note {
       color: var(--muted);
+      font-size: 13px;
     }
 
     .hint {
@@ -254,7 +280,7 @@
       h1 { font-size: 25px; }
       #viewer { height: 480px; }
       .viewer-wrap { min-height: 480px; }
-      .info-grid { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr; gap: 3px; }
     }
   </style>
 </head>
@@ -320,13 +346,6 @@
             <div class="info-label">Status</div>
             <div>Keine Gruppe ausgewählt.</div>
           </div>
-
-          <p class="hint">
-            Ein kurzer Linksklick auf einen Bewehrungsstab wählt die gesamte Gruppe aus.
-            Ein Klick auf eine andere Gruppe ersetzt die Auswahl. Ein Klick ins Leere oder
-            auf die Betonschale hebt die Auswahl auf. Beim Drehen, Zoomen und Verschieben
-            bleibt die Auswahl bestehen.
-          </p>
         </div>
 
         <div class="status" id="statusText">Viewer wird vorbereitet …</div>
@@ -357,194 +376,384 @@
 
     const GROUPS = [
       {
-        id: "dg-randleiter-quer",
+        id: "HP18N-DG-RL-Q-01",
         category: "druckgurt",
         listLabel: "Randleiter – Querstäbe",
-        label: "Randleiter – Querstäbe d6.5",
+        designation: "Randleiter – Querstäbe",
         file: "hp18n_bewehrung_druckgurt_randleiter_querstaebe_d6p5.glb",
-        bereich: "Druckgurt",
-        gruppe: "Randleiter",
-        details: "Querstäbe, Durchmesser d6.5"
+        componentArea: "Druckgurt",
+        reinforcementType: "Randleiter",
+        position: "",
+        direction: "quer",
+        quantity: "",
+        nominalDiameter: "6.5 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "d6.5",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Nach historischer Planangabe modelliert."
       },
       {
-        id: "dg-randleiter-laengs",
+        id: "HP18N-DG-RL-L-01",
         category: "druckgurt",
         listLabel: "Randleiter – Längsstäbe",
-        label: "Randleiter – 3 Stk. d8 STA III",
+        designation: "Randleiter – Längsstäbe",
         file: "hp18n_bewehrung_druckgurt_randleiter_3stk_d8_sta3.glb",
-        bereich: "Druckgurt",
-        gruppe: "Randleiter",
-        details: "3 Längsstäbe, Durchmesser d8, Stahlgüte STA III"
+        componentArea: "Druckgurt",
+        reinforcementType: "Randleiter",
+        position: "",
+        direction: "längs",
+        quantity: "3 Stäbe",
+        nominalDiameter: "8 mm",
+        spacing: "",
+        steelGrade: "STA III",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "3 d8 STA III",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Nach historischer Planangabe modelliert."
       },
       {
-        id: "dg-quer-unten-kassetten",
+        id: "HP18N-DG-QU-KA-01",
         category: "druckgurt",
         listLabel: "Querbewehrung untere Lage – Kassettenbereich",
-        label: "Querbewehrung untere Lage – Kassettenbereich",
+        designation: "Querbewehrung untere Lage – Kassettenbereich",
         file: "hp18n_bewehrung_druckgurt_quer_unten_kassettenbereich_2stk_pro_rippe_d6p5_sta1.glb",
-        bereich: "Druckgurt",
-        gruppe: "Querbewehrung untere Lage",
-        details: "Kassettenbereich, 2 Stk. je Rippe, Durchmesser d6.5, Stahlgüte STA I"
+        componentArea: "Druckgurt",
+        reinforcementType: "Querbewehrung",
+        position: "untere Lage, Kassettenbereich",
+        direction: "quer",
+        quantity: "2 Stäbe je Rippe",
+        nominalDiameter: "6.5 mm",
+        spacing: "",
+        steelGrade: "STA I",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "2/Rippe d6.5 STA I",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Nach historischer Planangabe modelliert."
       },
       {
-        id: "dg-quer-unten-endfeld-125",
+        id: "HP18N-DG-QU-EF125-01",
         category: "druckgurt",
         listLabel: "Querbewehrung untere Lage – Endfeld e125",
-        label: "Querbewehrung untere Lage – Endfeld d6.5 e125 STA I",
+        designation: "Querbewehrung untere Lage – Endfeld",
         file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e125_sta1.glb",
-        bereich: "Druckgurt",
-        gruppe: "Querbewehrung untere Lage",
-        details: "Endfeld, Durchmesser d6.5, Abstand e125, Stahlgüte STA I"
+        componentArea: "Druckgurt",
+        reinforcementType: "Querbewehrung",
+        position: "untere Lage, Endfeld",
+        direction: "quer",
+        quantity: "",
+        nominalDiameter: "6.5 mm",
+        spacing: "125 mm",
+        steelGrade: "STA I",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "d6.5 e125 STA I",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Abstand in normalisierter Millimeterangabe dargestellt."
       },
       {
-        id: "dg-quer-unten-endfeld-75",
+        id: "HP18N-DG-QU-EF075-01",
         category: "druckgurt",
         listLabel: "Querbewehrung untere Lage – Endfeld e75",
-        label: "Querbewehrung untere Lage – Endfeld d6.5 e75 STA I",
+        designation: "Querbewehrung untere Lage – Endfeld",
         file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e75_sta1.glb",
-        bereich: "Druckgurt",
-        gruppe: "Querbewehrung untere Lage",
-        details: "Endfeld, Durchmesser d6.5, Abstand e75, Stahlgüte STA I"
+        componentArea: "Druckgurt",
+        reinforcementType: "Querbewehrung",
+        position: "untere Lage, Endfeld",
+        direction: "quer",
+        quantity: "",
+        nominalDiameter: "6.5 mm",
+        spacing: "75 mm",
+        steelGrade: "STA I",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "d6.5 e75 STA I",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Abstand in normalisierter Millimeterangabe dargestellt."
       },
       {
-        id: "dg-quer-oben-kassetten",
+        id: "HP18N-DG-QO-KA-01",
         category: "druckgurt",
         listLabel: "Querbewehrung obere Lage – Kassettenbereich",
-        label: "Querbewehrung obere Lage – Kassettenbereich",
+        designation: "Querbewehrung obere Lage – Kassettenbereich",
         file: "hp18n_bewehrung_druckgurt_quer_oben_kassettenbereich_1bzw2stk_pro_rippe_d6p5_sta1.glb",
-        bereich: "Druckgurt",
-        gruppe: "Querbewehrung obere Lage",
-        details: "Kassettenbereich, 1 bzw. 2 Stk. je Rippe, Durchmesser d6.5, Stahlgüte STA I"
+        componentArea: "Druckgurt",
+        reinforcementType: "Querbewehrung",
+        position: "obere Lage, Kassettenbereich",
+        direction: "quer",
+        quantity: "1 bzw. 2 Stäbe je Rippe",
+        nominalDiameter: "6.5 mm",
+        spacing: "",
+        steelGrade: "STA I",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "1 bzw. 2/Rippe d6.5 STA I",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Nach historischer Planangabe modelliert."
       },
       {
-        id: "dg-quer-oben-endfeld-125",
+        id: "HP18N-DG-QO-EF125-01",
         category: "druckgurt",
         listLabel: "Querbewehrung obere Lage – Endfeld e125",
-        label: "Querbewehrung obere Lage – Endfeld d6.5 e125 STA I",
+        designation: "Querbewehrung obere Lage – Endfeld",
         file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e125_sta1.glb",
-        bereich: "Druckgurt",
-        gruppe: "Querbewehrung obere Lage",
-        details: "Endfeld, Durchmesser d6.5, Abstand e125, Stahlgüte STA I"
+        componentArea: "Druckgurt",
+        reinforcementType: "Querbewehrung",
+        position: "obere Lage, Endfeld",
+        direction: "quer",
+        quantity: "",
+        nominalDiameter: "6.5 mm",
+        spacing: "125 mm",
+        steelGrade: "STA I",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "d6.5 e125 STA I",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Abstand in normalisierter Millimeterangabe dargestellt."
       },
       {
-        id: "dg-quer-oben-endfeld-75",
+        id: "HP18N-DG-QO-EF075-01",
         category: "druckgurt",
         listLabel: "Querbewehrung obere Lage – Endfeld e75",
-        label: "Querbewehrung obere Lage – Endfeld d6.5 e75 STA I",
+        designation: "Querbewehrung obere Lage – Endfeld",
         file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e75_sta1.glb",
-        bereich: "Druckgurt",
-        gruppe: "Querbewehrung obere Lage",
-        details: "Endfeld, Durchmesser d6.5, Abstand e75, Stahlgüte STA I"
+        componentArea: "Druckgurt",
+        reinforcementType: "Querbewehrung",
+        position: "obere Lage, Endfeld",
+        direction: "quer",
+        quantity: "",
+        nominalDiameter: "6.5 mm",
+        spacing: "75 mm",
+        steelGrade: "STA I",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "d6.5 e75 STA I",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Abstand in normalisierter Millimeterangabe dargestellt."
       },
       {
-        id: "dg-laengs-d8",
+        id: "HP18N-DG-LM-D08-01",
         category: "druckgurt",
         listLabel: "Längsbewehrung mittlere Lage – d8",
-        label: "Längsbewehrung mittlere Lage – gesamte Länge d8",
+        designation: "Längsbewehrung mittlere Lage – über gesamte Länge",
         file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d8.glb",
-        bereich: "Druckgurt",
-        gruppe: "Längsbewehrung mittlere Lage",
-        details: "über die gesamte Länge, Durchmesser d8"
+        componentArea: "Druckgurt",
+        reinforcementType: "Längsbewehrung",
+        position: "mittlere Lage, über gesamte Länge",
+        direction: "längs",
+        quantity: "",
+        nominalDiameter: "8 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "d8",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Nach historischer Planangabe modelliert."
       },
       {
-        id: "dg-laengs-d6p5",
+        id: "HP18N-DG-LM-D06P5-01",
         category: "druckgurt",
         listLabel: "Längsbewehrung mittlere Lage – d6.5",
-        label: "Längsbewehrung mittlere Lage – gesamte Länge d6.5",
+        designation: "Längsbewehrung mittlere Lage – über gesamte Länge",
         file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d6p5.glb",
-        bereich: "Druckgurt",
-        gruppe: "Längsbewehrung mittlere Lage",
-        details: "über die gesamte Länge, Durchmesser d6.5"
+        componentArea: "Druckgurt",
+        reinforcementType: "Längsbewehrung",
+        position: "mittlere Lage, über gesamte Länge",
+        direction: "längs",
+        quantity: "",
+        nominalDiameter: "6.5 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "d6.5",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Nach historischer Planangabe modelliert."
       },
       {
-        id: "dg-laengs-endfeld",
+        id: "HP18N-DG-LM-EF-01",
         category: "druckgurt",
         listLabel: "Längsbewehrung mittlere Lage – Endfeld",
-        label: "Längsbewehrung mittlere Lage – Endfeld 5 bzw. 4 Stk. d6.5",
+        designation: "Längsbewehrung mittlere Lage – Endfeld",
         file: "hp18n_bewehrung_druckgurt_laengs_mittig_endfeld_5bzw4stk_d6p5.glb",
-        bereich: "Druckgurt",
-        gruppe: "Längsbewehrung mittlere Lage",
-        details: "Endfeld, 5 bzw. 4 Stäbe, Durchmesser d6.5"
+        componentArea: "Druckgurt",
+        reinforcementType: "Längsbewehrung",
+        position: "mittlere Lage, Endfeld",
+        direction: "längs",
+        quantity: "5 bzw. 4 Stäbe",
+        nominalDiameter: "6.5 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "5 bzw. 4 d6.5",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Nach historischer Planangabe modelliert."
       },
       {
-        id: "dg-herausstehend",
+        id: "HP18N-DG-HR-01",
         category: "druckgurt",
         listLabel: "Herausstehende Rundstähle",
-        label: "Herausstehende Rundstähle d6.5 e600",
+        designation: "Herausstehende Rundstähle",
         file: "hp18n_bewehrung_druckgurt_herausstehende_rundstaehle_d6p5_e600.glb",
-        bereich: "Druckgurt",
-        gruppe: "Herausstehende Rundstähle",
-        details: "Durchmesser d6.5, Abstand e600"
+        componentArea: "Druckgurt",
+        reinforcementType: "Anschlussbewehrung",
+        position: "aus dem Druckgurt herausstehend",
+        direction: "",
+        quantity: "",
+        nominalDiameter: "6.5 mm",
+        spacing: "600 mm",
+        steelGrade: "im Plan nicht angegeben",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "USERDEFINED",
+        planNotation: "d6.5 e600",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Bezeichnung lagebezogen; genaue Funktion noch zu prüfen."
       },
       {
-        id: "steg-laengs",
+        id: "HP18N-ST-OL-01",
         category: "steg",
         listLabel: "Obere Längsbewehrung",
-        label: "Obere Längsbewehrung d8",
+        designation: "Obere Längsbewehrung",
         file: "hp18n_bewehrung_steg_laengsstaebe_d8.glb",
-        bereich: "Steg",
-        gruppe: "Obere Längsbewehrung",
-        details: "Durchmesser d8"
+        componentArea: "Steg",
+        reinforcementType: "Längsbewehrung",
+        position: "oberhalb der Hauptzugbewehrung",
+        direction: "längs",
+        quantity: "",
+        nominalDiameter: "8 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "d8",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Lagebezogene Bezeichnung; Tragfunktion noch nicht abschließend bestimmt."
       },
       {
-        id: "steg-hauptzug",
+        id: "HP18N-ST-HZ-01",
         category: "steg",
         listLabel: "Hauptzugbewehrung",
-        label: "Hauptzugbewehrung d28 STA III",
+        designation: "Hauptzugbewehrung",
         file: "hp18n_bewehrung_steg_hauptzugbewehrung_d28_sta3.glb",
-        bereich: "Steg",
-        gruppe: "Hauptzugbewehrung",
-        details: "Durchmesser d28, Stahlgüte STA III"
+        componentArea: "Steg",
+        reinforcementType: "Hauptzugbewehrung",
+        position: "unterer Stegbereich",
+        direction: "längs",
+        quantity: "",
+        nominalDiameter: "28 mm",
+        spacing: "",
+        steelGrade: "STA III",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "MAIN",
+        planNotation: "d28 STA III",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Funktion und Materialangabe aus dem historischen Plan übernommen."
       },
       {
-        id: "steg-buegel",
+        id: "HP18N-ST-BG-01",
         category: "steg",
         listLabel: "Bügel",
-        label: "Bügel d6.5 e300/250/200/160",
+        designation: "Bügel",
         file: "hp18n_bewehrung_steg_buegel_d6p5_e300_250_200_160.glb",
-        bereich: "Steg",
-        gruppe: "Bügel",
-        details: "Durchmesser d6.5, Abstandsfolge e300–250–200–160"
+        componentArea: "Steg",
+        reinforcementType: "Bügelbewehrung",
+        position: "Steg",
+        direction: "quer zur Bauteillängsrichtung",
+        quantity: "",
+        nominalDiameter: "6.5 mm",
+        spacing: "300 / 250 / 200 / 160 mm",
+        steelGrade: "im Plan nicht angegeben",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "LIGATURE",
+        planNotation: "d6.5 e300/250/200/160",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Abstandsfolge aus dem historischen Plan übernommen."
       },
       {
-        id: "auflager-unten",
+        id: "HP18N-AU-UL-01",
         category: "auflager",
         listLabel: "Untere Lage",
-        label: "Untere Lage 4 Stk. d12",
+        designation: "Auflagerbewehrung – untere Lage",
         file: "hp18n_bewehrung_auflager_unten_4stk_d12.glb",
-        bereich: "Auflagerbereich",
-        gruppe: "Untere Lage",
-        details: "4 Stäbe, Durchmesser d12"
+        componentArea: "Auflagerbereich",
+        reinforcementType: "Auflagerbewehrung",
+        position: "untere Lage",
+        direction: "",
+        quantity: "4 Stäbe",
+        nominalDiameter: "12 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "4 d12",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Nach historischer Planangabe modelliert."
       },
       {
-        id: "auflager-oben",
+        id: "HP18N-AU-OL-01",
         category: "auflager",
         listLabel: "Obere Lage",
-        label: "Obere Lage 4 Stk. d12",
+        designation: "Auflagerbewehrung – obere Lage",
         file: "hp18n_bewehrung_auflager_oben_4stk_d12.glb",
-        bereich: "Auflagerbereich",
-        gruppe: "Obere Lage",
-        details: "4 Stäbe, Durchmesser d12"
+        componentArea: "Auflagerbereich",
+        reinforcementType: "Auflagerbewehrung",
+        position: "obere Lage",
+        direction: "",
+        quantity: "4 Stäbe",
+        nominalDiameter: "12 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "NOTDEFINED",
+        planNotation: "4 d12",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Nach historischer Planangabe modelliert."
       },
       {
-        id: "auflager-oese",
+        id: "HP18N-AU-MO-01",
         category: "auflager",
         listLabel: "Montageöse",
-        label: "Montageöse d20",
+        designation: "Montageöse",
         file: "hp18n_bewehrung_auflager_montageoese_d20.glb",
-        bereich: "Auflagerbereich",
-        gruppe: "Montageöse",
-        details: "Durchmesser d20"
+        componentArea: "Auflagerbereich",
+        reinforcementType: "Montage- und Transportbewehrung",
+        position: "Auflagerbereich",
+        direction: "",
+        quantity: "",
+        nominalDiameter: "20 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "USERDEFINED",
+        planNotation: "d20",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Als Montageöse im historischen Plan bezeichnet."
       },
       {
-        id: "auflager-buegel",
+        id: "HP18N-AU-BG-01",
         category: "auflager",
         listLabel: "Bügel",
-        label: "Bügel d8",
+        designation: "Bügel im Auflagerbereich",
         file: "hp18n_bewehrung_auflager_buegel_d8.glb",
-        bereich: "Auflagerbereich",
-        gruppe: "Bügel",
-        details: "Durchmesser d8"
+        componentArea: "Auflagerbereich",
+        reinforcementType: "Bügelbewehrung",
+        position: "Auflagerbereich",
+        direction: "quer zur Bauteillängsrichtung",
+        quantity: "",
+        nominalDiameter: "8 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        ifcClass: "IfcReinforcingBar",
+        ifcRole: "LIGATURE",
+        planNotation: "d8",
+        source: "Historischer Bewehrungsplan HP-18-N",
+        informationStatus: "Nach historischer Planangabe modelliert."
       }
     ];
 
@@ -695,12 +904,37 @@
       updateSelectionUI();
     }
 
+    function propertyRow(label, value, note = false) {
+      if (!value) return "";
+
+      return `
+        <div class="info-label">${label}</div>
+        <div class="property-value${note ? " property-note" : ""}">${value}</div>
+      `;
+    }
+
+    function propertySection(title, rows) {
+      const content = rows.filter(Boolean).join("");
+      if (!content) return "";
+
+      return `
+        <section class="property-section">
+          <h3>${title}</h3>
+          <div class="info-grid">${content}</div>
+        </section>
+      `;
+    }
+
     function updateSelectionUI() {
       document.querySelectorAll(".group-item").forEach((item) => {
-        item.classList.toggle("active", Boolean(selectedGroupId && item.dataset.groupId === selectedGroupId));
+        item.classList.toggle(
+          "active",
+          Boolean(selectedGroupId && item.dataset.groupId === selectedGroupId)
+        );
       });
 
       if (!selectedGroupId) {
+        selectionInfo.className = "info-grid";
         selectionInfo.innerHTML = `
           <div class="info-label">Status</div>
           <div>Keine Gruppe ausgewählt.</div>
@@ -709,22 +943,33 @@
       }
 
       const meta = GROUPS.find((group) => group.id === selectedGroupId);
-      selectionInfo.innerHTML = `
-        <div class="info-label">Bereich</div>
-        <div>${meta.bereich}</div>
 
-        <div class="info-label">Gruppe</div>
-        <div>${meta.gruppe}</div>
-
-        <div class="info-label">Bezeichnung</div>
-        <div>${meta.label}</div>
-
-        <div class="info-label">Details</div>
-        <div>${meta.details}</div>
-
-        <div class="info-label">GLB-Datei</div>
-        <div class="file-name">${meta.file}</div>
-      `;
+      selectionInfo.className = "property-sections";
+      selectionInfo.innerHTML = [
+        propertySection("Identifikation", [
+          propertyRow("Bezeichnung", meta.designation),
+          propertyRow("Gruppen-ID", meta.id),
+          propertyRow("IFC-Klasse", meta.ifcClass),
+          propertyRow("IFC-Rolle", meta.ifcRole)
+        ]),
+        propertySection("Konstruktive Zuordnung", [
+          propertyRow("Bauteilbereich", meta.componentArea),
+          propertyRow("Bewehrungsart", meta.reinforcementType),
+          propertyRow("Lage", meta.position),
+          propertyRow("Richtung", meta.direction)
+        ]),
+        propertySection("Geometrie und Material", [
+          propertyRow("Anzahl", meta.quantity),
+          propertyRow("Nenndurchmesser", meta.nominalDiameter),
+          propertyRow("Verlegeabstand", meta.spacing),
+          propertyRow("Stahlgüte", meta.steelGrade)
+        ]),
+        propertySection("Historische Dokumentation", [
+          propertyRow("Planangabe", meta.planNotation),
+          propertyRow("Quelle", meta.source),
+          propertyRow("Informationsstatus", meta.informationStatus, true)
+        ])
+      ].join("");
     }
 
     function updateConcreteVisibility() {
