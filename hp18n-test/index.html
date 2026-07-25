@@ -356,25 +356,196 @@
     };
 
     const GROUPS = [
-      { id: "dg-randleiter-quer", category: "druckgurt", label: "Randleiter – Querstäbe d6.5", file: "hp18n_bewehrung_druckgurt_randleiter_querstaebe_d6p5.glb", bereich: "Druckgurt", gruppe: "Randleiter", details: "Querstäbe, d6.5" },
-      { id: "dg-randleiter-laengs", category: "druckgurt", label: "Randleiter – 3 Stk. d8 STA III", file: "hp18n_bewehrung_druckgurt_randleiter_3stk_d8_sta3.glb", bereich: "Druckgurt", gruppe: "Randleiter", details: "3 Stäbe, d8, STA III" },
-      { id: "dg-quer-unten-kassetten", category: "druckgurt", label: "Querbewehrung unten – Kassettenbereich", file: "hp18n_bewehrung_druckgurt_quer_unten_kassettenbereich_2stk_pro_rippe_d6p5_sta1.glb", bereich: "Druckgurt", gruppe: "Querbewehrung – untere Lage", details: "Kassettenbereich, 2 Stk./Rippe, d6.5, STA I" },
-      { id: "dg-quer-unten-endfeld-125", category: "druckgurt", label: "Querbewehrung unten – Endfeld e125", file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e125_sta1.glb", bereich: "Druckgurt", gruppe: "Querbewehrung – untere Lage", details: "Endfeld, d6.5, e125, STA I" },
-      { id: "dg-quer-unten-endfeld-75", category: "druckgurt", label: "Querbewehrung unten – Endfeld e75", file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e75_sta1.glb", bereich: "Druckgurt", gruppe: "Querbewehrung – untere Lage", details: "Endfeld, d6.5, e75, STA I" },
-      { id: "dg-quer-oben-kassetten", category: "druckgurt", label: "Querbewehrung oben – Kassettenbereich", file: "hp18n_bewehrung_druckgurt_quer_oben_kassettenbereich_1bzw2stk_pro_rippe_d6p5_sta1.glb", bereich: "Druckgurt", gruppe: "Querbewehrung – obere Lage", details: "Kassettenbereich, 1 bzw. 2 Stk./Rippe, d6.5, STA I" },
-      { id: "dg-quer-oben-endfeld-125", category: "druckgurt", label: "Querbewehrung oben – Endfeld e125", file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e125_sta1.glb", bereich: "Druckgurt", gruppe: "Querbewehrung – obere Lage", details: "Endfeld, d6.5, e125, STA I" },
-      { id: "dg-quer-oben-endfeld-75", category: "druckgurt", label: "Querbewehrung oben – Endfeld e75", file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e75_sta1.glb", bereich: "Druckgurt", gruppe: "Querbewehrung – obere Lage", details: "Endfeld, d6.5, e75, STA I" },
-      { id: "dg-laengs-d8", category: "druckgurt", label: "Längsbewehrung mittig – gesamte Länge d8", file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d8.glb", bereich: "Druckgurt", gruppe: "Längsbewehrung – mittlere Lage", details: "über die gesamte Länge, d8" },
-      { id: "dg-laengs-d6p5", category: "druckgurt", label: "Längsbewehrung mittig – gesamte Länge d6.5", file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d6p5.glb", bereich: "Druckgurt", gruppe: "Längsbewehrung – mittlere Lage", details: "über die gesamte Länge, d6.5" },
-      { id: "dg-laengs-endfeld", category: "druckgurt", label: "Längsbewehrung mittig – Endfeld", file: "hp18n_bewehrung_druckgurt_laengs_mittig_endfeld_5bzw4stk_d6p5.glb", bereich: "Druckgurt", gruppe: "Längsbewehrung – mittlere Lage", details: "Endfeld, 5 bzw. 4 Stäbe, d6.5" },
-      { id: "dg-herausstehend", category: "druckgurt", label: "Herausstehende Rundstähle d6.5 e600", file: "hp18n_bewehrung_druckgurt_herausstehende_rundstaehle_d6p5_e600.glb", bereich: "Druckgurt", gruppe: "Herausstehende Rundstähle", details: "d6.5, e600" },
-      { id: "steg-laengs", category: "steg", label: "Steg – Längsstäbe d8", file: "hp18n_bewehrung_steg_laengsstaebe_d8.glb", bereich: "Steg", gruppe: "Längsstäbe", details: "d8" },
-      { id: "steg-hauptzug", category: "steg", label: "Steg – Hauptzugbewehrung d28 STA III", file: "hp18n_bewehrung_steg_hauptzugbewehrung_d28_sta3.glb", bereich: "Steg", gruppe: "Hauptzugbewehrung", details: "d28, STA III" },
-      { id: "steg-buegel", category: "steg", label: "Steg – Bügel d6.5 e300/250/200/160", file: "hp18n_bewehrung_steg_buegel_d6p5_e300_250_200_160.glb", bereich: "Steg", gruppe: "Bügel", details: "d6.5, e300–250–200–160" },
-      { id: "auflager-unten", category: "auflager", label: "Auflagerbereich – untere Lage 4 Stk. d12", file: "hp18n_bewehrung_auflager_unten_4stk_d12.glb", bereich: "Auflagerbereich", gruppe: "Untere Lage", details: "4 Stäbe, d12" },
-      { id: "auflager-oben", category: "auflager", label: "Auflagerbereich – obere Lage 4 Stk. d12", file: "hp18n_bewehrung_auflager_oben_4stk_d12.glb", bereich: "Auflagerbereich", gruppe: "Obere Lage", details: "4 Stäbe, d12" },
-      { id: "auflager-oese", category: "auflager", label: "Auflagerbereich – Montageöse d20", file: "hp18n_bewehrung_auflager_montageoese_d20.glb", bereich: "Auflagerbereich", gruppe: "Montageöse", details: "d20" },
-      { id: "auflager-buegel", category: "auflager", label: "Auflagerbereich – Bügel d8", file: "hp18n_bewehrung_auflager_buegel_d8.glb", bereich: "Auflagerbereich", gruppe: "Bügel", details: "d8" }
+      {
+        id: "dg-randleiter-quer",
+        category: "druckgurt",
+        listLabel: "Randleiter – Querstäbe",
+        label: "Randleiter – Querstäbe d6.5",
+        file: "hp18n_bewehrung_druckgurt_randleiter_querstaebe_d6p5.glb",
+        bereich: "Druckgurt",
+        gruppe: "Randleiter",
+        details: "Querstäbe, Durchmesser d6.5"
+      },
+      {
+        id: "dg-randleiter-laengs",
+        category: "druckgurt",
+        listLabel: "Randleiter – Längsstäbe",
+        label: "Randleiter – 3 Stk. d8 STA III",
+        file: "hp18n_bewehrung_druckgurt_randleiter_3stk_d8_sta3.glb",
+        bereich: "Druckgurt",
+        gruppe: "Randleiter",
+        details: "3 Längsstäbe, Durchmesser d8, Stahlgüte STA III"
+      },
+      {
+        id: "dg-quer-unten-kassetten",
+        category: "druckgurt",
+        listLabel: "Querbewehrung untere Lage – Kassettenbereich",
+        label: "Querbewehrung untere Lage – Kassettenbereich",
+        file: "hp18n_bewehrung_druckgurt_quer_unten_kassettenbereich_2stk_pro_rippe_d6p5_sta1.glb",
+        bereich: "Druckgurt",
+        gruppe: "Querbewehrung untere Lage",
+        details: "Kassettenbereich, 2 Stk. je Rippe, Durchmesser d6.5, Stahlgüte STA I"
+      },
+      {
+        id: "dg-quer-unten-endfeld-125",
+        category: "druckgurt",
+        listLabel: "Querbewehrung untere Lage – Endfeld e125",
+        label: "Querbewehrung untere Lage – Endfeld d6.5 e125 STA I",
+        file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e125_sta1.glb",
+        bereich: "Druckgurt",
+        gruppe: "Querbewehrung untere Lage",
+        details: "Endfeld, Durchmesser d6.5, Abstand e125, Stahlgüte STA I"
+      },
+      {
+        id: "dg-quer-unten-endfeld-75",
+        category: "druckgurt",
+        listLabel: "Querbewehrung untere Lage – Endfeld e75",
+        label: "Querbewehrung untere Lage – Endfeld d6.5 e75 STA I",
+        file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e75_sta1.glb",
+        bereich: "Druckgurt",
+        gruppe: "Querbewehrung untere Lage",
+        details: "Endfeld, Durchmesser d6.5, Abstand e75, Stahlgüte STA I"
+      },
+      {
+        id: "dg-quer-oben-kassetten",
+        category: "druckgurt",
+        listLabel: "Querbewehrung obere Lage – Kassettenbereich",
+        label: "Querbewehrung obere Lage – Kassettenbereich",
+        file: "hp18n_bewehrung_druckgurt_quer_oben_kassettenbereich_1bzw2stk_pro_rippe_d6p5_sta1.glb",
+        bereich: "Druckgurt",
+        gruppe: "Querbewehrung obere Lage",
+        details: "Kassettenbereich, 1 bzw. 2 Stk. je Rippe, Durchmesser d6.5, Stahlgüte STA I"
+      },
+      {
+        id: "dg-quer-oben-endfeld-125",
+        category: "druckgurt",
+        listLabel: "Querbewehrung obere Lage – Endfeld e125",
+        label: "Querbewehrung obere Lage – Endfeld d6.5 e125 STA I",
+        file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e125_sta1.glb",
+        bereich: "Druckgurt",
+        gruppe: "Querbewehrung obere Lage",
+        details: "Endfeld, Durchmesser d6.5, Abstand e125, Stahlgüte STA I"
+      },
+      {
+        id: "dg-quer-oben-endfeld-75",
+        category: "druckgurt",
+        listLabel: "Querbewehrung obere Lage – Endfeld e75",
+        label: "Querbewehrung obere Lage – Endfeld d6.5 e75 STA I",
+        file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e75_sta1.glb",
+        bereich: "Druckgurt",
+        gruppe: "Querbewehrung obere Lage",
+        details: "Endfeld, Durchmesser d6.5, Abstand e75, Stahlgüte STA I"
+      },
+      {
+        id: "dg-laengs-d8",
+        category: "druckgurt",
+        listLabel: "Längsbewehrung mittlere Lage – d8",
+        label: "Längsbewehrung mittlere Lage – gesamte Länge d8",
+        file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d8.glb",
+        bereich: "Druckgurt",
+        gruppe: "Längsbewehrung mittlere Lage",
+        details: "über die gesamte Länge, Durchmesser d8"
+      },
+      {
+        id: "dg-laengs-d6p5",
+        category: "druckgurt",
+        listLabel: "Längsbewehrung mittlere Lage – d6.5",
+        label: "Längsbewehrung mittlere Lage – gesamte Länge d6.5",
+        file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d6p5.glb",
+        bereich: "Druckgurt",
+        gruppe: "Längsbewehrung mittlere Lage",
+        details: "über die gesamte Länge, Durchmesser d6.5"
+      },
+      {
+        id: "dg-laengs-endfeld",
+        category: "druckgurt",
+        listLabel: "Längsbewehrung mittlere Lage – Endfeld",
+        label: "Längsbewehrung mittlere Lage – Endfeld 5 bzw. 4 Stk. d6.5",
+        file: "hp18n_bewehrung_druckgurt_laengs_mittig_endfeld_5bzw4stk_d6p5.glb",
+        bereich: "Druckgurt",
+        gruppe: "Längsbewehrung mittlere Lage",
+        details: "Endfeld, 5 bzw. 4 Stäbe, Durchmesser d6.5"
+      },
+      {
+        id: "dg-herausstehend",
+        category: "druckgurt",
+        listLabel: "Herausstehende Rundstähle",
+        label: "Herausstehende Rundstähle d6.5 e600",
+        file: "hp18n_bewehrung_druckgurt_herausstehende_rundstaehle_d6p5_e600.glb",
+        bereich: "Druckgurt",
+        gruppe: "Herausstehende Rundstähle",
+        details: "Durchmesser d6.5, Abstand e600"
+      },
+      {
+        id: "steg-laengs",
+        category: "steg",
+        listLabel: "Obere Längsbewehrung",
+        label: "Obere Längsbewehrung d8",
+        file: "hp18n_bewehrung_steg_laengsstaebe_d8.glb",
+        bereich: "Steg",
+        gruppe: "Obere Längsbewehrung",
+        details: "Durchmesser d8"
+      },
+      {
+        id: "steg-hauptzug",
+        category: "steg",
+        listLabel: "Hauptzugbewehrung",
+        label: "Hauptzugbewehrung d28 STA III",
+        file: "hp18n_bewehrung_steg_hauptzugbewehrung_d28_sta3.glb",
+        bereich: "Steg",
+        gruppe: "Hauptzugbewehrung",
+        details: "Durchmesser d28, Stahlgüte STA III"
+      },
+      {
+        id: "steg-buegel",
+        category: "steg",
+        listLabel: "Bügel",
+        label: "Bügel d6.5 e300/250/200/160",
+        file: "hp18n_bewehrung_steg_buegel_d6p5_e300_250_200_160.glb",
+        bereich: "Steg",
+        gruppe: "Bügel",
+        details: "Durchmesser d6.5, Abstandsfolge e300–250–200–160"
+      },
+      {
+        id: "auflager-unten",
+        category: "auflager",
+        listLabel: "Untere Lage",
+        label: "Untere Lage 4 Stk. d12",
+        file: "hp18n_bewehrung_auflager_unten_4stk_d12.glb",
+        bereich: "Auflagerbereich",
+        gruppe: "Untere Lage",
+        details: "4 Stäbe, Durchmesser d12"
+      },
+      {
+        id: "auflager-oben",
+        category: "auflager",
+        listLabel: "Obere Lage",
+        label: "Obere Lage 4 Stk. d12",
+        file: "hp18n_bewehrung_auflager_oben_4stk_d12.glb",
+        bereich: "Auflagerbereich",
+        gruppe: "Obere Lage",
+        details: "4 Stäbe, Durchmesser d12"
+      },
+      {
+        id: "auflager-oese",
+        category: "auflager",
+        listLabel: "Montageöse",
+        label: "Montageöse d20",
+        file: "hp18n_bewehrung_auflager_montageoese_d20.glb",
+        bereich: "Auflagerbereich",
+        gruppe: "Montageöse",
+        details: "Durchmesser d20"
+      },
+      {
+        id: "auflager-buegel",
+        category: "auflager",
+        listLabel: "Bügel",
+        label: "Bügel d8",
+        file: "hp18n_bewehrung_auflager_buegel_d8.glb",
+        bereich: "Auflagerbereich",
+        gruppe: "Bügel",
+        details: "Durchmesser d8"
+      }
     ];
 
     const REBAR_COLOR = 0x4a4a4a;
@@ -580,7 +751,7 @@
         const row = document.createElement("div");
         row.className = "group-item";
         row.dataset.groupId = group.id;
-        row.textContent = group.label;
+        row.textContent = group.listLabel;
         containers[group.category].appendChild(row);
 
         row.addEventListener("click", () => {
