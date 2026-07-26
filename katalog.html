@@ -908,8 +908,8 @@
             camera-target="auto auto auto"
             camera-orbit="35deg 68deg auto"
             field-of-view="30deg"
-            min-camera-orbit="auto auto 1%"
-            max-camera-orbit="auto auto 1000%"
+            min-camera-orbit="auto auto 7m"
+            max-camera-orbit="auto auto 75m"
             shadow-intensity="1"
             shadow-softness="0.8"
             exposure="1"
@@ -1414,38 +1414,16 @@
       "HPZ-2.4-MIT-STEG"
     ];
 
-    /*
-      Reale Vergleichslängen der dargestellten GLB-Modelle.
-      Die 24-m-Schale bildet den gemeinsamen Bezugsrahmen.
-      Für die HPZ-Modelle wird die dargestellte Maximallänge von 15 m verwendet.
-    */
-    const comparisonLengths = {
-      "HP-12-MINI": 11.98,
-      "HP-12-N": 11.98,
-      "HP-15-N": 14.98,
-      "HP-15-Z": 14.98,
-      "HP-18-N": 17.98,
-      "HP-18-Z": 17.98,
-      "HP-24": 23.98,
-      "HPZ-2-OHNE-STEG": 15.0,
-      "HPZ-2.4-MIT-STEG": 15.0
-    };
-
-    const MAX_COMPARISON_LENGTH = Math.max(
-      ...Object.values(comparisonLengths)
-    );
-
     const COMPARISON_THETA = 35;
     const COMPARISON_PHI = 68;
     const COMPARISON_FIELD_OF_VIEW = 30;
 
-    // Für alle Modelle gilt dieselbe reale Standard-Kameradistanz.
-    // Dadurch werden 12-, 15-, 18- und 24-m-Schalen sichtbar verschieden groß.
+    // Alle GLBs werden ohne modellabhängige Nachskalierung direkt
+    // in ihren exportierten glTF-Metern verglichen.
     const COMMON_CAMERA_DISTANCE_METERS = 40;
     const SCALE_BAR_METERS = 2;
 
     let activeModelId = "HP-18-N";
-    let currentMetersPerViewerUnit = 1;
 
     const viewer = document.querySelector("#shell-viewer");
     const title = document.querySelector("#model-title");
@@ -1592,10 +1570,7 @@
     }
 
     function comparisonOrbitFor() {
-      const radiusInViewerUnits =
-        COMMON_CAMERA_DISTANCE_METERS / currentMetersPerViewerUnit;
-
-      return `${COMPARISON_THETA}deg ${COMPARISON_PHI}deg ${radiusInViewerUnits}m`;
+      return `${COMPARISON_THETA}deg ${COMPARISON_PHI}deg ${COMMON_CAMERA_DISTANCE_METERS}m`;
     }
 
     function applyComparisonView(immediate = true) {
@@ -1608,26 +1583,6 @@
       }
 
       window.requestAnimationFrame(updateScaleIndicator);
-    }
-
-    function updateModelScale() {
-      if (typeof viewer.getDimensions !== "function") return;
-
-      const dimensions = viewer.getDimensions();
-      const rawDimensions = [
-        Number(dimensions.x),
-        Number(dimensions.y),
-        Number(dimensions.z)
-      ].filter(Number.isFinite);
-
-      if (rawDimensions.length !== 3) return;
-
-      const rawLength = Math.max(...rawDimensions);
-      const realLength =
-        comparisonLengths[activeModelId] || rawLength;
-
-      currentMetersPerViewerUnit =
-        rawLength > 0 ? realLength / rawLength : 1;
     }
 
     function updateScaleIndicator() {
@@ -1651,8 +1606,7 @@
         return;
       }
 
-      const radiusMeters =
-        orbit.radius * currentMetersPerViewerUnit;
+      const radiusMeters = orbit.radius;
       const fieldOfViewRadians =
         THREE_DEG_TO_RAD * fieldOfViewDegrees;
 
@@ -1697,11 +1651,22 @@
         viewer.updateFraming();
       }
 
-      updateModelScale();
       applyComparisonView(true);
 
+      if (typeof viewer.getDimensions === "function") {
+        const dimensions = viewer.getDimensions();
+        console.info(
+          `[HP-Katalog] ${activeModelId} – GLB-Abmessungen in Metern`,
+          {
+            x: Number(dimensions.x),
+            y: Number(dimensions.y),
+            z: Number(dimensions.z)
+          }
+        );
+      }
+
       viewerStatus.textContent =
-        "Fester Größenvergleich · gleiche Standardkamera für alle Modelle · Ansicht zurücksetzen für den Vergleich";
+        "Fester Größenvergleich · gleiche Kamera und gleiche glTF-Einheiten für alle Modelle";
     });
 
     viewer.addEventListener("camera-change", () => {
@@ -1715,7 +1680,7 @@
     resetComparisonViewButton.addEventListener("click", () => {
       applyComparisonView(true);
       viewerStatus.textContent =
-        "Vergleichsansicht mit einheitlichem Maßstab wiederhergestellt";
+        "Vergleichsansicht mit festem Maßstab wiederhergestellt";
     });
 
     viewer.addEventListener("error", () => {
