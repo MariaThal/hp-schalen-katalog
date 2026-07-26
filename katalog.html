@@ -253,6 +253,15 @@
       font-size: 13px;
     }
 
+    .viewer-actions {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
     .id-badge {
       flex: 0 0 auto;
       padding: 7px 10px;
@@ -262,6 +271,27 @@
       font-family: ui-monospace, "Cascadia Code", monospace;
       font-size: 12px;
       font-weight: 700;
+    }
+
+    .viewer-button {
+      min-height: 34px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: var(--paper);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .viewer-button:hover {
+      border-color: #a8a59f;
+      background: #f7f6f3;
+    }
+
+    .viewer-button:active {
+      transform: translateY(1px);
     }
 
     .viewer-shell {
@@ -279,11 +309,102 @@
       --poster-color: transparent;
     }
 
+    .viewer-dimensions {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(76px, auto));
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.70);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+      backdrop-filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .viewer-dimension {
+      min-width: 82px;
+      padding: 9px 11px;
+      border-right: 1px solid rgba(210, 208, 201, 0.75);
+    }
+
+    .viewer-dimension:last-child {
+      border-right: 0;
+    }
+
+    .viewer-dimension span,
+    .viewer-dimension strong {
+      display: block;
+    }
+
+    .viewer-dimension span {
+      margin-bottom: 2px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .viewer-dimension strong {
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .scale-indicator {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      min-width: 90px;
+      padding: 8px 10px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.70);
+      border-radius: 9px;
+      color: #4f5356;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .scale-label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 11px;
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .scale-line {
+      position: relative;
+      width: 80px;
+      height: 8px;
+      border-top: 2px solid #53514d;
+    }
+
+    .scale-line::before,
+    .scale-line::after {
+      content: "";
+      position: absolute;
+      top: -5px;
+      width: 2px;
+      height: 8px;
+      background: #53514d;
+    }
+
+    .scale-line::before {
+      left: 0;
+    }
+
+    .scale-line::after {
+      right: 0;
+    }
+
     .viewer-note {
       position: absolute;
       right: 18px;
       bottom: 18px;
-      max-width: 245px;
+      max-width: 280px;
       padding: 10px 12px;
       border: 1px solid rgba(255, 255, 255, 0.66);
       border-radius: 10px;
@@ -631,6 +752,27 @@
         flex-direction: column;
       }
 
+      .viewer-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .viewer-dimensions {
+        top: 12px;
+        left: 12px;
+        grid-template-columns: repeat(3, minmax(64px, 1fr));
+      }
+
+      .viewer-dimension {
+        min-width: 0;
+        padding: 8px;
+      }
+
+      .scale-indicator {
+        left: 12px;
+        bottom: 76px;
+      }
+
       .viewer-shell,
       model-viewer {
         min-height: 500px;
@@ -753,7 +895,12 @@
             <p id="model-subtitle">HP-Schale · Normalfall</p>
           </div>
 
-          <span class="id-badge" id="model-id">HP-18-N</span>
+          <div class="viewer-actions">
+            <span class="id-badge" id="model-id">HP-18-N</span>
+            <button class="viewer-button" id="reset-comparison-view" type="button">
+              Ansicht zurücksetzen
+            </button>
+          </div>
         </div>
 
         <div class="viewer-shell">
@@ -763,9 +910,11 @@
             alt="Interaktives 3D-Modell der HP-Schale 18 m N"
             camera-controls
             touch-action="pan-y"
-            auto-rotate
-            auto-rotate-delay="1500"
-            rotation-per-second="18deg"
+            camera-target="auto auto auto"
+            camera-orbit="35deg 68deg 133.37%"
+            field-of-view="30deg"
+            min-field-of-view="30deg"
+            max-field-of-view="30deg"
             shadow-intensity="1"
             shadow-softness="0.8"
             exposure="1"
@@ -773,8 +922,28 @@
             interaction-prompt="auto">
           </model-viewer>
 
+          <div class="viewer-dimensions" aria-label="Abmessungen des angezeigten Modells">
+            <div class="viewer-dimension">
+              <span>Länge</span>
+              <strong id="dimension-length">17,98 m</strong>
+            </div>
+            <div class="viewer-dimension">
+              <span>Breite</span>
+              <strong id="dimension-width">1,98 m</strong>
+            </div>
+            <div class="viewer-dimension">
+              <span>Höhe</span>
+              <strong id="dimension-height">–</strong>
+            </div>
+          </div>
+
+          <div class="scale-indicator" aria-label="Dynamische Maßstabsleiste">
+            <span class="scale-label" id="scale-label">2 m</span>
+            <div class="scale-line" id="scale-line"></div>
+          </div>
+
           <div class="viewer-note" id="viewer-status">
-            Modell mit Maus oder Touch drehen · Scrollen zum Zoomen
+            Fester Größenvergleich · mit Maus oder Touch drehen · Scrollen zum Zoomen
           </div>
         </div>
       </article>
@@ -1281,6 +1450,34 @@
       "HPZ-2.4-MIT-STEG"
     ];
 
+    /*
+      Reale Vergleichslängen der dargestellten GLB-Modelle.
+      Die 24-m-Schale bildet den gemeinsamen Bezugsrahmen.
+      Für die HPZ-Modelle wird die dargestellte Maximallänge von 15 m verwendet.
+    */
+    const comparisonLengths = {
+      "HP-12-MINI": 11.98,
+      "HP-12-N": 11.98,
+      "HP-15-N": 14.98,
+      "HP-15-Z": 14.98,
+      "HP-18-N": 17.98,
+      "HP-18-Z": 17.98,
+      "HP-24": 23.98,
+      "HPZ-2-OHNE-STEG": 15.0,
+      "HPZ-2.4-MIT-STEG": 15.0
+    };
+
+    const MAX_COMPARISON_LENGTH = Math.max(
+      ...Object.values(comparisonLengths)
+    );
+
+    const COMPARISON_THETA = 35;
+    const COMPARISON_PHI = 68;
+    const COMPARISON_FIELD_OF_VIEW = 30;
+
+    let activeModelId = "HP-18-N";
+    let currentMetersPerViewerUnit = 1;
+
     const viewer = document.querySelector("#shell-viewer");
     const title = document.querySelector("#model-title");
     const subtitle = document.querySelector("#model-subtitle");
@@ -1290,6 +1487,14 @@
     const dataColumns = document.querySelector("#data-columns");
     const timeline = document.querySelector("#timeline");
     const viewerStatus = document.querySelector("#viewer-status");
+    const resetComparisonViewButton = document.querySelector(
+      "#reset-comparison-view"
+    );
+    const dimensionLength = document.querySelector("#dimension-length");
+    const dimensionWidth = document.querySelector("#dimension-width");
+    const dimensionHeight = document.querySelector("#dimension-height");
+    const scaleLabel = document.querySelector("#scale-label");
+    const scaleLine = document.querySelector("#scale-line");
 
     function renderModelButtons() {
       buttonsContainer.replaceChildren();
@@ -1430,11 +1635,134 @@
       }
     }
 
+    function formatMeters(value, digits = 2) {
+      if (!Number.isFinite(value)) return "–";
+
+      return `${value.toLocaleString("de-DE", {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      })} m`;
+    }
+
+    function comparisonOrbitFor(modelId) {
+      const modelLength = comparisonLengths[modelId] || MAX_COMPARISON_LENGTH;
+      const radiusPercent =
+        (MAX_COMPARISON_LENGTH / modelLength) * 100;
+
+      return `${COMPARISON_THETA}deg ${COMPARISON_PHI}deg ${radiusPercent.toFixed(2)}%`;
+    }
+
+    function applyComparisonView(immediate = true) {
+      viewer.cameraTarget = "auto auto auto";
+      viewer.fieldOfView = `${COMPARISON_FIELD_OF_VIEW}deg`;
+      viewer.cameraOrbit = comparisonOrbitFor(activeModelId);
+
+      if (immediate && typeof viewer.jumpCameraToGoal === "function") {
+        viewer.jumpCameraToGoal();
+      }
+
+      window.requestAnimationFrame(updateScaleIndicator);
+    }
+
+    function updateDimensionDisplay() {
+      if (typeof viewer.getDimensions !== "function") return;
+
+      const dimensions = viewer.getDimensions();
+      const rawDimensions = [
+        Number(dimensions.x),
+        Number(dimensions.y),
+        Number(dimensions.z)
+      ].filter(Number.isFinite);
+
+      if (rawDimensions.length !== 3) return;
+
+      rawDimensions.sort((a, b) => b - a);
+
+      const rawLength = rawDimensions[0];
+      const realLength =
+        comparisonLengths[activeModelId] || rawLength;
+
+      currentMetersPerViewerUnit =
+        rawLength > 0 ? realLength / rawLength : 1;
+
+      const realDimensions = rawDimensions.map(
+        (dimension) => dimension * currentMetersPerViewerUnit
+      );
+
+      dimensionLength.textContent = formatMeters(realDimensions[0]);
+      dimensionWidth.textContent = formatMeters(realDimensions[1]);
+      dimensionHeight.textContent = formatMeters(realDimensions[2]);
+    }
+
+    function chooseScaleLength(pixelsPerMeter) {
+      const candidates = [0.25, 0.5, 1, 2, 5, 10, 20];
+      const targetWidth = 92;
+
+      return candidates.reduce((best, candidate) => {
+        const bestDifference = Math.abs(best * pixelsPerMeter - targetWidth);
+        const candidateDifference =
+          Math.abs(candidate * pixelsPerMeter - targetWidth);
+
+        return candidateDifference < bestDifference ? candidate : best;
+      }, candidates[0]);
+    }
+
+    function formatScaleLength(value) {
+      return value.toLocaleString("de-DE", {
+        minimumFractionDigits: value < 1 ? 2 : 0,
+        maximumFractionDigits: value < 1 ? 2 : 1
+      });
+    }
+
+    function updateScaleIndicator() {
+      if (
+        typeof viewer.getCameraOrbit !== "function" ||
+        typeof viewer.getFieldOfView !== "function"
+      ) {
+        return;
+      }
+
+      const orbit = viewer.getCameraOrbit();
+      const fieldOfViewDegrees = viewer.getFieldOfView();
+      const viewerHeight = viewer.clientHeight;
+
+      if (
+        !orbit ||
+        !Number.isFinite(orbit.radius) ||
+        !Number.isFinite(fieldOfViewDegrees) ||
+        viewerHeight <= 0
+      ) {
+        return;
+      }
+
+      const radiusMeters =
+        orbit.radius * currentMetersPerViewerUnit;
+      const fieldOfViewRadians =
+        THREE_DEG_TO_RAD * fieldOfViewDegrees;
+
+      const visibleHeightAtTarget =
+        2 * radiusMeters * Math.tan(fieldOfViewRadians / 2);
+
+      if (!Number.isFinite(visibleHeightAtTarget) || visibleHeightAtTarget <= 0) {
+        return;
+      }
+
+      const pixelsPerMeter = viewerHeight / visibleHeightAtTarget;
+      const scaleLengthMeters = chooseScaleLength(pixelsPerMeter);
+      const widthPixels = scaleLengthMeters * pixelsPerMeter;
+
+      scaleLabel.textContent = `${formatScaleLength(scaleLengthMeters)} m`;
+      scaleLine.style.width = `${Math.max(34, Math.min(170, widthPixels))}px`;
+    }
+
+    const THREE_DEG_TO_RAD = Math.PI / 180;
+
     function showModel(modelId) {
       const model = models[modelId];
 
       if (!model) return;
 
+      activeModelId = modelId;
       viewerStatus.textContent = "3D-Modell wird geladen …";
 
       viewer.src = model.file;
@@ -1451,8 +1779,29 @@
     }
 
     viewer.addEventListener("load", () => {
+      if (typeof viewer.updateFraming === "function") {
+        viewer.updateFraming();
+      }
+
+      updateDimensionDisplay();
+      applyComparisonView(true);
+
       viewerStatus.textContent =
-        "Modell mit Maus oder Touch drehen · Scrollen zum Zoomen";
+        "Fester Größenvergleich · 24-m-Schale als Bezugsrahmen · Ansicht zurücksetzen für den Vergleich";
+    });
+
+    viewer.addEventListener("camera-change", () => {
+      updateScaleIndicator();
+    });
+
+    window.addEventListener("resize", () => {
+      window.requestAnimationFrame(updateScaleIndicator);
+    });
+
+    resetComparisonViewButton.addEventListener("click", () => {
+      applyComparisonView(true);
+      viewerStatus.textContent =
+        "Vergleichsansicht wiederhergestellt · 24-m-Schale als Bezugsrahmen";
     });
 
     viewer.addEventListener("error", () => {
