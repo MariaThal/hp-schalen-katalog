@@ -217,7 +217,7 @@
       display: grid;
       grid-template-columns: minmax(0, 1.75fr) minmax(320px, 0.75fr);
       gap: 24px;
-      align-items: stretch;
+      align-items: start;
     }
 
     .viewer-card,
@@ -307,49 +307,6 @@
       height: 680px;
       background: transparent;
       --poster-color: transparent;
-    }
-
-    .viewer-dimensions {
-      position: absolute;
-      top: 18px;
-      left: 18px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(76px, auto));
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.70);
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.86);
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
-      backdrop-filter: blur(10px);
-      pointer-events: none;
-    }
-
-    .viewer-dimension {
-      min-width: 82px;
-      padding: 9px 11px;
-      border-right: 1px solid rgba(210, 208, 201, 0.75);
-    }
-
-    .viewer-dimension:last-child {
-      border-right: 0;
-    }
-
-    .viewer-dimension span,
-    .viewer-dimension strong {
-      display: block;
-    }
-
-    .viewer-dimension span {
-      margin-bottom: 2px;
-      color: var(--muted);
-      font-size: 10px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .viewer-dimension strong {
-      font-size: 13px;
-      font-variant-numeric: tabular-nums;
     }
 
     .scale-indicator {
@@ -757,17 +714,6 @@
         justify-content: space-between;
       }
 
-      .viewer-dimensions {
-        top: 12px;
-        left: 12px;
-        grid-template-columns: repeat(3, minmax(64px, 1fr));
-      }
-
-      .viewer-dimension {
-        min-width: 0;
-        padding: 8px;
-      }
-
       .scale-indicator {
         left: 12px;
         bottom: 76px;
@@ -849,6 +795,55 @@
       }
     }
 
+
+    /* Alle Kataloginformationen stehen rechts neben dem 3D-Modell. */
+    .profile-card {
+      display: flex;
+      min-height: 0;
+      max-height: 762px;
+      flex-direction: column;
+    }
+
+    .profile-card .tabs {
+      flex: 0 0 auto;
+    }
+
+    .profile-card .tab-panel {
+      min-height: 0;
+      padding: 18px;
+    }
+
+    .profile-card .tab-panel.is-active {
+      display: block;
+      flex: 1 1 auto;
+      overflow-y: auto;
+    }
+
+    .profile-card .data-columns {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .profile-card .data-section {
+      padding: 15px;
+    }
+
+    .profile-card .document-card {
+      grid-template-columns: 1fr;
+      gap: 8px;
+      padding: 15px;
+    }
+
+    .profile-card .method-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .profile-card .method-text,
+    .profile-card .method-note {
+      padding: 16px;
+    }
+
   </style>
 </head>
 
@@ -911,31 +906,16 @@
             camera-controls
             touch-action="pan-y"
             camera-target="auto auto auto"
-            camera-orbit="35deg 68deg 133.37%"
+            camera-orbit="35deg 68deg auto"
             field-of-view="30deg"
-            min-field-of-view="30deg"
-            max-field-of-view="30deg"
+            min-camera-orbit="auto auto 1%"
+            max-camera-orbit="auto auto 1000%"
             shadow-intensity="1"
             shadow-softness="0.8"
             exposure="1"
             tone-mapping="neutral"
             interaction-prompt="auto">
           </model-viewer>
-
-          <div class="viewer-dimensions" aria-label="Abmessungen des angezeigten Modells">
-            <div class="viewer-dimension">
-              <span>Länge</span>
-              <strong id="dimension-length">17,98 m</strong>
-            </div>
-            <div class="viewer-dimension">
-              <span>Breite</span>
-              <strong id="dimension-width">1,98 m</strong>
-            </div>
-            <div class="viewer-dimension">
-              <span>Höhe</span>
-              <strong id="dimension-height">–</strong>
-            </div>
-          </div>
 
           <div class="scale-indicator" aria-label="Dynamische Maßstabsleiste">
             <span class="scale-label" id="scale-label">2 m</span>
@@ -948,37 +928,18 @@
         </div>
       </article>
 
-      <aside class="profile-card">
-        <div class="profile-header">
-          <p>Kurzprofil</p>
-          <h2>Technische Kerndaten</h2>
-        </div>
-
-        <dl class="profile-list" id="profile-list"></dl>
-
-        <div class="profile-summary">
-          <strong>Darstellungsgrundlage</strong>
-          <p>
-            Das 3D-Modell zeigt die rekonstruierte Ausführung nach der
-            Zulassung 45/70 von 1970. Spätere Dokumentstände werden textlich
-            gegenübergestellt.
-          </p>
-        </div>
-      </aside>
-    </section>
-
-    <section class="details-card">
-      <nav class="tabs" aria-label="Informationsbereiche">
+      <aside class="profile-card" aria-label="Informationen zum ausgewählten Schalentyp">
+<nav class="tabs" aria-label="Informationsbereiche">
         <button class="tab-button is-active" data-tab="construction">
-          Geometrie & Konstruktion
+          Daten
         </button>
 
         <button class="tab-button" data-tab="history">
-          Historische Dokumente
+          Dokumente
         </button>
 
         <button class="tab-button" data-tab="method">
-          Einordnung & Methodik
+          Methodik
         </button>
       </nav>
 
@@ -1021,7 +982,10 @@
           </div>
         </div>
       </div>
+      </aside>
     </section>
+
+
   </main>
 
   <footer class="site-footer">
@@ -1475,6 +1439,11 @@
     const COMPARISON_PHI = 68;
     const COMPARISON_FIELD_OF_VIEW = 30;
 
+    // Für alle Modelle gilt dieselbe reale Standard-Kameradistanz.
+    // Dadurch werden 12-, 15-, 18- und 24-m-Schalen sichtbar verschieden groß.
+    const COMMON_CAMERA_DISTANCE_METERS = 40;
+    const SCALE_BAR_METERS = 2;
+
     let activeModelId = "HP-18-N";
     let currentMetersPerViewerUnit = 1;
 
@@ -1483,16 +1452,12 @@
     const subtitle = document.querySelector("#model-subtitle");
     const idBadge = document.querySelector("#model-id");
     const buttonsContainer = document.querySelector("#model-buttons");
-    const profileList = document.querySelector("#profile-list");
     const dataColumns = document.querySelector("#data-columns");
     const timeline = document.querySelector("#timeline");
     const viewerStatus = document.querySelector("#viewer-status");
     const resetComparisonViewButton = document.querySelector(
       "#reset-comparison-view"
     );
-    const dimensionLength = document.querySelector("#dimension-length");
-    const dimensionWidth = document.querySelector("#dimension-width");
-    const dimensionHeight = document.querySelector("#dimension-height");
     const scaleLabel = document.querySelector("#scale-label");
     const scaleLine = document.querySelector("#scale-line");
 
@@ -1520,24 +1485,6 @@
         });
 
         buttonsContainer.appendChild(button);
-      }
-    }
-
-    function renderProfile(rows) {
-      profileList.replaceChildren();
-
-      for (const [label, value] of rows) {
-        const row = document.createElement("div");
-        row.className = "profile-row";
-
-        const term = document.createElement("dt");
-        term.textContent = label;
-
-        const description = document.createElement("dd");
-        description.textContent = value;
-
-        row.append(term, description);
-        profileList.appendChild(row);
       }
     }
 
@@ -1644,18 +1591,17 @@
       })} m`;
     }
 
-    function comparisonOrbitFor(modelId) {
-      const modelLength = comparisonLengths[modelId] || MAX_COMPARISON_LENGTH;
-      const radiusPercent =
-        (MAX_COMPARISON_LENGTH / modelLength) * 100;
+    function comparisonOrbitFor() {
+      const radiusInViewerUnits =
+        COMMON_CAMERA_DISTANCE_METERS / currentMetersPerViewerUnit;
 
-      return `${COMPARISON_THETA}deg ${COMPARISON_PHI}deg ${radiusPercent.toFixed(2)}%`;
+      return `${COMPARISON_THETA}deg ${COMPARISON_PHI}deg ${radiusInViewerUnits}m`;
     }
 
     function applyComparisonView(immediate = true) {
       viewer.cameraTarget = "auto auto auto";
       viewer.fieldOfView = `${COMPARISON_FIELD_OF_VIEW}deg`;
-      viewer.cameraOrbit = comparisonOrbitFor(activeModelId);
+      viewer.cameraOrbit = comparisonOrbitFor();
 
       if (immediate && typeof viewer.jumpCameraToGoal === "function") {
         viewer.jumpCameraToGoal();
@@ -1664,7 +1610,7 @@
       window.requestAnimationFrame(updateScaleIndicator);
     }
 
-    function updateDimensionDisplay() {
+    function updateModelScale() {
       if (typeof viewer.getDimensions !== "function") return;
 
       const dimensions = viewer.getDimensions();
@@ -1676,42 +1622,12 @@
 
       if (rawDimensions.length !== 3) return;
 
-      rawDimensions.sort((a, b) => b - a);
-
-      const rawLength = rawDimensions[0];
+      const rawLength = Math.max(...rawDimensions);
       const realLength =
         comparisonLengths[activeModelId] || rawLength;
 
       currentMetersPerViewerUnit =
         rawLength > 0 ? realLength / rawLength : 1;
-
-      const realDimensions = rawDimensions.map(
-        (dimension) => dimension * currentMetersPerViewerUnit
-      );
-
-      dimensionLength.textContent = formatMeters(realDimensions[0]);
-      dimensionWidth.textContent = formatMeters(realDimensions[1]);
-      dimensionHeight.textContent = formatMeters(realDimensions[2]);
-    }
-
-    function chooseScaleLength(pixelsPerMeter) {
-      const candidates = [0.25, 0.5, 1, 2, 5, 10, 20];
-      const targetWidth = 92;
-
-      return candidates.reduce((best, candidate) => {
-        const bestDifference = Math.abs(best * pixelsPerMeter - targetWidth);
-        const candidateDifference =
-          Math.abs(candidate * pixelsPerMeter - targetWidth);
-
-        return candidateDifference < bestDifference ? candidate : best;
-      }, candidates[0]);
-    }
-
-    function formatScaleLength(value) {
-      return value.toLocaleString("de-DE", {
-        minimumFractionDigits: value < 1 ? 2 : 0,
-        maximumFractionDigits: value < 1 ? 2 : 1
-      });
     }
 
     function updateScaleIndicator() {
@@ -1748,11 +1664,10 @@
       }
 
       const pixelsPerMeter = viewerHeight / visibleHeightAtTarget;
-      const scaleLengthMeters = chooseScaleLength(pixelsPerMeter);
-      const widthPixels = scaleLengthMeters * pixelsPerMeter;
+      const widthPixels = SCALE_BAR_METERS * pixelsPerMeter;
 
-      scaleLabel.textContent = `${formatScaleLength(scaleLengthMeters)} m`;
-      scaleLine.style.width = `${Math.max(34, Math.min(170, widthPixels))}px`;
+      scaleLabel.textContent = `${SCALE_BAR_METERS} m`;
+      scaleLine.style.width = `${Math.max(28, Math.min(190, widthPixels))}px`;
     }
 
     const THREE_DEG_TO_RAD = Math.PI / 180;
@@ -1772,7 +1687,6 @@
       subtitle.textContent = model.subtitle;
       idBadge.textContent = modelId;
 
-      renderProfile(model.profile);
       renderConstruction(model);
       renderDocuments(model.documents);
       setActiveButton(modelId);
@@ -1783,11 +1697,11 @@
         viewer.updateFraming();
       }
 
-      updateDimensionDisplay();
+      updateModelScale();
       applyComparisonView(true);
 
       viewerStatus.textContent =
-        "Fester Größenvergleich · 24-m-Schale als Bezugsrahmen · Ansicht zurücksetzen für den Vergleich";
+        "Fester Größenvergleich · gleiche Standardkamera für alle Modelle · Ansicht zurücksetzen für den Vergleich";
     });
 
     viewer.addEventListener("camera-change", () => {
@@ -1801,7 +1715,7 @@
     resetComparisonViewButton.addEventListener("click", () => {
       applyComparisonView(true);
       viewerStatus.textContent =
-        "Vergleichsansicht wiederhergestellt · 24-m-Schale als Bezugsrahmen";
+        "Vergleichsansicht mit einheitlichem Maßstab wiederhergestellt";
     });
 
     viewer.addEventListener("error", () => {
