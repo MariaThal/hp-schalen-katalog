@@ -46,15 +46,17 @@
       line-height: 1.5;
     }
 
-    button,
-    select {
+    button {
       font: inherit;
     }
 
-    button:focus-visible,
-    select:focus-visible {
+    button:focus-visible {
       outline: 3px solid rgba(72, 70, 66, 0.20);
       outline-offset: 2px;
+    }
+
+    [hidden] {
+      display: none !important;
     }
 
     .site-header {
@@ -66,7 +68,7 @@
     .header-inner,
     main,
     .footer-inner {
-      width: min(1440px, calc(100% - 48px));
+      width: min(1480px, calc(100% - 48px));
       margin: 0 auto;
     }
 
@@ -78,45 +80,49 @@
       min-height: 68px;
     }
 
-    .brand {
-      display: flex;
-      align-items: baseline;
-      gap: 14px;
-    }
-
-    .brand strong {
+    .site-brand {
+      color: var(--ink);
       font-size: 16px;
+      font-weight: 700;
       letter-spacing: 0.01em;
+      text-decoration: none;
     }
 
-    .brand span {
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .site-nav a {
+      padding: 8px 10px;
+      border-radius: 8px;
       color: var(--muted);
+      text-decoration: none;
       font-size: 13px;
     }
 
-    .header-tag {
-      padding: 7px 11px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--muted);
+    .site-nav a:hover,
+    .site-nav a.active {
+      color: var(--ink);
       background: var(--paper);
-      font-size: 13px;
+      box-shadow: 0 0 0 1px var(--line);
     }
 
     main {
-      padding: 40px 0 64px;
+      padding: 22px 0 64px;
     }
 
     .intro {
       display: grid;
       grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
-      gap: 34px;
+      gap: 24px;
       align-items: end;
-      margin-bottom: 28px;
+      margin-bottom: 17px;
     }
 
     .eyebrow {
-      margin: 0 0 10px;
+      margin: 0 0 6px;
       color: var(--accent);
       font-size: 12px;
       font-weight: 700;
@@ -127,101 +133,249 @@
     h1 {
       max-width: 900px;
       margin: 0;
-      font-family: "Open Sans", "Noto Sans", Arial, Helvetica, sans-serif;
-      font-size: clamp(28px, 3.2vw, 40px);
+      font-size: clamp(27px, 3vw, 38px);
       font-weight: 600;
       line-height: 1.15;
       letter-spacing: -0.025em;
     }
 
     .intro-text {
+      max-width: 600px;
       margin: 0;
       color: var(--muted);
-      font-size: 15px;
+      font-size: 13px;
+      line-height: 1.48;
     }
 
-    .catalog-nav {
-      margin-bottom: 26px;
-      padding: 18px;
+    .catalog-layout {
+      display: grid;
+      grid-template-columns: minmax(300px, 0.72fr) minmax(0, 1.75fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .catalog-main {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .catalog-sidebar {
+      display: flex;
+      min-height: 0;
+      height: 760px;
+      align-self: stretch;
+      flex-direction: column;
+      overflow: hidden;
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--paper);
       box-shadow: var(--shadow);
     }
 
-    .nav-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 14px;
+    .sidebar-header {
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
     }
 
-    .nav-heading h2 {
+    .sidebar-header h2 {
+      margin: 0 0 5px;
+      font-size: 16px;
+    }
+
+    .sidebar-header p {
       margin: 0;
-      font-size: 15px;
-    }
-
-    .nav-heading span {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
     }
 
-    .model-buttons {
+    .sidebar-legend {
       display: grid;
-      grid-template-columns: repeat(9, minmax(94px, 1fr));
-      gap: 9px;
-    }
-
-    .model-button {
-      min-height: 58px;
-      padding: 10px 9px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      color: var(--ink);
-      background: #fbfbf9;
-      cursor: pointer;
-      transition:
-        transform 160ms ease,
-        border-color 160ms ease,
-        background 160ms ease;
-    }
-
-    .model-button:hover {
-      transform: translateY(-2px);
-      border-color: #a8b0b7;
-    }
-
-    .model-button.is-active {
-      border-color: var(--accent);
-      color: #ffffff;
-      background: #484642;
-    }
-
-    .model-button strong,
-    .model-button span {
-      display: block;
-    }
-
-    .model-button strong {
-      font-size: 13px;
-    }
-
-    .model-button span {
-      margin-top: 2px;
-      opacity: 0.76;
+      gap: 7px;
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #f8f8f5;
+      color: var(--muted);
       font-size: 11px;
     }
 
-    .main-grid {
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-mark {
+      display: inline-grid;
+      min-width: 31px;
+      height: 20px;
+      padding: 0 5px;
+      place-items: center;
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 750;
+      letter-spacing: 0.04em;
+    }
+
+    .status-mark.has-model {
+      color: #ffffff;
+      background: var(--accent);
+    }
+
+    .status-mark.no-model {
+      color: var(--muted);
+      border: 1px solid #bdbab3;
+      background: transparent;
+    }
+
+    .system-tree {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 10px 10px 18px;
+    }
+
+    .tree-top,
+    .tree-sub {
+      margin: 0;
+    }
+
+    .tree-top + .tree-top {
+      margin-top: 9px;
+    }
+
+    .tree-top > summary,
+    .tree-sub > summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    .tree-top > summary::-webkit-details-marker,
+    .tree-sub > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .tree-top > summary {
+      position: relative;
+      padding: 10px 10px 9px 25px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .tree-top > summary::before,
+    .tree-sub > summary::before {
+      content: "›";
+      position: absolute;
+      transition: transform 150ms ease;
+    }
+
+    .tree-top > summary::before {
+      left: 10px;
+    }
+
+    .tree-sub > summary::before {
+      left: 7px;
+    }
+
+    details[open] > summary::before {
+      transform: rotate(90deg);
+    }
+
+    .tree-top > summary:hover {
+      background: var(--soft);
+    }
+
+    .tree-sub {
+      margin-left: 10px;
+      border-left: 1px solid var(--line);
+    }
+
+    .tree-sub > summary {
+      position: relative;
+      margin: 1px 0;
+      padding: 7px 8px 7px 22px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .tree-items {
       display: grid;
-      grid-template-columns: minmax(0, 1.75fr) minmax(320px, 0.75fr);
-      gap: 24px;
-      align-items: start;
+      gap: 4px;
+      padding: 2px 0 7px 10px;
+    }
+
+    .tree-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      width: 100%;
+      padding: 9px 8px 9px 10px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--ink);
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .tree-item:hover {
+      border-color: var(--line);
+      background: #f8f8f5;
+    }
+
+    .tree-item.is-active {
+      color: #ffffff;
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .tree-item-label {
+      min-width: 0;
+    }
+
+    .tree-item strong,
+    .tree-item small {
+      display: block;
+    }
+
+    .tree-item strong {
+      overflow: hidden;
+      font-size: 12px;
+      line-height: 1.25;
+      text-overflow: ellipsis;
+    }
+
+    .tree-item small {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .tree-item.is-active small {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .tree-item.is-active .status-mark.has-model {
+      color: var(--accent);
+      background: #ffffff;
+    }
+
+    .tree-item.is-active .status-mark.no-model {
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.60);
+    }
+
+    .catalog-content {
+      min-width: 0;
     }
 
     .viewer-card,
-    .profile-card,
     .details-card {
       overflow: hidden;
       border: 1px solid var(--line);
@@ -229,6 +383,7 @@
       background: var(--paper);
       box-shadow: var(--shadow);
     }
+
 
     .viewer-heading {
       display: flex;
@@ -262,17 +417,6 @@
       flex-wrap: wrap;
     }
 
-    .id-badge {
-      flex: 0 0 auto;
-      padding: 7px 10px;
-      border-radius: 8px;
-      color: var(--accent);
-      background: var(--accent-soft);
-      font-family: ui-monospace, "Cascadia Code", monospace;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
     .viewer-button {
       min-height: 34px;
       padding: 7px 10px;
@@ -288,10 +432,6 @@
     .viewer-button:hover {
       border-color: #a8a59f;
       background: #f7f6f3;
-    }
-
-    .viewer-button:active {
-      transform: translateY(1px);
     }
 
     .viewer-shell {
@@ -361,7 +501,7 @@
       position: absolute;
       right: 18px;
       bottom: 18px;
-      max-width: 280px;
+      max-width: 300px;
       padding: 10px 12px;
       border: 1px solid rgba(255, 255, 255, 0.66);
       border-radius: 10px;
@@ -371,78 +511,40 @@
       font-size: 12px;
     }
 
-    .profile-card {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .profile-header {
-      padding: 20px 20px 16px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .profile-header p {
-      margin: 0 0 5px;
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 750;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .profile-header h2 {
-      margin: 0;
-      font-size: 19px;
-    }
-
-    .profile-list {
-      margin: 0;
-      padding: 7px 20px 16px;
-    }
-
-    .profile-row {
+    .no-model-panel {
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 20px;
-      align-items: baseline;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--soft);
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      min-height: 230px;
+      padding: 30px 28px;
+      background:
+        radial-gradient(circle at 50% 35%, #ffffff 0%, #f5f4f1 72%, #ecebe6 100%);
     }
 
-    .profile-row dt {
+    .no-model-symbol {
+      display: grid;
+      width: 46px;
+      height: 46px;
+      place-items: center;
+      border: 1px solid #bdbab3;
+      border-radius: 12px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.78);
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .no-model-panel h3 {
+      margin: 0 0 7px;
+      font-size: 17px;
+    }
+
+    .no-model-panel p {
+      max-width: 950px;
+      margin: 0;
       color: var(--muted);
       font-size: 13px;
-    }
-
-    .profile-row dd {
-      margin: 0;
-      max-width: 180px;
-      font-weight: 650;
-      text-align: right;
-    }
-
-    .profile-summary {
-      margin: auto 20px 20px;
-      padding: 16px;
-      border-radius: 12px;
-      background: #ecebe6;
-    }
-
-    .profile-summary strong {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--accent);
-      font-size: 13px;
-    }
-
-    .profile-summary p {
-      margin: 0;
-      color: #555b60;
-      font-size: 13px;
-    }
-
-    .details-card {
-      margin-top: 24px;
     }
 
     .tabs {
@@ -467,7 +569,7 @@
 
     .tab-button.is-active {
       color: #ffffff;
-      background: #484642;
+      background: var(--accent);
     }
 
     .tab-panel {
@@ -486,6 +588,7 @@
     }
 
     .data-section {
+      min-width: 0;
       padding: 20px;
       border: 1px solid var(--line);
       border-radius: 12px;
@@ -493,8 +596,8 @@
     }
 
     .data-section h3 {
-      margin: 0 0 14px;
-      font-size: 15px;
+      margin: 0 0 13px;
+      font-size: 14px;
     }
 
     .data-table {
@@ -507,60 +610,40 @@
       padding: 9px 0;
       border-bottom: 1px solid var(--soft);
       vertical-align: top;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .data-table th {
       width: 52%;
+      padding-right: 15px;
       color: var(--muted);
       font-weight: 500;
       text-align: left;
     }
 
     .data-table td {
-      font-weight: 620;
+      font-weight: 650;
       text-align: right;
+      overflow-wrap: anywhere;
     }
 
     .timeline {
-      position: relative;
       display: grid;
-      gap: 14px;
-      margin-left: 9px;
-      padding-left: 27px;
-    }
-
-    .timeline::before {
-      content: "";
-      position: absolute;
-      top: 8px;
-      bottom: 8px;
-      left: 5px;
-      width: 1px;
-      background: var(--line);
+      gap: 12px;
     }
 
     .document-card {
-      position: relative;
       display: grid;
-      grid-template-columns: 150px minmax(0, 1fr);
-      gap: 22px;
-      padding: 18px 20px;
+      grid-template-columns: minmax(110px, 0.28fr) minmax(0, 1fr);
+      gap: 20px;
+      padding: 17px 18px;
       border: 1px solid var(--line);
       border-radius: 12px;
       background: #fbfbf9;
     }
 
-    .document-card::before {
-      content: "";
-      position: absolute;
-      top: 25px;
-      left: -27px;
-      width: 11px;
-      height: 11px;
-      border: 3px solid var(--page);
-      border-radius: 50%;
-      background: var(--accent);
+    .document-card.is-absent {
+      opacity: 0.56;
     }
 
     .document-meta strong,
@@ -569,94 +652,79 @@
     }
 
     .document-meta strong {
-      color: var(--accent);
       font-size: 13px;
     }
 
     .document-meta span {
       margin-top: 3px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .document-body h3 {
-      margin: 0 0 5px;
-      font-size: 15px;
+      margin: 0;
+      font-size: 14px;
     }
 
     .document-body p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .method-text,
+    .method-note {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fbfbf9;
+    }
+
+    .method-text h3,
+    .method-note h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+
+    .method-text p,
+    .method-note p {
       margin: 0;
       color: var(--muted);
       font-size: 13px;
     }
 
-    .document-card.is-absent {
-      opacity: 0.66;
-    }
-
-    .method-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
-      gap: 24px;
-    }
-
-    .method-text,
-    .method-note {
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-    }
-
-    .method-text h3,
-    .method-note h3 {
-      margin-top: 0;
-    }
-
-    .method-text p,
-    .method-note p {
-      color: var(--muted);
-    }
-
-    .method-note {
-      background: #ecebe6;
-    }
-
-    .method-note p:last-child,
-    .method-text p:last-child {
-      margin-bottom: 0;
+    .method-text p + p,
+    .method-note p + p {
+      margin-top: 10px;
     }
 
     .site-footer {
       border-top: 1px solid var(--line);
-      color: var(--muted);
-      background: #f5f5f5;
+      background: #ebeae5;
     }
 
     .footer-inner {
       display: flex;
       justify-content: space-between;
-      gap: 24px;
-      padding: 26px 0;
+      gap: 20px;
+      padding: 22px 0;
+      color: var(--muted);
       font-size: 12px;
     }
 
-    @media (max-width: 1120px) {
-      .model-buttons {
-        grid-template-columns: repeat(5, minmax(100px, 1fr));
+    @media (max-width: 1100px) {
+      .catalog-layout {
+        grid-template-columns: minmax(270px, 0.68fr) minmax(0, 1.75fr);
       }
 
-      .main-grid {
+      .data-columns {
         grid-template-columns: 1fr;
-      }
-
-      .profile-list {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        column-gap: 28px;
-      }
-
-      .profile-summary {
-        margin-top: 0;
       }
     }
 
@@ -664,59 +732,40 @@
       .header-inner,
       main,
       .footer-inner {
-        width: min(100% - 28px, 1440px);
+        width: min(100% - 28px, 1480px);
+      }
+
+      .header-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+        padding: 13px 0;
+      }
+
+      .site-nav {
+        flex-wrap: wrap;
       }
 
       .intro {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 12px;
+        margin-bottom: 15px;
       }
 
-      .model-buttons {
-        grid-template-columns: repeat(3, minmax(94px, 1fr));
-      }
-
-      .data-columns,
-      .method-grid {
+      .catalog-layout {
         grid-template-columns: 1fr;
       }
 
-      .document-card {
-        grid-template-columns: 1fr;
-        gap: 9px;
+      .catalog-sidebar {
+        height: auto;
       }
 
-      .footer-inner {
-        flex-direction: column;
-      }
-    }
-
-    @media (max-width: 560px) {
-      main {
-        padding-top: 34px;
+      .catalog-main {
+        gap: 18px;
       }
 
-      .brand span,
-      .header-tag {
-        display: none;
-      }
-
-      .model-buttons {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .viewer-heading {
-        flex-direction: column;
-      }
-
-      .viewer-actions {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .scale-indicator {
-        left: 12px;
-        bottom: 76px;
+      .system-tree {
+        max-height: 440px;
       }
 
       .viewer-shell,
@@ -725,125 +774,47 @@
         height: 500px;
       }
 
-      .profile-list {
-        display: block;
+      .method-grid {
+        grid-template-columns: 1fr;
       }
 
-      .tab-panel {
-        padding: 18px;
+      .footer-inner {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .viewer-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .viewer-shell,
+      model-viewer {
+        min-height: 400px;
+        height: 400px;
       }
 
       .viewer-note {
-        left: 14px;
-        right: 14px;
-        max-width: none;
-      }
-    }
-
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-    }
-
-    .site-brand {
-      color: var(--ink);
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-    }
-
-    .site-nav {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      flex-wrap: wrap;
-    }
-
-    .site-nav a {
-      padding: 9px 12px;
-      border-radius: 9px;
-      color: #55534f;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    .site-nav a:hover,
-    .site-nav a.active {
-      color: var(--ink);
-      background: var(--paper);
-    }
-
-    @media (max-width: 590px) {
-      .header-inner {
-        min-height: 62px;
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 11px 0;
+        right: 12px;
+        bottom: 12px;
+        max-width: 230px;
       }
 
-      .site-nav {
-        width: 100%;
+      .scale-indicator {
+        left: 12px;
+        bottom: 78px;
       }
 
-      .site-nav a {
-        flex: 1 1 auto;
-        padding: 8px;
-        text-align: center;
-        font-size: 13px;
+      .no-model-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .document-card {
+        grid-template-columns: 1fr;
+        gap: 8px;
       }
     }
-
-
-    /* Alle Kataloginformationen stehen rechts neben dem 3D-Modell. */
-    .profile-card {
-      display: flex;
-      min-height: 0;
-      max-height: 762px;
-      flex-direction: column;
-    }
-
-    .profile-card .tabs {
-      flex: 0 0 auto;
-    }
-
-    .profile-card .tab-panel {
-      min-height: 0;
-      padding: 18px;
-    }
-
-    .profile-card .tab-panel.is-active {
-      display: block;
-      flex: 1 1 auto;
-      overflow-y: auto;
-    }
-
-    .profile-card .data-columns {
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    .profile-card .data-section {
-      padding: 15px;
-    }
-
-    .profile-card .document-card {
-      grid-template-columns: 1fr;
-      gap: 8px;
-      padding: 15px;
-    }
-
-    .profile-card .method-grid {
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    .profile-card .method-text,
-    .profile-card .method-note {
-      padding: 16px;
-    }
-
   </style>
 </head>
 
@@ -864,574 +835,184 @@
     <section class="intro">
       <div>
         <p class="eyebrow">Digitaler Typenkatalog</p>
-        <h1>HP-Schalen nach Herbert Müller</h1>
+        <h1>HP- und HPZ-Schalen im Baukastensystem</h1>
       </div>
 
       <p class="intro-text">
-        Geometrisch rekonstruierte Schalentypen, konstruktive Kenndaten und
-        historische Bezeichnungen aus Zulassungen, Katalogen und Standards.
+        Der Katalog verbindet geometrisch rekonstruierte Schalentypen mit
+        weiteren historisch belegten Ausführungen, Familienbezeichnungen und
+        Produktcodes. So bleibt erkennbar, welche Einträge als 3D-Modell
+        vorliegen und welche ausschließlich quellenbasiert dokumentiert sind.
       </p>
     </section>
 
-    <section class="catalog-nav" aria-label="Auswahl der Schalentypen">
-      <div class="nav-heading">
-        <h2>Schalentyp auswählen</h2>
-        <span>9 erfasste Ausführungen</span>
-      </div>
-
-      <div class="model-buttons" id="model-buttons"></div>
-    </section>
-
-    <section class="main-grid">
-      <article class="viewer-card">
-        <div class="viewer-heading">
-          <div>
-            <h2 id="model-title">18m-HP-Schale V1</h2>
-            <p id="model-subtitle">HP-Schale · Normalfall</p>
-          </div>
-
-          <div class="viewer-actions">
-            <span class="id-badge" id="model-id">HP-18-N</span>
-            <button class="viewer-button" id="reset-comparison-view" type="button">
-              Ansicht zurücksetzen
-            </button>
-          </div>
+    <section class="catalog-layout">
+      <aside class="catalog-sidebar" aria-label="Katalogsystem">
+        <div class="sidebar-header">
+          <h2>Katalogsystem</h2>
+          <p>26 Einträge · 9 mit 3D-Modell</p>
         </div>
 
-        <div class="viewer-shell">
-          <model-viewer
-            id="shell-viewer"
-            src="models/HP-18-N.glb"
-            alt="Interaktives 3D-Modell der HP-Schale 18 m N"
-            camera-controls
-            touch-action="pan-y"
-            camera-target="auto auto auto"
-            camera-orbit="35deg 68deg auto"
-            field-of-view="30deg"
-            min-camera-orbit="auto auto 7m"
-            max-camera-orbit="auto auto 75m"
-            shadow-intensity="1"
-            shadow-softness="0.8"
-            exposure="1"
-            tone-mapping="neutral"
-            interaction-prompt="auto">
-          </model-viewer>
-
-          <div class="scale-indicator" aria-label="Dynamische Maßstabsleiste">
-            <span class="scale-label" id="scale-label">2 m</span>
-            <div class="scale-line" id="scale-line"></div>
-          </div>
-
-          <div class="viewer-note" id="viewer-status">
-            Fester Größenvergleich · mit Maus oder Touch drehen · Scrollen zum Zoomen
-          </div>
+        <div class="sidebar-legend">
+          <span class="legend-row">
+            <span class="status-mark has-model">3D</span>
+            geometrische Rekonstruktion vorhanden
+          </span>
+          <span class="legend-row">
+            <span class="status-mark no-model">INFO</span>
+            ausschließlich historisch dokumentiert
+          </span>
         </div>
-      </article>
 
-      <aside class="profile-card" aria-label="Informationen zum ausgewählten Schalentyp">
-<nav class="tabs" aria-label="Informationsbereiche">
-        <button class="tab-button is-active" data-tab="construction">
-          Daten
-        </button>
-
-        <button class="tab-button" data-tab="history">
-          Dokumente
-        </button>
-
-        <button class="tab-button" data-tab="method">
-          Methodik
-        </button>
-      </nav>
-
-      <div class="tab-panel is-active" id="construction">
-        <div class="data-columns" id="data-columns"></div>
-      </div>
-
-      <div class="tab-panel" id="history">
-        <div class="timeline" id="timeline"></div>
-      </div>
-
-      <div class="tab-panel" id="method">
-        <div class="method-grid">
-          <div class="method-text">
-            <h3>Geometrische Rekonstruktion</h3>
-            <p>
-              Die dargestellten Außenkubaturen wurden parametrisch in
-              Grasshopper auf Grundlage der Schalungspläne und der Zulassung
-              45/70 rekonstruiert. Die Rhino-/Grasshopper-Dateien bilden die
-              geometrischen Mastermodelle.
-            </p>
-            <p>
-              Für die Browserdarstellung wurden daraus GLB-Dateien erzeugt.
-              Diese sind polygonale Webdarstellungen und ersetzen nicht die
-              präzisen Mastermodelle.
-            </p>
-          </div>
-
-          <div class="method-note">
-            <h3>Lesart des Katalogs</h3>
-            <p>
-              Abweichende Benennungen und das spätere Fehlen einzelner Typen
-              werden als historische Quellenbefunde dargestellt. Sie sind
-              nicht automatisch als geometrische Varianten nachmodelliert.
-            </p>
-            <p>
-              Die Daten- und Quellenstruktur ist ein Arbeitsstand und kann im
-              weiteren Verlauf der Diplomarbeit ergänzt oder korrigiert werden.
-            </p>
-          </div>
-        </div>
-      </div>
+        <nav class="system-tree" id="system-tree" aria-label="Schalentypen"></nav>
       </aside>
+
+      <div class="catalog-main">
+        <article class="viewer-card" id="viewer-card">
+          <div class="viewer-heading">
+            <div>
+              <h2 id="entry-title">18m-HP-Schale V1</h2>
+              <p id="entry-subtitle">HP-Schale · Normalfall</p>
+            </div>
+
+            <div class="viewer-actions">
+              <span class="availability-badge" id="availability-badge">
+                3D-Modell vorhanden
+              </span>
+              <span class="id-badge" id="entry-id">HP-18-N</span>
+              <button class="viewer-button" id="reset-comparison-view" type="button">
+                Ansicht zurücksetzen
+              </button>
+            </div>
+          </div>
+
+          <div class="viewer-shell" id="viewer-shell">
+            <model-viewer
+              id="shell-viewer"
+              src="models/HP-18-N.glb"
+              alt="Interaktives 3D-Modell der HP-Schale 18 m N"
+              camera-controls
+              touch-action="pan-y"
+              camera-target="auto auto auto"
+              camera-orbit="35deg 68deg auto"
+              field-of-view="30deg"
+              min-camera-orbit="auto auto 7m"
+              max-camera-orbit="auto auto 75m"
+              shadow-intensity="1"
+              shadow-softness="0.8"
+              exposure="1"
+              tone-mapping="neutral"
+              interaction-prompt="auto">
+            </model-viewer>
+
+            <div class="scale-indicator" aria-label="Dynamische Maßstabsleiste">
+              <span class="scale-label" id="scale-label">2 m</span>
+              <div class="scale-line" id="scale-line"></div>
+            </div>
+
+            <div class="viewer-note" id="viewer-status">
+              Fester Größenvergleich · mit Maus oder Touch drehen · Scrollen zum Zoomen
+            </div>
+          </div>
+
+          <div class="no-model-panel" id="no-model-card" hidden>
+            <div class="no-model-symbol">INFO</div>
+            <div>
+              <h3>Kein eigenständiges 3D-Modell vorhanden</h3>
+              <p id="no-model-text"></p>
+            </div>
+          </div>
+        </article>
+
+        <section class="details-card">
+          <nav class="tabs" aria-label="Informationsbereiche">
+            <button class="tab-button is-active" data-tab="construction">
+              Daten
+            </button>
+
+            <button class="tab-button" data-tab="history">
+              Dokumente
+            </button>
+
+            <button class="tab-button" data-tab="method">
+              Methodik
+            </button>
+          </nav>
+
+          <div class="tab-panel is-active" id="construction">
+            <div class="data-columns" id="data-columns"></div>
+          </div>
+
+          <div class="tab-panel" id="history">
+            <div class="timeline" id="timeline"></div>
+          </div>
+
+          <div class="tab-panel" id="method">
+            <div class="method-grid">
+              <div class="method-text">
+                <h3>Geometrische Rekonstruktion</h3>
+                <p>
+                  Die 3D-Modelle wurden parametrisch in Grasshopper auf Grundlage
+                  der Schalungspläne und der Zulassung 45/70 rekonstruiert. Die
+                  Rhino-/Grasshopper-Dateien bilden die geometrischen Mastermodelle.
+                </p>
+                <p>
+                  Historische Einträge ohne eigenes 3D-Modell bleiben dennoch als
+                  eigenständige Bestandteile des Baukastensystems auswählbar.
+                </p>
+              </div>
+
+              <div class="method-note">
+                <h3>Lesart des ausgewählten Eintrags</h3>
+                <p id="method-entry-text"></p>
+                <p>
+                  Abweichende Benennungen in späteren Dokumenten werden als
+                  Quellenbefunde dargestellt und nicht automatisch als identische
+                  oder geometrisch unterschiedliche Typen interpretiert.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </section>
-
-
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
       <span>Digitaler Katalog der HP- und HPZ-Schalen nach Herbert Müller</span>
-      <span>Interaktive Modelle: GLB · Darstellung mit &lt;model-viewer&gt;</span>
+      <span>3D-Rekonstruktionen und quellenbasierte historische Einträge</span>
     </div>
   </footer>
 
   <script>
-    /*
-      ============================================================
-      DATENBEREICH
-      Hier stehen vorläufig die Katalogdaten direkt im HTML-Code.
-      Später kann dieser Bereich durch eine JSON-Datei ersetzt werden.
-      ============================================================
-    */
-
-    const models = {
-      "HP-12-MINI": {
-        short: "12 m mini",
-        group: "HP",
-        title: "12m-HP-Schale V1",
-        subtitle: "HP-Schale · Mini-Ausführung",
-        file: "models/HP-12-MINI.glb",
-        alt: "Interaktives 3D-Modell der HP-Schale 12 m mini",
-        profile: [
-          ["Systemlänge", "12 m"],
-          ["Nennlänge", "11,98 m"],
-          ["Systembreite", "2,00 m"],
-          ["Dicke", "50 mm"],
-          ["Lastfall", "keine Angabe"],
-          ["Betongüte", "B300"]
-        ],
-        geometry: [
-          ["Systemlänge", "12 m"],
-          ["Nennlänge", "11,98 m"],
-          ["Systembreite", "2,00 m"],
-          ["Nennbreite", "1,98 m"],
-          ["Längsradius", "81,25 m"],
-          ["Schalendicke", "50 mm"]
-        ],
-        construction: [
-          ["Lastfall", "keine Angabe"],
-          ["Randverstärkung", "nein"],
-          ["Steg", "ohne Steg"],
-          ["Kassette", "mit Kassette"],
-          ["Dachüberstand", "beidseitig bis 1 m"]
-        ],
-        material: [
-          ["Bauweise", "Stahlbeton"],
-          ["Betongüte", "B300"],
-          ["Krümmung", "doppelt gekrümmt"]
-        ],
-        documents: [
-          ["1970", "Zulassung 45/70", "HP Schalenträger SL 12000mm mini", ""],
-          ["ca. 1971", "Luckenwalde", "HPS 12.0", "Auch Delta-Schale; auch 10,5-m-Schale"],
-          ["1974", "Erzeugnisse Bauwesen – Betonelemente", "HPS-12.0 N", "Parameter unterschieden sich zum Teil"],
-          ["1977", "TGL 21856/05", "nicht vorhanden", ""],
-          ["1980", "Katalog PED 8003", "nicht vorhanden", ""]
-        ]
-      },
-
-      "HP-12-N": {
-        short: "12 m N",
-        group: "HP",
-        title: "12m-HP-Schale V2",
-        subtitle: "HP-Schale · Normalfall",
-        file: "models/HP-12-N.glb",
-        alt: "Interaktives 3D-Modell der HP-Schale 12 m N",
-        profile: [
-          ["Systemlänge", "12 m"],
-          ["Nennlänge", "11,98 m"],
-          ["Systembreite", "2,00 m"],
-          ["Dicke", "50 mm"],
-          ["Lastfall", "N"],
-          ["Betongüte", "B300"]
-        ],
-        geometry: [
-          ["Systemlänge", "12 m"],
-          ["Nennlänge", "11,98 m"],
-          ["Systembreite", "2,00 m"],
-          ["Nennbreite", "1,98 m"],
-          ["Längsradius", "81,25 m"],
-          ["Schalendicke", "50 mm"]
-        ],
-        construction: [
-          ["Lastfall", "N"],
-          ["Randverstärkung", "nein"],
-          ["Steg", "mit Steg"],
-          ["Kassette", "ohne Kassette"],
-          ["Dachüberstand", "beidseitig bis 1 m"]
-        ],
-        material: [
-          ["Bauweise", "Stahlbeton"],
-          ["Betongüte", "B300"],
-          ["Krümmung", "doppelt gekrümmt"]
-        ],
-        documents: [
-          ["1970", "Zulassung 45/70", "HP Schalenträger SL 12000mm", "Keine Angabe zu N oder Z"],
-          ["ca. 1971", "Luckenwalde", "HPS 12.1", "Normalfall; auch Deltaschale"],
-          ["1974", "Erzeugnisse Bauwesen – Betonelemente", "HPS 12.1 Z", "Parameter unterschieden sich zum Teil"],
-          ["1977", "TGL 21856/05", "HPS 12N", ""],
-          ["1980", "Katalog PED 8003", "DHT11X0", ""]
-        ]
-      },
-
-      "HP-15-N": {
-        short: "15 m N",
-        group: "HP",
-        title: "15m-HP-Schale V1",
-        subtitle: "HP-Schale · Normalfall",
-        file: "models/HP-15-N.glb",
-        alt: "Interaktives 3D-Modell der HP-Schale 15 m N",
-        profile: [
-          ["Systemlänge", "15 m"],
-          ["Nennlänge", "14,98 m"],
-          ["Systembreite", "2,00 m"],
-          ["Dicke", "50 mm"],
-          ["Lastfall", "N"],
-          ["Betongüte", "B300"]
-        ],
-        geometry: [
-          ["Systemlänge", "15 m"],
-          ["Nennlänge", "14,98 m"],
-          ["Systembreite", "2,00 m"],
-          ["Nennbreite", "1,98 m"],
-          ["Längsradius", "81,25 m"],
-          ["Schalendicke", "50 mm"]
-        ],
-        construction: [
-          ["Lastfall", "N"],
-          ["Randverstärkung", "nein"],
-          ["Steg", "mit Steg"],
-          ["Kassette", "mit Kassette"],
-          ["Dachüberstand", "beidseitig bis 1 m"]
-        ],
-        material: [
-          ["Bauweise", "Stahlbeton"],
-          ["Betongüte", "B300"],
-          ["Krümmung", "doppelt gekrümmt"]
-        ],
-        documents: [
-          ["1970", "Zulassung 45/70", "HP-Schalenträger SL=15000mm ohne Zusatzlast", ""],
-          ["ca. 1971", "Luckenwalde", "HPS-15.1", "Normalfall"],
-          ["1974", "Erzeugnisse Bauwesen – Betonelemente", "15.1 N", ""],
-          ["1977", "TGL 21856/05", "nicht vorhanden", ""],
-          ["1980", "Katalog PED 8003", "nicht vorhanden", ""]
-        ]
-      },
-
-      "HP-15-Z": {
-        short: "15 m Z",
-        group: "HP",
-        title: "15m-HP-Schale V2",
-        subtitle: "HP-Schale · Zusatzlast",
-        file: "models/HP-15-Z.glb",
-        alt: "Interaktives 3D-Modell der HP-Schale 15 m Z",
-        profile: [
-          ["Systemlänge", "15 m"],
-          ["Nennlänge", "14,98 m"],
-          ["Systembreite", "2,00 m"],
-          ["Dicke", "50 mm"],
-          ["Lastfall", "Z"],
-          ["Betongüte", "B300"]
-        ],
-        geometry: [
-          ["Systemlänge", "15 m"],
-          ["Nennlänge", "14,98 m"],
-          ["Systembreite", "2,00 m"],
-          ["Nennbreite", "1,98 m"],
-          ["Längsradius", "81,25 m"],
-          ["Schalendicke", "50 mm"]
-        ],
-        construction: [
-          ["Lastfall", "Z"],
-          ["Randverstärkung", "ja"],
-          ["Steg", "mit Steg"],
-          ["Kassette", "mit Kassette"],
-          ["Dachüberstand", "beidseitig bis 1 m"]
-        ],
-        material: [
-          ["Bauweise", "Stahlbeton"],
-          ["Betongüte", "B300"],
-          ["Krümmung", "doppelt gekrümmt"]
-        ],
-        documents: [
-          ["1970", "Zulassung 45/70", "HP-Schalenträger SL=15000mm mit Zusatzlast", ""],
-          ["ca. 1971", "Luckenwalde", "HPS-15.2", "Mit Zusatzlast"],
-          ["1974", "Erzeugnisse Bauwesen – Betonelemente", "15.2 Z", ""],
-          ["1977", "TGL 21856/05", "nicht vorhanden", ""],
-          ["1980", "Katalog PED 8003", "nicht vorhanden", ""]
-        ]
-      },
-
-      "HP-18-N": {
-        short: "18 m N",
-        group: "HP",
-        title: "18m-HP-Schale V1",
-        subtitle: "HP-Schale · Normalfall",
-        file: "models/HP-18-N.glb",
-        alt: "Interaktives 3D-Modell der HP-Schale 18 m N",
-        profile: [
-          ["Systemlänge", "18 m"],
-          ["Nennlänge", "17,98 m"],
-          ["Systembreite", "2,00 m"],
-          ["Dicke", "50 mm"],
-          ["Lastfall", "N"],
-          ["Betongüte", "B300"]
-        ],
-        geometry: [
-          ["Systemlänge", "18 m"],
-          ["Nennlänge", "17,98 m"],
-          ["Systembreite", "2,00 m"],
-          ["Nennbreite", "1,98 m"],
-          ["Längsradius", "81,25 m"],
-          ["Schalendicke", "50 mm"]
-        ],
-        construction: [
-          ["Lastfall", "N"],
-          ["Randverstärkung", "nein"],
-          ["Steg", "mit Steg"],
-          ["Kassette", "mit Kassette"],
-          ["Dachüberstand", "beidseitig bis 1 m"]
-        ],
-        material: [
-          ["Bauweise", "Stahlbeton"],
-          ["Betongüte", "B300"],
-          ["Krümmung", "doppelt gekrümmt"]
-        ],
-        documents: [
-          ["1970", "Zulassung 45/70", "HP-Schalenträger SL=18000mm ohne Zusatzlast", ""],
-          ["ca. 1971", "Luckenwalde", "HPS-18.1", "Normalfall"],
-          ["1974", "Erzeugnisse Bauwesen – Betonelemente", "18.1 N", ""],
-          ["1977", "TGL 21856/05", "HPS 18N/750", "750 steht für 0,75 m einseitigen Dachüberstand"],
-          ["1980", "Katalog PED 8003", "DHDT13X0", ""]
-        ]
-      },
-
-      "HP-18-Z": {
-        short: "18 m Z",
-        group: "HP",
-        title: "18m-HP-Schale V2",
-        subtitle: "HP-Schale · Zusatzlast",
-        file: "models/HP-18-Z.glb",
-        alt: "Interaktives 3D-Modell der HP-Schale 18 m Z",
-        profile: [
-          ["Systemlänge", "18 m"],
-          ["Nennlänge", "17,98 m"],
-          ["Systembreite", "2,00 m"],
-          ["Dicke", "50 mm"],
-          ["Lastfall", "Z"],
-          ["Betongüte", "B300"]
-        ],
-        geometry: [
-          ["Systemlänge", "18 m"],
-          ["Nennlänge", "17,98 m"],
-          ["Systembreite", "2,00 m"],
-          ["Nennbreite", "1,98 m"],
-          ["Längsradius", "81,25 m"],
-          ["Schalendicke", "50 mm"]
-        ],
-        construction: [
-          ["Lastfall", "Z"],
-          ["Randverstärkung", "ja"],
-          ["Steg", "mit Steg"],
-          ["Kassette", "mit Kassette"],
-          ["Dachüberstand", "beidseitig bis 1 m"]
-        ],
-        material: [
-          ["Bauweise", "Stahlbeton"],
-          ["Betongüte", "B300"],
-          ["Krümmung", "doppelt gekrümmt"]
-        ],
-        documents: [
-          ["1970", "Zulassung 45/70", "HP-Schalenträger SL=18000mm mit Zusatzlast", ""],
-          ["ca. 1971", "Luckenwalde", "HPS-18.2", "Mit Zusatzlast"],
-          ["1974", "Erzeugnisse Bauwesen – Betonelemente", "18.2 Z", ""],
-          ["1977", "TGL 21856/05", "HPS 18Z/250", "250 steht für 0,25 m einseitigen Dachüberstand"],
-          ["1980", "Katalog PED 8003", "k. A. Zusatzlast", ""]
-        ]
-      },
-
-      "HP-24": {
-        short: "24 m",
-        group: "HP",
-        title: "24m-HP-Schale V1",
-        subtitle: "HP-Schale · Spannbetonausführung",
-        file: "models/HP-24.glb",
-        alt: "Interaktives 3D-Modell der HP-Schale 24 m",
-        profile: [
-          ["Systemlänge", "24 m"],
-          ["Nennlänge", "23,98 m"],
-          ["Systembreite", "2,40 m"],
-          ["Dicke", "70 mm"],
-          ["Lastfall", "keine Angabe"],
-          ["Betongüte", "B450"]
-        ],
-        geometry: [
-          ["Systemlänge", "24 m"],
-          ["Nennlänge", "23,98 m"],
-          ["Systembreite", "2,40 m"],
-          ["Nennbreite", "2,38 m"],
-          ["Längsradius", "162,82 m"],
-          ["Schalendicke", "70 mm"]
-        ],
-        construction: [
-          ["Lastfall", "keine Angabe"],
-          ["Randverstärkung", "ja"],
-          ["Steg", "mit Steg"],
-          ["Kassette", "mit Kassette"],
-          ["Dachüberstand", "beidseitig bis 1 m"]
-        ],
-        material: [
-          ["Bauweise", "Spannbeton"],
-          ["Betongüte", "B450"],
-          ["Krümmung", "doppelt gekrümmt"]
-        ],
-        documents: [
-          ["1970", "Zulassung 45/70", "HP-Schalenträger SL=24000mm", "Keine Angabe zu N oder Z"],
-          ["ca. 1971", "Luckenwalde", "nicht vorhanden", ""],
-          ["1974", "Erzeugnisse Bauwesen – Betonelemente", "nicht vorhanden", ""],
-          ["1977", "TGL 21856/05", "HPS 24 v", ""],
-          ["1980", "Katalog PED 8003", "DHDP15X4", ""]
-        ]
-      },
-
-      "HPZ-2-OHNE-STEG": {
-        short: "HPZ 2,0 m",
-        group: "HPZ",
-        title: "HPZ-Wandschale V1",
-        subtitle: "HPZ-Schale · ohne Steg",
-        file: "models/HPZ-2-OHNE-STEG.glb",
-        alt: "Interaktives 3D-Modell der HPZ-Wandschale ohne Steg",
-        profile: [
-          ["Systemlänge", "stufenlos bis 15 m"],
-          ["Nennlänge", "bis 15 m"],
-          ["Systembreite", "2,00 m"],
-          ["Dicke", "55 mm"],
-          ["Lastfall", "mit und ohne Dachlast"],
-          ["Betongüte", "B450"]
-        ],
-        geometry: [
-          ["Systemlänge", "stufenlos bis 15 m"],
-          ["Nennlänge", "bis 15 m"],
-          ["Systembreite", "2,00 m"],
-          ["Nennbreite", "1,98 m"],
-          ["Längsradius", "nicht vorhanden"],
-          ["Schalendicke", "55 mm"]
-        ],
-        construction: [
-          ["Lastfall", "mit und ohne Dachlast"],
-          ["Randverstärkung", "ja"],
-          ["Steg", "ohne Steg"],
-          ["Kassette", "ohne Kassette"],
-          ["Dachüberstand", "nein"]
-        ],
-        material: [
-          ["Bauweise", "Stahlbeton"],
-          ["Betongüte", "B450"],
-          ["Krümmung", "einfach gekrümmt"]
-        ],
-        documents: [
-          ["1970", "Zulassung 45/70", "HP-Wandschalen SL=72000mm", ""],
-          ["ca. 1971", "Luckenwalde", "HPW-1", ""],
-          ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Bezeichnung eingetragen", "stufenlos bis 15 m"],
-          ["1977", "TGL 21856/05", "keine Angabe", ""],
-          ["1980", "Katalog PED 8003", "keine Angabe", ""]
-        ]
-      },
-
-      "HPZ-2.4-MIT-STEG": {
-        short: "HPZ 2,4 m",
-        group: "HPZ",
-        title: "HPZ-Wandschale V3",
-        subtitle: "HPZ-Schale · mit Steg",
-        file: "models/HPZ-2.4-MIT-STEG.glb",
-        alt: "Interaktives 3D-Modell der HPZ-Wandschale mit Steg",
-        profile: [
-          ["Systemlänge", "stufenlos bis 15 m"],
-          ["Nennlänge", "bis 15 m"],
-          ["Systembreite", "2,40 m"],
-          ["Dicke", "60 mm"],
-          ["Lastfall", "mit und ohne Dachlast"],
-          ["Betongüte", "B450"]
-        ],
-        geometry: [
-          ["Systemlänge", "stufenlos bis 15 m"],
-          ["Nennlänge", "bis 15 m"],
-          ["Systembreite", "2,40 m"],
-          ["Nennbreite", "2,38 m"],
-          ["Längsradius", "nicht vorhanden"],
-          ["Schalendicke", "60 mm"]
-        ],
-        construction: [
-          ["Lastfall", "mit und ohne Dachlast"],
-          ["Randverstärkung", "ja"],
-          ["Steg", "mit Steg"],
-          ["Kassette", "ohne Kassette"],
-          ["Dachüberstand", "nein"]
-        ],
-        material: [
-          ["Bauweise", "Stahlbeton"],
-          ["Betongüte", "B450"],
-          ["Krümmung", "einfach gekrümmt"]
-        ],
-        documents: [
-          ["1970", "Zulassung 45/70", "HP-Wandschalen SL=99000mm", ""],
-          ["ca. 1971", "Luckenwalde", "HPW-3", "Kann als Dachschale verwendet werden"],
-          ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Bezeichnung eingetragen", "stufenlos bis 15 m"],
-          ["1977", "TGL 21856/05", "keine Angabe", ""],
-          ["1980", "Katalog PED 8003", "keine Angabe", ""]
-        ]
-      }
-    };
-
-    const modelOrder = [
-      "HP-12-MINI",
-      "HP-12-N",
-      "HP-15-N",
-      "HP-15-Z",
-      "HP-18-N",
-      "HP-18-Z",
-      "HP-24",
-      "HPZ-2-OHNE-STEG",
-      "HPZ-2.4-MIT-STEG"
-    ];
+    const catalogItems = {"HP-12-MINI": {"id": "HP-12-MINI", "short": "12 m mini", "group": "HP", "subcategory": "12 m", "title": "12m-HP-Schale V1", "subtitle": "HP-Schale · Mini-Ausführung", "hasModel": true, "file": "models/HP-12-MINI.glb", "alt": "Interaktives 3D-Modell der HP-Schale 12 m mini", "geometry": [["Systemlänge", "12 m"], ["Nennlänge", "11,98 m"], ["Systembreite", "2,00 m"], ["Nennbreite", "1,98 m"], ["Längsradius", "81,25 m"], ["Schalendicke", "50 mm"]], "construction": [["Lastfall", "keine Angabe"], ["Randverstärkung", "nein"], ["Steg", "ohne Steg"], ["Kassette", "mit Kassette"], ["Dachüberstand", "beidseitig bis 1 m"]], "material": [["Bauweise", "Stahlbeton"], ["Betongüte", "B300"], ["Krümmung", "doppelt gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "HP Schalenträger SL 12000mm mini", ""], ["ca. 1971", "Luckenwalde", "HPS 12.0", "Auch Delta-Schale; auch 10,5-m-Schale"], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "HPS-12.0 N", "Parameter unterschieden sich zum Teil"], ["1977", "TGL 21856/05", "nicht vorhanden", ""], ["1980", "Katalog PED 8003", "nicht vorhanden", ""]], "catalogRow": 4, "inApproval4570": true, "availabilityText": "Für diesen Eintrag liegt eine geometrische Rekonstruktion als interaktives 3D-Modell vor. Alle vorhandenen Modelle werden mit derselben Standardkamera und in ihren exportierten glTF-Metern dargestellt."}, "HP-12-N": {"id": "HP-12-N", "short": "12 m N", "group": "HP", "subcategory": "12 m", "title": "12m-HP-Schale V2", "subtitle": "HP-Schale · Normalfall", "hasModel": true, "file": "models/HP-12-N.glb", "alt": "Interaktives 3D-Modell der HP-Schale 12 m N", "geometry": [["Systemlänge", "12 m"], ["Nennlänge", "11,98 m"], ["Systembreite", "2,00 m"], ["Nennbreite", "1,98 m"], ["Längsradius", "81,25 m"], ["Schalendicke", "50 mm"]], "construction": [["Lastfall", "N"], ["Randverstärkung", "nein"], ["Steg", "mit Steg"], ["Kassette", "ohne Kassette"], ["Dachüberstand", "beidseitig bis 1 m"]], "material": [["Bauweise", "Stahlbeton"], ["Betongüte", "B300"], ["Krümmung", "doppelt gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "HP Schalenträger SL 12000mm", "Keine Angabe zu N oder Z"], ["ca. 1971", "Luckenwalde", "HPS 12.1", "Normalfall; auch Deltaschale"], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "HPS 12.1 Z", "Parameter unterschieden sich zum Teil"], ["1977", "TGL 21856/05", "HPS 12N", ""], ["1980", "Katalog PED 8003", "DHT11X0", ""]], "catalogRow": 5, "inApproval4570": true, "availabilityText": "Für diesen Eintrag liegt eine geometrische Rekonstruktion als interaktives 3D-Modell vor. Alle vorhandenen Modelle werden mit derselben Standardkamera und in ihren exportierten glTF-Metern dargestellt."}, "CAT-06-12M-HP-SCHALE-V3": {"id": "CAT-06-12M-HP-SCHALE-V3", "short": "12m-HP-Schale V3", "group": "HP", "subcategory": "12 m", "title": "12m-HP-Schale V3", "subtitle": "HP-Schale · Zusatzlast", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "12m"], ["Nennlänge", "11,98m"], ["Systembreite", "2m"], ["Nennbreite", "1,98m"], ["Längsradius", "81,25m"], ["Schalendicke", "55 (1980), 50 nach Zulassung"]], "construction": [["Lastfall", "Z"], ["Randverstärkung", "nein"], ["Steg", "mit Steg"], ["Aussteifungsrippe", "keine Angabe"], ["Kassette", "ohne Kassette"], ["Dachüberstand", "beidseitig bis 1m"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "Stahlbeton - B300"], ["Krümmung", "doppelt gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "HP Schalenträger SL 12000mm (k.A. zu Z/N)", ""], ["ca. 1971", "Luckenwalde", "HPS 12.2", "für Zusatzlast, auch Deltaschale"], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "HPS-12.2", "Parameter unterschieden sich z.T."], ["1977", "TGL 21856/05", "HPS 12Z", ""], ["1980", "Katalog PED 8003", "k.A.  Zusatzlast", ""]], "catalogRow": 6, "inApproval4570": true, "availabilityText": "Für diesen Katalogeintrag liegt in der digitalen Begleitpublikation derzeit kein eigenständiges 3D-Modell vor. Der Typ ist in der Zulassung 45/70 beziehungsweise in ihrer Typensystematik belegt, wurde im vorliegenden Arbeitsstand jedoch nicht als eigene Geometrie rekonstruiert. Die Angaben werden deshalb ausschließlich quellenbasiert dargestellt."}, "HP-15-N": {"id": "HP-15-N", "short": "15 m N", "group": "HP", "subcategory": "15 m", "title": "15m-HP-Schale V1", "subtitle": "HP-Schale · Normalfall", "hasModel": true, "file": "models/HP-15-N.glb", "alt": "Interaktives 3D-Modell der HP-Schale 15 m N", "geometry": [["Systemlänge", "15 m"], ["Nennlänge", "14,98 m"], ["Systembreite", "2,00 m"], ["Nennbreite", "1,98 m"], ["Längsradius", "81,25 m"], ["Schalendicke", "50 mm"]], "construction": [["Lastfall", "N"], ["Randverstärkung", "nein"], ["Steg", "mit Steg"], ["Kassette", "mit Kassette"], ["Dachüberstand", "beidseitig bis 1 m"]], "material": [["Bauweise", "Stahlbeton"], ["Betongüte", "B300"], ["Krümmung", "doppelt gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "HP-Schalenträger SL=15000mm ohne Zusatzlast", ""], ["ca. 1971", "Luckenwalde", "HPS-15.1", "Normalfall"], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "15.1 N", ""], ["1977", "TGL 21856/05", "nicht vorhanden", ""], ["1980", "Katalog PED 8003", "nicht vorhanden", ""]], "catalogRow": 8, "inApproval4570": true, "availabilityText": "Für diesen Eintrag liegt eine geometrische Rekonstruktion als interaktives 3D-Modell vor. Alle vorhandenen Modelle werden mit derselben Standardkamera und in ihren exportierten glTF-Metern dargestellt."}, "HP-15-Z": {"id": "HP-15-Z", "short": "15 m Z", "group": "HP", "subcategory": "15 m", "title": "15m-HP-Schale V2", "subtitle": "HP-Schale · Zusatzlast", "hasModel": true, "file": "models/HP-15-Z.glb", "alt": "Interaktives 3D-Modell der HP-Schale 15 m Z", "geometry": [["Systemlänge", "15 m"], ["Nennlänge", "14,98 m"], ["Systembreite", "2,00 m"], ["Nennbreite", "1,98 m"], ["Längsradius", "81,25 m"], ["Schalendicke", "50 mm"]], "construction": [["Lastfall", "Z"], ["Randverstärkung", "ja"], ["Steg", "mit Steg"], ["Kassette", "mit Kassette"], ["Dachüberstand", "beidseitig bis 1 m"]], "material": [["Bauweise", "Stahlbeton"], ["Betongüte", "B300"], ["Krümmung", "doppelt gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "HP-Schalenträger SL=15000mm mit Zusatzlast", ""], ["ca. 1971", "Luckenwalde", "HPS-15.2", "Mit Zusatzlast"], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "15.2 Z", ""], ["1977", "TGL 21856/05", "nicht vorhanden", ""], ["1980", "Katalog PED 8003", "nicht vorhanden", ""]], "catalogRow": 9, "inApproval4570": true, "availabilityText": "Für diesen Eintrag liegt eine geometrische Rekonstruktion als interaktives 3D-Modell vor. Alle vorhandenen Modelle werden mit derselben Standardkamera und in ihren exportierten glTF-Metern dargestellt."}, "CAT-10-HPS-15-3-15-3": {"id": "CAT-10-HPS-15-3-15-3", "short": "HPS-15.3 / 15.3", "group": "HP", "subcategory": "15 m", "title": "HPS-15.3 / 15.3", "subtitle": "HP-Schale · Randlast für Oberlicht", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "keine Angabe"], ["Nennlänge", "keine Angabe"], ["Systembreite", "keine Angabe"], ["Nennbreite", "keine Angabe"], ["Längsradius", "81,25m"], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "keine Angabe"], ["Randverstärkung", "keine Angabe"], ["Steg", "keine Angabe"], ["Aussteifungsrippe", "keine Angabe"], ["Kassette", "keine Angabe"], ["Dachüberstand", "keine Angabe"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "keine Angabe"], ["Krümmung", "doppelt gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "keine Angabe", ""], ["ca. 1971", "Luckenwalde", "HPS-15.3", "mit Randlast für Oberlicht"], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "15.3 -", "keine Angabe"], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 10, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "HP-18-N": {"id": "HP-18-N", "short": "18 m N", "group": "HP", "subcategory": "18 m", "title": "18m-HP-Schale V1", "subtitle": "HP-Schale · Normalfall", "hasModel": true, "file": "models/HP-18-N.glb", "alt": "Interaktives 3D-Modell der HP-Schale 18 m N", "geometry": [["Systemlänge", "18 m"], ["Nennlänge", "17,98 m"], ["Systembreite", "2,00 m"], ["Nennbreite", "1,98 m"], ["Längsradius", "81,25 m"], ["Schalendicke", "50 mm"]], "construction": [["Lastfall", "N"], ["Randverstärkung", "nein"], ["Steg", "mit Steg"], ["Kassette", "mit Kassette"], ["Dachüberstand", "beidseitig bis 1 m"]], "material": [["Bauweise", "Stahlbeton"], ["Betongüte", "B300"], ["Krümmung", "doppelt gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "HP-Schalenträger SL=18000mm ohne Zusatzlast", ""], ["ca. 1971", "Luckenwalde", "HPS-18.1", "Normalfall"], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "18.1 N", ""], ["1977", "TGL 21856/05", "HPS 18N/750", "750 steht für 0,75 m einseitigen Dachüberstand"], ["1980", "Katalog PED 8003", "DHDT13X0", ""]], "catalogRow": 12, "inApproval4570": true, "availabilityText": "Für diesen Eintrag liegt eine geometrische Rekonstruktion als interaktives 3D-Modell vor. Alle vorhandenen Modelle werden mit derselben Standardkamera und in ihren exportierten glTF-Metern dargestellt."}, "HP-18-Z": {"id": "HP-18-Z", "short": "18 m Z", "group": "HP", "subcategory": "18 m", "title": "18m-HP-Schale V2", "subtitle": "HP-Schale · Zusatzlast", "hasModel": true, "file": "models/HP-18-Z.glb", "alt": "Interaktives 3D-Modell der HP-Schale 18 m Z", "geometry": [["Systemlänge", "18 m"], ["Nennlänge", "17,98 m"], ["Systembreite", "2,00 m"], ["Nennbreite", "1,98 m"], ["Längsradius", "81,25 m"], ["Schalendicke", "50 mm"]], "construction": [["Lastfall", "Z"], ["Randverstärkung", "ja"], ["Steg", "mit Steg"], ["Kassette", "mit Kassette"], ["Dachüberstand", "beidseitig bis 1 m"]], "material": [["Bauweise", "Stahlbeton"], ["Betongüte", "B300"], ["Krümmung", "doppelt gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "HP-Schalenträger SL=18000mm mit Zusatzlast", ""], ["ca. 1971", "Luckenwalde", "HPS-18.2", "Mit Zusatzlast"], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "18.2 Z", ""], ["1977", "TGL 21856/05", "HPS 18Z/250", "250 steht für 0,25 m einseitigen Dachüberstand"], ["1980", "Katalog PED 8003", "k. A. Zusatzlast", ""]], "catalogRow": 13, "inApproval4570": true, "availabilityText": "Für diesen Eintrag liegt eine geometrische Rekonstruktion als interaktives 3D-Modell vor. Alle vorhandenen Modelle werden mit derselben Standardkamera und in ihren exportierten glTF-Metern dargestellt."}, "CAT-14-HPS-18-3-18-3": {"id": "CAT-14-HPS-18-3-18-3", "short": "HPS-18.3 / 18.3", "group": "HP", "subcategory": "18 m", "title": "HPS-18.3 / 18.3", "subtitle": "HP-Schale · Randlast für Oberlicht", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "keine Angabe"], ["Nennlänge", "keine Angabe"], ["Systembreite", "keine Angabe"], ["Nennbreite", "keine Angabe"], ["Längsradius", "81,25m"], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "keine Angabe"], ["Randverstärkung", "keine Angabe"], ["Steg", "keine Angabe"], ["Aussteifungsrippe", "keine Angabe"], ["Kassette", "keine Angabe"], ["Dachüberstand", "keine Angabe"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "Stahlbeton - B300"], ["Krümmung", "doppelt gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "keine Angabe", ""], ["ca. 1971", "Luckenwalde", "HPS-18.3", "mit Randlast für Oberlicht"], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "18.3 -", "keine Angabe"], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 14, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "HP-24": {"id": "HP-24", "short": "24 m", "group": "HP", "subcategory": "24 m", "title": "24m-HP-Schale V1", "subtitle": "HP-Schale · Spannbetonausführung", "hasModel": true, "file": "models/HP-24.glb", "alt": "Interaktives 3D-Modell der HP-Schale 24 m", "geometry": [["Systemlänge", "24 m"], ["Nennlänge", "23,98 m"], ["Systembreite", "2,40 m"], ["Nennbreite", "2,38 m"], ["Längsradius", "162,82 m"], ["Schalendicke", "70 mm"]], "construction": [["Lastfall", "keine Angabe"], ["Randverstärkung", "ja"], ["Steg", "mit Steg"], ["Kassette", "mit Kassette"], ["Dachüberstand", "beidseitig bis 1 m"]], "material": [["Bauweise", "Spannbeton"], ["Betongüte", "B450"], ["Krümmung", "doppelt gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "HP-Schalenträger SL=24000mm", "Keine Angabe zu N oder Z"], ["ca. 1971", "Luckenwalde", "nicht vorhanden", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "nicht vorhanden", ""], ["1977", "TGL 21856/05", "HPS 24 v", ""], ["1980", "Katalog PED 8003", "DHDP15X4", ""]], "catalogRow": 16, "inApproval4570": true, "availabilityText": "Für diesen Eintrag liegt eine geometrische Rekonstruktion als interaktives 3D-Modell vor. Alle vorhandenen Modelle werden mit derselben Standardkamera und in ihren exportierten glTF-Metern dargestellt."}, "HPZ-2-OHNE-STEG": {"id": "HPZ-2-OHNE-STEG", "short": "HPZ 2,0 m", "group": "HPZ", "subcategory": "Wandschalen", "title": "HPZ-Wandschale V1", "subtitle": "HPZ-Schale · ohne Steg", "hasModel": true, "file": "models/HPZ-2-OHNE-STEG.glb", "alt": "Interaktives 3D-Modell der HPZ-Wandschale ohne Steg", "geometry": [["Systemlänge", "stufenlos bis 15 m"], ["Nennlänge", "bis 15 m"], ["Systembreite", "2,00 m"], ["Nennbreite", "1,98 m"], ["Längsradius", "nicht vorhanden"], ["Schalendicke", "55 mm"]], "construction": [["Lastfall", "mit und ohne Dachlast"], ["Randverstärkung", "ja"], ["Steg", "ohne Steg"], ["Kassette", "ohne Kassette"], ["Dachüberstand", "nein"]], "material": [["Bauweise", "Stahlbeton"], ["Betongüte", "B450"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "HP-Wandschalen SL=72000mm", ""], ["ca. 1971", "Luckenwalde", "HPW-1", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Bezeichnung eingetragen", "stufenlos bis 15 m"], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 19, "inApproval4570": true, "availabilityText": "Für diesen Eintrag liegt eine geometrische Rekonstruktion als interaktives 3D-Modell vor. Alle vorhandenen Modelle werden mit derselben Standardkamera und in ihren exportierten glTF-Metern dargestellt."}, "CAT-20-HPZ-WANDSCHALE-V2": {"id": "CAT-20-HPZ-WANDSCHALE-V2", "short": "HPZ-Wandschale V2", "group": "HPZ", "subcategory": "Wandschalen", "title": "HPZ-Wandschale V2", "subtitle": "HPZ-Wandschale · ohne Steg", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "stufenlos-15m"], ["Nennlänge", "bis 15"], ["Systembreite", "2,4m"], ["Nennbreite", "1,98m"], ["Längsradius", "n.v."], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "mit u. ohne Dachlast"], ["Randverstärkung", "k.A. -> ja?"], ["Steg", "ohne Steg"], ["Aussteifungsrippe", "mit und ohne aussteifungsrippe"], ["Kassette", "ohne Kassette"], ["Dachüberstand", "nein"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "Stahlbeton B450"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "n.v.", ""], ["ca. 1971", "Luckenwalde", "HPW-2", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Angabe", "stufenlos-15"], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 20, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "HPZ-2.4-MIT-STEG": {"id": "HPZ-2.4-MIT-STEG", "short": "HPZ 2,4 m", "group": "HPZ", "subcategory": "Wandschalen", "title": "HPZ-Wandschale V3", "subtitle": "HPZ-Schale · mit Steg", "hasModel": true, "file": "models/HPZ-2.4-MIT-STEG.glb", "alt": "Interaktives 3D-Modell der HPZ-Wandschale mit Steg", "geometry": [["Systemlänge", "stufenlos bis 15 m"], ["Nennlänge", "bis 15 m"], ["Systembreite", "2,40 m"], ["Nennbreite", "2,38 m"], ["Längsradius", "nicht vorhanden"], ["Schalendicke", "60 mm"]], "construction": [["Lastfall", "mit und ohne Dachlast"], ["Randverstärkung", "ja"], ["Steg", "mit Steg"], ["Kassette", "ohne Kassette"], ["Dachüberstand", "nein"]], "material": [["Bauweise", "Stahlbeton"], ["Betongüte", "B450"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "HP-Wandschalen SL=99000mm", ""], ["ca. 1971", "Luckenwalde", "HPW-3", "Kann als Dachschale verwendet werden"], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Bezeichnung eingetragen", "stufenlos bis 15 m"], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 21, "inApproval4570": true, "availabilityText": "Für diesen Eintrag liegt eine geometrische Rekonstruktion als interaktives 3D-Modell vor. Alle vorhandenen Modelle werden mit derselben Standardkamera und in ihren exportierten glTF-Metern dargestellt."}, "CAT-23-HPZ-LUCKENWALDE": {"id": "CAT-23-HPZ-LUCKENWALDE", "short": "HPZ (Luckenwalde)", "group": "HPZ", "subcategory": "Dachschalen", "title": "HPZ (Luckenwalde)", "subtitle": "HPZ-Dachschale · Familienbezeichnung", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "bis 18m stufenlos"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2/2,4m"], ["Nennbreite", "keine Angabe"], ["Längsradius", "n.v."], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "k.A."], ["Randverstärkung", "ja?"], ["Steg", "mit o. ohne"], ["Aussteifungsrippe", "mit und ohne aussteifungsrippe"], ["Kassette", "keine Angabe"], ["Dachüberstand", "k.A."], ["Anmerkung", "keine Angabe"]], "material": [["Material", "Stahlbeton"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "n.v.", ""], ["ca. 1971", "Luckenwalde", "k. Bezeichnung", "Wandschalen auch als Dachschalen"], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Angabe", ""], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 23, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "CAT-24-ZDS-1974-KATALOG": {"id": "CAT-24-ZDS-1974-KATALOG", "short": "ZDS (1974 Katalog )", "group": "HPZ", "subcategory": "Dachschalen", "title": "ZDS (1974 Katalog )", "subtitle": "Zylinderdachschale · Katalogbezeichnung 1974", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "12-24m"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2,4m"], ["Nennbreite", "keine Angabe"], ["Längsradius", "n.v."], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "k.A."], ["Randverstärkung", "keine Angabe"], ["Steg", "k.A."], ["Aussteifungsrippe", "k.A."], ["Kassette", "k.A."], ["Dachüberstand", "k.A."], ["Anmerkung", "keine Angabe"]], "material": [["Material", "k.A."], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "keine Angabe", ""], ["ca. 1971", "Luckenwalde", "keine Angabe", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "ZDS", "12 bis 24"], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 24, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "CAT-25-HPZ-12N-500-500": {"id": "CAT-25-HPZ-12N-500-500", "short": "HPZ 12N/(500/500)", "group": "HPZ", "subcategory": "Dachschalen", "title": "HPZ 12N/(500/500)", "subtitle": "HPZ-Dachschale · historischer Eintrag", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "12"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2,4m"], ["Nennbreite", "keine Angabe"], ["Längsradius", "n.v."], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "keine Angabe"], ["Randverstärkung", "k.A."], ["Steg", "mit Steg"], ["Aussteifungsrippe", "k.A."], ["Kassette", "ohne Kassette"], ["Dachüberstand", "beidseitig bis 1m"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "Stahlbeton"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "n.v.", ""], ["ca. 1971", "Luckenwalde", "n.v.", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Angabe", ""], ["1977", "TGL 21856/05", "HPZ 12N/500/500", "z.B. mit Steg, zweiseitigem Dachüberstand 500mm"], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 25, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "CAT-26-HPZ-12-Z": {"id": "CAT-26-HPZ-12-Z", "short": "HPZ 12 Z", "group": "HPZ", "subcategory": "Dachschalen", "title": "HPZ 12 Z", "subtitle": "HPZ-Dachschale · historischer Eintrag", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "12"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2,4m"], ["Nennbreite", "keine Angabe"], ["Längsradius", "n.v."], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "keine Angabe"], ["Randverstärkung", "k.A."], ["Steg", "mit Steg"], ["Aussteifungsrippe", "k.A."], ["Kassette", "k.A."], ["Dachüberstand", "beidseitig bis 1m"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "Stahlbeton"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "n.v.", ""], ["ca. 1971", "Luckenwalde", "n.v.", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Angabe", ""], ["1977", "TGL 21856/05", "HPZ 12 Z", "mit Steg, zweiseitigem Dachüberstand bis 1m"], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 26, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "CAT-27-HPZ-18V-500": {"id": "CAT-27-HPZ-18V-500", "short": "HPZ 18v/(500)", "group": "HPZ", "subcategory": "Dachschalen", "title": "HPZ 18v/(500)", "subtitle": "HPZ-Dachschale · historischer Eintrag", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "18"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2,4m"], ["Nennbreite", "keine Angabe"], ["Längsradius", "n.v."], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "keine Angabe"], ["Randverstärkung", "k.A."], ["Steg", "mit Steg"], ["Aussteifungsrippe", "k.A."], ["Kassette", "k.A."], ["Dachüberstand", "beidseitig bis 1m"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "Spannbeton"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "n.v.", ""], ["ca. 1971", "Luckenwalde", "n.v.", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Angabe", ""], ["1977", "TGL 21856/05", "HPZ 18v/500", "z.B. mit Steg, einseitigem Dachüberstand 500mm, vorgespannt"], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 27, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "CAT-28-HPZ-24V": {"id": "CAT-28-HPZ-24V", "short": "HPZ 24v", "group": "HPZ", "subcategory": "Dachschalen", "title": "HPZ 24v", "subtitle": "HPZ-Dachschale · historischer Eintrag", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "24"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2,4m"], ["Nennbreite", "keine Angabe"], ["Längsradius", "n.v."], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "keine Angabe"], ["Randverstärkung", "k.A."], ["Steg", "mit Steg"], ["Aussteifungsrippe", "k.A."], ["Kassette", "k.A."], ["Dachüberstand", "beidseitig bis 1m"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "Spannbeton"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "n.v.", ""], ["ca. 1971", "Luckenwalde", "n.v.", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Angabe", ""], ["1977", "TGL 21856/05", "HPZ 24v", "mit Steg, zweiseitigem Dachüberstand bis 1m"], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 28, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "CAT-29-DHET11X4": {"id": "CAT-29-DHET11X4", "short": "DHET11X4", "group": "HPZ", "subcategory": "Dachschalen", "title": "DHET11X4", "subtitle": "HPZ-Dachschale · historischer Eintrag", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "12"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2,4m"], ["Nennbreite", "2,38m"], ["Längsradius", "n.v."], ["Schalendicke", "55"]], "construction": [["Lastfall", "N"], ["Randverstärkung", "ja"], ["Steg", "ohne Steg"], ["Aussteifungsrippe", "nein"], ["Kassette", "ohne Kassette"], ["Dachüberstand", "beidseitig bis 1m"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "StahlbetonB300"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "keine Angabe", ""], ["ca. 1971", "Luckenwalde", "keine Angabe", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Angabe", ""], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 29, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "CAT-30-DHEP-13X4": {"id": "CAT-30-DHEP-13X4", "short": "DHEP 13X4", "group": "HPZ", "subcategory": "Dachschalen", "title": "DHEP 13X4", "subtitle": "HPZ-Dachschale · historischer Eintrag", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "18"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2,4m"], ["Nennbreite", "2,38m"], ["Längsradius", "n.v."], ["Schalendicke", "55"]], "construction": [["Lastfall", "N"], ["Randverstärkung", "ja"], ["Steg", "mit Steg"], ["Aussteifungsrippe", "nein"], ["Kassette", "ohne Kassette"], ["Dachüberstand", "beidseitig bis 1m"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "StahlbetonB300"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "keine Angabe", ""], ["ca. 1971", "Luckenwalde", "keine Angabe", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Angabe", ""], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 30, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "CAT-31-DHEP15X4": {"id": "CAT-31-DHEP15X4", "short": "DHEP15X4", "group": "HPZ", "subcategory": "Dachschalen", "title": "DHEP15X4", "subtitle": "HPZ-Dachschale · historischer Eintrag", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "24"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2,4m"], ["Nennbreite", "2,38m"], ["Längsradius", "n.v."], ["Schalendicke", "55"]], "construction": [["Lastfall", "N"], ["Randverstärkung", "ja"], ["Steg", "mit Steg"], ["Aussteifungsrippe", "nein"], ["Kassette", "ohne Kassette"], ["Dachüberstand", "beidseitig bis 1m"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "Spannbeton B450"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "keine Angabe", ""], ["ca. 1971", "Luckenwalde", "keine Angabe", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Angabe", ""], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "DHET 11X4, DHEP", ""]], "catalogRow": 31, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "CAT-33-HPD-LUCKENWALDE": {"id": "CAT-33-HPD-LUCKENWALDE", "short": "HPD (Luckenwalde)", "group": "HPZ", "subcategory": "Deckenschalen", "title": "HPD (Luckenwalde)", "subtitle": "HPZ-Deckenschale · Luckenwalde", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "bis 12m stufenlos"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2,4m"], ["Nennbreite", "keine Angabe"], ["Längsradius", "n.v."], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "N"], ["Randverstärkung", "keine Angabe"], ["Steg", "keine Angabe"], ["Aussteifungsrippe", "keine Angabe"], ["Kassette", "keine Angabe"], ["Dachüberstand", "keine Angabe"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "keine Angabe"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "keine Angabe", ""], ["ca. 1971", "Luckenwalde", "HPD", "bis 12m"], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Angabe", ""], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 33, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "CAT-34-HPD-1974-KATALOG": {"id": "CAT-34-HPD-1974-KATALOG", "short": "HPD (1974 Katalog)", "group": "HPZ", "subcategory": "Deckenschalen", "title": "HPD (1974 Katalog)", "subtitle": "HPZ-Deckenschale · Katalogbezeichnung 1974", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "12-18m"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2,4m"], ["Nennbreite", "keine Angabe"], ["Längsradius", "n.v."], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "k.A."], ["Randverstärkung", "keine Angabe"], ["Steg", "keine Angabe"], ["Aussteifungsrippe", "keine Angabe"], ["Kassette", "keine Angabe"], ["Dachüberstand", "keine Angabe"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "keine Angabe"], ["Krümmung", "einfach gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "n.v.", ""], ["ca. 1971", "Luckenwalde", "keine Angabe", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "HPD", "12 oder 18"], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 34, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "CAT-36-HPS12-0-LUCKENWALDE": {"id": "CAT-36-HPS12-0-LUCKENWALDE", "short": "HPS12.0 (Luckenwalde)", "group": "HPZ", "subcategory": "Deltaschalen", "title": "HPS12.0 (Luckenwalde)", "subtitle": "Deltaschale · historische Bezeichnung", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "12m"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2"], ["Nennbreite", "keine Angabe"], ["Längsradius", "keine Angabe"], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "keine Angabe"], ["Randverstärkung", "keine Angabe"], ["Steg", "keine Angabe"], ["Aussteifungsrippe", "keine Angabe"], ["Kassette", "keine Angabe"], ["Dachüberstand", "keine Angabe"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "keine Angabe"], ["Krümmung", "doppelt gekrümmt"]], "documents": [["1970", "Zulassung 45/70", "keine Angabe", ""], ["ca. 1971", "Luckenwalde", "keine Angabe", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Angabe", ""], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 36, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}, "CAT-37-HPZ-DELTA-LUCKENWALDE": {"id": "CAT-37-HPZ-DELTA-LUCKENWALDE", "short": "HPZ Delta (Luckenwalde)", "group": "HPZ", "subcategory": "Deltaschalen", "title": "HPZ Delta (Luckenwalde)", "subtitle": "Deltaschale · historische Bezeichnung", "hasModel": false, "file": null, "alt": null, "geometry": [["Systemlänge", "bis 15m"], ["Nennlänge", "keine Angabe"], ["Systembreite", "2/2,4m"], ["Nennbreite", "keine Angabe"], ["Längsradius", "keine Angabe"], ["Schalendicke", "keine Angabe"]], "construction": [["Lastfall", "keine Angabe"], ["Randverstärkung", "keine Angabe"], ["Steg", "keine Angabe"], ["Aussteifungsrippe", "keine Angabe"], ["Kassette", "keine Angabe"], ["Dachüberstand", "keine Angabe"], ["Anmerkung", "keine Angabe"]], "material": [["Material", "keine Angabe"], ["Krümmung", "keine Angabe"]], "documents": [["1970", "Zulassung 45/70", "keine Angabe", ""], ["ca. 1971", "Luckenwalde", "keine Angabe", ""], ["1974", "Erzeugnisse Bauwesen – Betonelemente", "keine Angabe", ""], ["1977", "TGL 21856/05", "keine Angabe", ""], ["1980", "Katalog PED 8003", "keine Angabe", ""]], "catalogRow": 37, "inApproval4570": false, "availabilityText": "Dieser Schalentyp gehört nicht zum für die geometrische Rekonstruktion verwendeten Zulassungsstand 45/70, sondern ist erst in späteren historischen Dokumenten nachweisbar. Daher liegt im vorliegenden Arbeitsstand kein 3D-Modell vor. Soweit keine vollständigen Konstruktionszeichnungen überliefert sind, werden ausschließlich die quellenbelegten Angaben dargestellt."}};
+    const catalogNavigation = [{"label": "HP", "subgroups": [{"label": "12 m", "items": ["HP-12-MINI", "HP-12-N", "CAT-06-12M-HP-SCHALE-V3"]}, {"label": "15 m", "items": ["HP-15-N", "HP-15-Z", "CAT-10-HPS-15-3-15-3"]}, {"label": "18 m", "items": ["HP-18-N", "HP-18-Z", "CAT-14-HPS-18-3-18-3"]}, {"label": "24 m", "items": ["HP-24"]}]}, {"label": "HPZ", "subgroups": [{"label": "Wandschalen", "items": ["HPZ-2-OHNE-STEG", "CAT-20-HPZ-WANDSCHALE-V2", "HPZ-2.4-MIT-STEG"]}, {"label": "Dachschalen", "items": ["CAT-23-HPZ-LUCKENWALDE", "CAT-24-ZDS-1974-KATALOG", "CAT-25-HPZ-12N-500-500", "CAT-26-HPZ-12-Z", "CAT-27-HPZ-18V-500", "CAT-28-HPZ-24V", "CAT-29-DHET11X4", "CAT-30-DHEP-13X4", "CAT-31-DHEP15X4"]}, {"label": "Deckenschalen", "items": ["CAT-33-HPD-LUCKENWALDE", "CAT-34-HPD-1974-KATALOG"]}, {"label": "Deltaschalen", "items": ["CAT-36-HPS12-0-LUCKENWALDE", "CAT-37-HPZ-DELTA-LUCKENWALDE"]}]}];
 
     const COMPARISON_THETA = 35;
     const COMPARISON_PHI = 68;
     const COMPARISON_FIELD_OF_VIEW = 30;
-
-    // Alle GLBs werden ohne modellabhängige Nachskalierung direkt
-    // in ihren exportierten glTF-Metern verglichen.
     const COMMON_CAMERA_DISTANCE_METERS = 40;
     const SCALE_BAR_METERS = 2;
+    const THREE_DEG_TO_RAD = Math.PI / 180;
 
-    let activeModelId = "HP-18-N";
+    let activeEntryId = "HP-18-N";
 
+    const systemTree = document.querySelector("#system-tree");
+    const catalogSidebar = document.querySelector(".catalog-sidebar");
+    const catalogMain = document.querySelector(".catalog-main");
+    const viewerCard = document.querySelector("#viewer-card");
+    const viewerShell = document.querySelector("#viewer-shell");
+    const noModelCard = document.querySelector("#no-model-card");
+    const noModelText = document.querySelector("#no-model-text");
     const viewer = document.querySelector("#shell-viewer");
-    const title = document.querySelector("#model-title");
-    const subtitle = document.querySelector("#model-subtitle");
-    const idBadge = document.querySelector("#model-id");
-    const buttonsContainer = document.querySelector("#model-buttons");
+    const entryTitle = document.querySelector("#entry-title");
+    const entrySubtitle = document.querySelector("#entry-subtitle");
+    const entryIdBadge = document.querySelector("#entry-id");
+    const availabilityBadge = document.querySelector("#availability-badge");
     const dataColumns = document.querySelector("#data-columns");
     const timeline = document.querySelector("#timeline");
+    const methodEntryText = document.querySelector("#method-entry-text");
     const viewerStatus = document.querySelector("#viewer-status");
     const resetComparisonViewButton = document.querySelector(
       "#reset-comparison-view"
@@ -1439,30 +1020,70 @@
     const scaleLabel = document.querySelector("#scale-label");
     const scaleLine = document.querySelector("#scale-line");
 
-    function renderModelButtons() {
-      buttonsContainer.replaceChildren();
+    function createStatusMark(hasModel) {
+      const mark = document.createElement("span");
+      mark.className = `status-mark ${hasModel ? "has-model" : "no-model"}`;
+      mark.textContent = hasModel ? "3D" : "INFO";
+      return mark;
+    }
 
-      for (const modelId of modelOrder) {
-        const model = models[modelId];
-        const button = document.createElement("button");
+    function renderNavigation() {
+      systemTree.replaceChildren();
 
-        button.type = "button";
-        button.className = "model-button";
-        button.dataset.modelId = modelId;
+      for (const topLevel of catalogNavigation) {
+        const topDetails = document.createElement("details");
+        topDetails.className = "tree-top";
+        topDetails.open = true;
 
-        const label = document.createElement("strong");
-        label.textContent = model.short;
+        const topSummary = document.createElement("summary");
+        topSummary.textContent = topLevel.label;
+        topDetails.appendChild(topSummary);
 
-        const group = document.createElement("span");
-        group.textContent = model.group === "HP" ? "HP-Schale" : "HPZ-Schale";
+        for (const subgroup of topLevel.subgroups) {
+          const subDetails = document.createElement("details");
+          subDetails.className = "tree-sub";
+          subDetails.open = true;
 
-        button.append(label, group);
+          const subSummary = document.createElement("summary");
+          subSummary.textContent = subgroup.label;
 
-        button.addEventListener("click", () => {
-          showModel(modelId);
-        });
+          const itemContainer = document.createElement("div");
+          itemContainer.className = "tree-items";
 
-        buttonsContainer.appendChild(button);
+          for (const itemId of subgroup.items) {
+            const item = catalogItems[itemId];
+            const button = document.createElement("button");
+
+            button.type = "button";
+            button.className = "tree-item";
+            button.dataset.entryId = itemId;
+
+            const label = document.createElement("span");
+            label.className = "tree-item-label";
+
+            const strong = document.createElement("strong");
+            strong.textContent = item.short;
+
+            const small = document.createElement("small");
+            small.textContent = item.hasModel
+              ? "rekonstruiert"
+              : "quellenbasiert";
+
+            label.append(strong, small);
+            button.append(label, createStatusMark(item.hasModel));
+
+            button.addEventListener("click", () => {
+              showEntry(itemId);
+            });
+
+            itemContainer.appendChild(button);
+          }
+
+          subDetails.append(subSummary, itemContainer);
+          topDetails.appendChild(subDetails);
+        }
+
+        systemTree.appendChild(topDetails);
       }
     }
 
@@ -1470,8 +1091,8 @@
       const section = document.createElement("section");
       section.className = "data-section";
 
-      const titleElement = document.createElement("h3");
-      titleElement.textContent = heading;
+      const headingElement = document.createElement("h3");
+      headingElement.textContent = heading;
 
       const table = document.createElement("table");
       table.className = "data-table";
@@ -1485,23 +1106,23 @@
 
         header.scope = "row";
         header.textContent = label;
-        cell.textContent = value;
+        cell.textContent = value || "keine Angabe";
 
         row.append(header, cell);
         body.appendChild(row);
       }
 
       table.appendChild(body);
-      section.append(titleElement, table);
+      section.append(headingElement, table);
 
       return section;
     }
 
-    function renderConstruction(model) {
+    function renderData(item) {
       dataColumns.replaceChildren(
-        createDataSection("Abmessungen", model.geometry),
-        createDataSection("Konstruktion", model.construction),
-        createDataSection("Material & Form", model.material)
+        createDataSection("Abmessungen", item.geometry),
+        createDataSection("Konstruktion", item.construction),
+        createDataSection("Material & Form", item.material)
       );
     }
 
@@ -1512,11 +1133,12 @@
         const card = document.createElement("article");
         card.className = "document-card";
 
-        const normalized = designation.toLowerCase();
+        const normalized = (designation || "").toLowerCase();
 
         if (
           normalized.includes("nicht vorhanden") ||
-          normalized.includes("keine angabe")
+          normalized.includes("keine angabe") ||
+          normalized === "n.v."
         ) {
           card.classList.add("is-absent");
         }
@@ -1536,7 +1158,7 @@
         body.className = "document-body";
 
         const heading = document.createElement("h3");
-        heading.textContent = designation;
+        heading.textContent = designation || "keine Angabe";
 
         body.appendChild(heading);
 
@@ -1551,22 +1173,29 @@
       }
     }
 
-    function setActiveButton(modelId) {
-      for (const button of buttonsContainer.querySelectorAll(".model-button")) {
-        button.classList.toggle(
-          "is-active",
-          button.dataset.modelId === modelId
-        );
+    function setActiveNavigation(entryId) {
+      for (const button of systemTree.querySelectorAll(".tree-item")) {
+        const active = button.dataset.entryId === entryId;
+        button.classList.toggle("is-active", active);
+
+        if (active) {
+          const subDetails = button.closest(".tree-sub");
+          const topDetails = button.closest(".tree-top");
+          if (subDetails) subDetails.open = true;
+          if (topDetails) topDetails.open = true;
+        }
       }
     }
 
-    function formatMeters(value, digits = 2) {
-      if (!Number.isFinite(value)) return "–";
+    function syncSidebarHeight() {
+      if (window.innerWidth <= 820) {
+        catalogSidebar.style.height = "";
+        return;
+      }
 
-      return `${value.toLocaleString("de-DE", {
-        minimumFractionDigits: digits,
-        maximumFractionDigits: digits
-      })} m`;
+      // Die linke Katalogspalte reicht immer bis zur Unterkante
+      // der gesamten rechten Spalte aus Viewer und Detailbereich.
+      catalogSidebar.style.height = `${catalogMain.offsetHeight}px`;
     }
 
     function comparisonOrbitFor() {
@@ -1574,19 +1203,22 @@
     }
 
     function applyComparisonView(immediate = true) {
-      viewer.cameraTarget = "auto auto auto";
-      viewer.fieldOfView = `${COMPARISON_FIELD_OF_VIEW}deg`;
-      viewer.cameraOrbit = comparisonOrbitFor();
+      if (!viewerShell.hidden) {
+        viewer.cameraTarget = "auto auto auto";
+        viewer.fieldOfView = `${COMPARISON_FIELD_OF_VIEW}deg`;
+        viewer.cameraOrbit = comparisonOrbitFor();
 
-      if (immediate && typeof viewer.jumpCameraToGoal === "function") {
-        viewer.jumpCameraToGoal();
+        if (immediate && typeof viewer.jumpCameraToGoal === "function") {
+          viewer.jumpCameraToGoal();
+        }
+
+        window.requestAnimationFrame(updateScaleIndicator);
       }
-
-      window.requestAnimationFrame(updateScaleIndicator);
     }
 
     function updateScaleIndicator() {
       if (
+        viewerShell.hidden ||
         typeof viewer.getCameraOrbit !== "function" ||
         typeof viewer.getFieldOfView !== "function"
       ) {
@@ -1607,9 +1239,7 @@
       }
 
       const radiusMeters = orbit.radius;
-      const fieldOfViewRadians =
-        THREE_DEG_TO_RAD * fieldOfViewDegrees;
-
+      const fieldOfViewRadians = THREE_DEG_TO_RAD * fieldOfViewDegrees;
       const visibleHeightAtTarget =
         2 * radiusMeters * Math.tan(fieldOfViewRadians / 2);
 
@@ -1624,26 +1254,50 @@
       scaleLine.style.width = `${Math.max(28, Math.min(190, widthPixels))}px`;
     }
 
-    const THREE_DEG_TO_RAD = Math.PI / 180;
+    function showEntry(entryId) {
+      const item = catalogItems[entryId];
 
-    function showModel(modelId) {
-      const model = models[modelId];
+      if (!item) return;
 
-      if (!model) return;
+      activeEntryId = entryId;
 
-      activeModelId = modelId;
-      viewerStatus.textContent = "3D-Modell wird geladen …";
+      entryTitle.textContent = item.title;
+      entrySubtitle.textContent = item.subtitle;
+      entryIdBadge.textContent = item.id;
+      methodEntryText.textContent = item.availabilityText;
 
-      viewer.src = model.file;
-      viewer.alt = model.alt;
+      availabilityBadge.textContent = item.hasModel
+        ? "3D-Modell vorhanden"
+        : "kein 3D-Modell";
 
-      title.textContent = model.title;
-      subtitle.textContent = model.subtitle;
-      idBadge.textContent = modelId;
+      availabilityBadge.classList.toggle("no-model", !item.hasModel);
+      setActiveNavigation(entryId);
+      renderData(item);
+      renderDocuments(item.documents);
 
-      renderConstruction(model);
-      renderDocuments(model.documents);
-      setActiveButton(modelId);
+      if (item.hasModel) {
+        noModelCard.hidden = true;
+        viewerShell.hidden = false;
+        resetComparisonViewButton.hidden = false;
+
+        viewerStatus.textContent = "3D-Modell wird geladen …";
+        viewer.src = item.file;
+        viewer.alt = item.alt;
+      } else {
+        viewerShell.hidden = true;
+        noModelCard.hidden = false;
+        resetComparisonViewButton.hidden = true;
+        noModelText.textContent = item.availabilityText;
+      }
+
+      window.requestAnimationFrame(syncSidebarHeight);
+
+      if (window.innerWidth <= 820) {
+        document.querySelector("#viewer-card").scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
     }
 
     viewer.addEventListener("load", () => {
@@ -1652,40 +1306,30 @@
       }
 
       applyComparisonView(true);
-
-      if (typeof viewer.getDimensions === "function") {
-        const dimensions = viewer.getDimensions();
-        console.info(
-          `[HP-Katalog] ${activeModelId} – GLB-Abmessungen in Metern`,
-          {
-            x: Number(dimensions.x),
-            y: Number(dimensions.y),
-            z: Number(dimensions.z)
-          }
-        );
-      }
+      window.requestAnimationFrame(syncSidebarHeight);
 
       viewerStatus.textContent =
         "Fester Größenvergleich · gleiche Kamera und gleiche glTF-Einheiten für alle Modelle";
     });
 
-    viewer.addEventListener("camera-change", () => {
-      updateScaleIndicator();
+    viewer.addEventListener("camera-change", updateScaleIndicator);
+
+    viewer.addEventListener("error", () => {
+      viewerStatus.textContent =
+        "Das Modell konnte nicht geladen werden. Bitte den GLB-Dateinamen prüfen.";
     });
 
     window.addEventListener("resize", () => {
-      window.requestAnimationFrame(updateScaleIndicator);
+      window.requestAnimationFrame(() => {
+        updateScaleIndicator();
+        syncSidebarHeight();
+      });
     });
 
     resetComparisonViewButton.addEventListener("click", () => {
       applyComparisonView(true);
       viewerStatus.textContent =
         "Vergleichsansicht mit festem Maßstab wiederhergestellt";
-    });
-
-    viewer.addEventListener("error", () => {
-      viewerStatus.textContent =
-        "Das Modell konnte nicht geladen werden. Bitte den GLB-Dateinamen prüfen.";
     });
 
     for (const tabButton of document.querySelectorAll(".tab-button")) {
@@ -1699,11 +1343,22 @@
         for (const panel of document.querySelectorAll(".tab-panel")) {
           panel.classList.toggle("is-active", panel.id === target);
         }
+
+        window.requestAnimationFrame(syncSidebarHeight);
       });
     }
 
-    renderModelButtons();
-    showModel("HP-18-N");
+    if ("ResizeObserver" in window) {
+      const catalogHeightObserver = new ResizeObserver(() => {
+        window.requestAnimationFrame(syncSidebarHeight);
+      });
+
+      catalogHeightObserver.observe(catalogMain);
+    }
+
+    renderNavigation();
+    showEntry(activeEntryId);
+    window.requestAnimationFrame(syncSidebarHeight);
   </script>
 </body>
 </html>
