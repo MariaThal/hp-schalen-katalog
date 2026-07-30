@@ -418,6 +418,9 @@
     }
 
     .viewer-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       min-height: 34px;
       padding: 7px 10px;
       border: 1px solid var(--line);
@@ -427,6 +430,8 @@
       cursor: pointer;
       font-size: 12px;
       font-weight: 650;
+      text-decoration: none;
+      white-space: nowrap;
     }
 
     .viewer-button:hover {
@@ -908,6 +913,23 @@
                 3D-Modell vorhanden
               </span>
               <span class="id-badge" id="entry-id">HP-18-N</span>
+
+              <a
+                class="viewer-button"
+                id="download-glb"
+                href="models/HP-18-N.glb"
+                download="HP-18-N.glb">
+                GLB herunterladen
+              </a>
+
+              <a
+                class="viewer-button"
+                id="download-3dm"
+                href="models-3dm/HP-18-N.3dm"
+                download="HP-18-N.3dm">
+                3DM herunterladen
+              </a>
+
               <button class="viewer-button" id="reset-comparison-view" type="button">
                 Ansicht zurücksetzen
               </button>
@@ -1056,6 +1078,8 @@
     const timeline = document.querySelector("#timeline");
     const methodEntryText = document.querySelector("#method-entry-text");
     const viewerStatus = document.querySelector("#viewer-status");
+    const downloadGlbLink = document.querySelector("#download-glb");
+    const download3dmLink = document.querySelector("#download-3dm");
     const resetComparisonViewButton = document.querySelector(
       "#reset-comparison-view"
     );
@@ -1325,7 +1349,27 @@
       if (item.hasModel) {
         noModelCard.hidden = true;
         viewerShell.hidden = false;
+        downloadGlbLink.hidden = false;
+        download3dmLink.hidden = false;
         resetComparisonViewButton.hidden = false;
+
+        const glbFileName = item.file.split("/").pop();
+        const modelBaseName = glbFileName.replace(/\.glb$/i, "");
+        const rhinoFileName = `${modelBaseName}.3dm`;
+
+        downloadGlbLink.href = item.file;
+        downloadGlbLink.download = glbFileName;
+        downloadGlbLink.setAttribute(
+          "aria-label",
+          `${item.title} als GLB herunterladen`
+        );
+
+        download3dmLink.href = `models-3dm/${rhinoFileName}`;
+        download3dmLink.download = rhinoFileName;
+        download3dmLink.setAttribute(
+          "aria-label",
+          `${item.title} als Rhino-3DM herunterladen`
+        );
 
         viewerStatus.textContent = "3D-Modell wird geladen …";
         viewer.src = item.file;
@@ -1333,6 +1377,8 @@
       } else {
         viewerShell.hidden = true;
         noModelCard.hidden = false;
+        downloadGlbLink.hidden = true;
+        download3dmLink.hidden = true;
         resetComparisonViewButton.hidden = true;
         noModelText.textContent = item.availabilityText;
       }
