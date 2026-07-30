@@ -285,6 +285,77 @@
       font-size: 13px;
     }
 
+
+    .download-section {
+      margin-top: 20px;
+      padding: 20px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .download-section h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .download-intro {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .download-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 15px 16px;
+      border: 1px solid #e5e1da;
+      border-radius: 9px;
+      background: #fbfaf8;
+    }
+
+    .download-card h3 {
+      margin: 0 0 4px;
+      font-size: 14px;
+    }
+
+    .download-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .download-button {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 9px 12px;
+      border: 1px solid #cfcac0;
+      border-radius: 8px;
+      color: var(--text);
+      background: #ffffff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .download-button:hover {
+      background: #f8f6f2;
+    }
+
     .status {
       font-size: 13px;
       color: var(--muted);
@@ -331,6 +402,12 @@
       #viewer { height: 480px; }
       .viewer-wrap { min-height: 480px; }
       .info-grid { grid-template-columns: 1fr; gap: 3px; }
+      .download-grid { grid-template-columns: 1fr; }
+      .download-card {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .download-button { width: 100%; }
     }
   </style>
 </head>
@@ -420,6 +497,43 @@
 
         <div class="status" id="statusText">Viewer wird vorbereitet …</div>
       </section>
+    </section>
+
+
+    <section class="download-section" aria-labelledby="downloads-title">
+      <h2 id="downloads-title">Modelldateien</h2>
+      <p class="download-intro">
+        Bereitstellung der BIM-Austauschdatei und des geometrischen Rhino-Mastermodells
+        zur weiteren fachlichen Prüfung.
+      </p>
+
+      <div class="download-grid">
+        <article class="download-card">
+          <div>
+            <h3>IFC-Modell der HP-18-N</h3>
+            <p>Betonschale, Bewehrungsgruppen, Einbauteil und zugehörige Eigenschaften.</p>
+          </div>
+          <a
+            class="download-button"
+            href="./downloads/HP-18-N_Bewehrungsmodell_IFC4.ifc"
+            download="HP-18-N_Bewehrungsmodell_IFC4.ifc">
+            IFC herunterladen
+          </a>
+        </article>
+
+        <article class="download-card">
+          <div>
+            <h3>Rhino-Mastermodell der HP-18-N</h3>
+            <p>Editierbares geometrisches Arbeitsmodell im nativen Rhino-Format.</p>
+          </div>
+          <a
+            class="download-button"
+            href="./downloads/HP-18-N_Rhino-Modell.3dm"
+            download="HP-18-N_Rhino-Modell.3dm">
+            3DM herunterladen
+          </a>
+        </article>
+      </div>
     </section>
   </main>
 
