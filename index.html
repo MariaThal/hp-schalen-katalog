@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>HP-Schalen nach Herbert Müller – Projekt</title>
+  <title>Hyperbolische Paraboloidschalen – Diplomarbeit Maria Thal</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -151,10 +151,14 @@
     }
 
     .project-card p {
-      max-width: 900px;
+      max-width: 980px;
       margin: 0;
       color: var(--muted);
       line-height: 1.7;
+    }
+
+    .project-card p + p {
+      margin-top: 12px;
     }
 
     .page-grid {
@@ -172,20 +176,6 @@
       border-radius: var(--radius);
       background: var(--paper);
       box-shadow: var(--shadow);
-    }
-
-    .page-card-visual {
-      min-height: 125px;
-      border-bottom: 1px solid var(--line);
-      background:
-        radial-gradient(circle at 55% 38%, rgba(255, 255, 255, 0.94), transparent 35%),
-        linear-gradient(145deg, #e8e5df, #d2cec6);
-    }
-
-    .page-card.case .page-card-visual {
-      background:
-        radial-gradient(circle at 55% 38%, rgba(255, 255, 255, 0.90), transparent 35%),
-        linear-gradient(145deg, #e4dfd7, #c8b9a9);
     }
 
     .page-card-content {
@@ -229,6 +219,46 @@
       background: #34322f;
     }
 
+    .imprint {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.35fr) minmax(0, 1.65fr);
+      gap: 48px;
+      margin-top: 34px;
+      padding: 28px 0 4px;
+      border-top: 1px solid var(--line);
+    }
+
+    .imprint-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .imprint-content {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+    }
+
+    .imprint-block h3 {
+      margin: 0 0 7px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .imprint-block p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .imprint-block a {
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
     .site-footer {
       border-top: 1px solid var(--line);
       color: var(--muted);
@@ -251,12 +281,18 @@
       }
 
       .intro,
-      .page-grid {
+      .page-grid,
+      .imprint {
         grid-template-columns: 1fr;
       }
 
-      .intro {
+      .intro,
+      .imprint {
         gap: 22px;
+      }
+
+      .imprint-content {
+        grid-template-columns: 1fr 1fr;
       }
 
       .footer-inner {
@@ -286,6 +322,11 @@
       main {
         padding-top: 38px;
       }
+
+      .imprint-content {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
     }
   </style>
 </head>
@@ -298,7 +339,7 @@
       <nav class="site-nav" aria-label="Hauptnavigation">
         <a class="active" href="./">Projekt</a>
         <a href="./katalog.html">Katalog</a>
-        <a href="./hp18n-test/">Fallstudie HP-18-N</a>
+        <a href="./hp18n-fallstudie/">Fallstudie HP-18-N</a>
       </nav>
     </div>
   </header>
@@ -306,38 +347,46 @@
   <main>
     <section class="intro">
       <div>
-        <p class="eyebrow">Projekt</p>
-        <h1>HP-Schalen nach Herbert Müller</h1>
+        <p class="eyebrow">Diplomarbeit · Architektur · TU Dresden</p>
+        <h1>Hyperbolische Paraboloidschalen</h1>
       </div>
 
       <p class="intro-text">
-        Digitaler Typenkatalog und konstruktive Fallstudie im Rahmen einer
-        architekturwissenschaftlichen Diplomarbeit.
+        HP-Schalen als ingenieurtechnische Meisterwerke und baukulturelles Erbe
+        der seriellen Bauweise der Ostmoderne.
       </p>
     </section>
 
-    <section class="project-card">
-      <p class="eyebrow">Projektstruktur</p>
-      <h2>Vom Typenkatalog zur konstruktiven Fallstudie</h2>
+    <section class="project-card" aria-labelledby="projekt-title">
+      <p class="eyebrow">Projekt</p>
+      <h2 id="projekt-title">Zur Website</h2>
+
       <p>
-        Der Katalog bildet die gemeinsame typologische Ebene. Die Fallstudie
-        ergänzt diese um eine detaillierte Untersuchung eines ausgewählten
-        Schalentypus. Beide Bereiche teilen dieselbe Webadresse, Navigation
-        und gestalterische Sprache.
+        Diese Website ist als digitales Ergebnis einer wissenschaftlich-theoretischen
+        Diplomarbeit an der Technischen Universität Dresden entstanden. Sie macht
+        ausgewählte Ergebnisse der Untersuchung zu den HP-Schalen nach Herbert Müller
+        interaktiv zugänglich.
+      </p>
+
+      <p>
+        Im Mittelpunkt stehen die systematische Erfassung des HP-Schalen-Baukastensystems,
+        die geometrische Rekonstruktion ausgewählter Elemente sowie die konstruktive
+        Vertiefung der HP-18-N anhand eines detaillierten 3D-Modells von Betonschale
+        und Bewehrung.
       </p>
     </section>
 
     <section class="page-grid" aria-label="Bereiche der Website">
       <article class="page-card">
-
         <div class="page-card-content">
           <p class="eyebrow">Typologische Übersicht</p>
           <h2>Katalog</h2>
+
           <p>
-            Der digitale Katalog versammelt die geometrisch rekonstruierten
-            HP- und HPZ-Schalentypen. Die Modelle können interaktiv betrachtet
-            und anhand ihrer konstruktiven Kenndaten sowie historischen
-            Dokumentstände verglichen werden.
+            Der digitale Katalog versammelt geometrisch rekonstruierte sowie
+            quellenbasiert dokumentierte HP- und HPZ-Schalentypen. Vorhandene
+            3D-Modelle können interaktiv betrachtet und anhand konstruktiver
+            Kenndaten sowie historischer Dokumentstände verglichen werden.
           </p>
 
           <a class="button" href="./katalog.html">Katalog öffnen</a>
@@ -345,10 +394,10 @@
       </article>
 
       <article class="page-card case">
-
         <div class="page-card-content">
           <p class="eyebrow">Konstruktive Vertiefung</p>
           <h2>Fallstudie HP-18-N</h2>
+
           <p>
             Die Fallstudie untersucht die HP-18-N als konstruktives Gesamtsystem
             aus Betonschale und Bewehrung. Bauteil und Bewehrungsgruppen können
@@ -356,15 +405,53 @@
             und BIM-/IFC-orientierten Daten betrachtet werden.
           </p>
 
-          <a class="button" href="./hp18n-test/">Fallstudie öffnen</a>
+          <a class="button" href="./hp18n-fallstudie/">Fallstudie öffnen</a>
         </div>
       </article>
+    </section>
+
+    <section class="imprint" aria-labelledby="impressum-title">
+      <div>
+        <p class="eyebrow">Projektangaben</p>
+        <h2 class="imprint-title" id="impressum-title">Impressum</h2>
+      </div>
+
+      <div class="imprint-content">
+        <div class="imprint-block">
+          <h3>Verfasserin</h3>
+          <p>
+            Maria Thal<br>
+            Diplomarbeit Architektur<br>
+            Sommersemester 2026<br>
+            Technische Universität Dresden
+          </p>
+        </div>
+
+        <div class="imprint-block">
+          <h3>Betreuung</h3>
+          <p>
+            Fakultät Architektur und Landschaft<br>
+            Lehrstuhl für Tragwerksplanung<br>
+            Prof. Dr.-Ing. Matthias Beckh
+          </p>
+        </div>
+
+        <div class="imprint-block">
+          <h3>Kontakt</h3>
+          <p>
+            <a href="mailto:hp-schalen.mariathal@outlook.de">
+              hp-schalen.mariathal@outlook.de
+            </a><br>
+            <span>vorläufige Kontaktadresse</span>
+          </p>
+        </div>
+      </div>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <span>HP-Schalen nach Herbert Müller</span>
+      <span>Maria Thal · Diplomarbeit Architektur · TU Dresden · 2026</span>
       <span>Projekt · Katalog · Fallstudie HP-18-N</span>
     </div>
   </footer>

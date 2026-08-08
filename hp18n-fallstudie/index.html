@@ -17,7 +17,9 @@
       --error: #9d2b2b;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -79,7 +81,9 @@
       padding: 24px 0 40px;
     }
 
-    main > header { margin-bottom: 18px; }
+    main > header {
+      margin-bottom: 18px;
+    }
 
     h1 {
       margin: 0 0 6px;
@@ -189,8 +193,13 @@
       margin-bottom: 10px;
     }
 
-    .control-row label { font-size: 14px; }
-    .control-row input[type="range"] { width: 100%; }
+    .control-row label {
+      font-size: 14px;
+    }
+
+    .control-row input[type="range"] {
+      width: 100%;
+    }
 
     .group-list {
       display: grid;
@@ -209,7 +218,9 @@
       font-weight: 600;
     }
 
-    .group-item:hover { background: #f7f4ef; }
+    .group-item:hover {
+      background: #f7f4ef;
+    }
 
     .group-item.active {
       border-color: var(--accent);
@@ -241,7 +252,9 @@
       cursor: pointer;
     }
 
-    button:hover { background: #f8f6f2; }
+    button:hover {
+      background: #f8f6f2;
+    }
 
     .info-grid {
       display: grid;
@@ -285,6 +298,15 @@
       font-size: 13px;
     }
 
+    .property-subheading {
+      grid-column: 1 / -1;
+      margin-top: 8px;
+      padding-top: 12px;
+      border-top: 1px solid #e5e1da;
+      font-weight: 700;
+      color: #444;
+    }
+
     .status {
       font-size: 13px;
       color: var(--muted);
@@ -293,15 +315,23 @@
       background: #faf9f7;
     }
 
-    .status.error { color: var(--error); }
+    .status.error {
+      color: var(--error);
+    }
 
     @media (max-width: 1100px) {
-      .layout { grid-template-columns: 1fr; }
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
       .panel {
         position: static;
         max-height: none;
       }
-      .viewer-card { min-height: 620px; }
+
+      .viewer-card {
+        min-height: 620px;
+      }
     }
 
     @media (max-width: 700px) {
@@ -313,7 +343,9 @@
         padding: 11px 0;
       }
 
-      .shared-nav { width: 100%; }
+      .shared-nav {
+        width: 100%;
+      }
 
       .shared-nav a {
         flex: 1 1 auto;
@@ -327,10 +359,22 @@
         padding-top: 18px;
       }
 
-      h1 { font-size: 25px; }
-      #viewer { height: 480px; }
-      .viewer-wrap { min-height: 480px; }
-      .info-grid { grid-template-columns: 1fr; gap: 3px; }
+      h1 {
+        font-size: 25px;
+      }
+
+      #viewer {
+        height: 480px;
+      }
+
+      .viewer-wrap {
+        min-height: 480px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+        gap: 3px;
+      }
     }
   </style>
 </head>
@@ -339,10 +383,11 @@
   <header class="shared-site-header">
     <div class="shared-header-inner">
       <a class="shared-brand" href="../">HP-Schalen nach Herbert Müller</a>
+
       <nav class="shared-nav" aria-label="Hauptnavigation">
-        <a href="../#katalog">Katalog</a>
+        <a href="../">Projekt</a>
+        <a href="../katalog.html">Katalog</a>
         <a class="active" href="./">Fallstudie HP-18-N</a>
-        <a href="../#projekt">Projekt</a>
       </nav>
     </div>
   </header>
@@ -350,6 +395,7 @@
   <main>
     <header>
       <h1>HP-18-N – Betonschale und Bewehrung</h1>
+
       <p class="subtitle">
         Interaktive konstruktive Fallstudie zur HP-Schale 18 m N.
         Betonschale, Bewehrungsgruppen und Montageöse können ausgewählt und mit ihren
@@ -371,7 +417,14 @@
             <label for="concreteTransparency" style="min-width: 112px;">
               Betontransparenz
             </label>
-            <input type="range" id="concreteTransparency" min="0" max="90" value="35" />
+
+            <input
+              type="range"
+              id="concreteTransparency"
+              min="0"
+              max="90"
+              value="35"
+            />
           </div>
 
           <div class="btn-row" style="margin-top: 12px;">
@@ -382,8 +435,11 @@
 
         <div class="section">
           <h2>Bauteil</h2>
+
           <div class="group-list">
-            <div id="concreteListItem" class="group-item">Betonschale</div>
+            <div id="concreteListItem" class="group-item">
+              Betonschale
+            </div>
           </div>
         </div>
 
@@ -412,24 +468,27 @@
 
         <div class="viewer-info">
           <h2>Ausgewähltes Element</h2>
+
           <div id="selectionInfo" class="info-grid">
             <div class="info-label">Status</div>
             <div>Kein Element ausgewählt.</div>
           </div>
         </div>
 
-        <div class="status" id="statusText">Viewer wird vorbereitet …</div>
+        <div class="status" id="statusText">
+          Viewer wird vorbereitet …
+        </div>
       </section>
     </section>
   </main>
 
   <script type="importmap">
-  {
-    "imports": {
-      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
     }
-  }
   </script>
 
   <script type="module">
@@ -440,439 +499,438 @@
     const MODEL_PATH = "./models/";
 
     const CONCRETE = {
-      "id": "HP18N-BT-01",
-      "file": "hp18n_betonschale.glb",
-      "shellType": "HP-18-N",
-      "designation": "HP-18-N Betonschale",
-      "componentArea": "Betonkörper",
-      "dataBasis": "Zulassung Nr. 45/70",
-      "informationStatus": "geometrisch rekonstruiert",
-      "executionType": "Stahlbeton",
-      "structuralFunction": "tragend",
-      "systemLength": "18,00 m",
-      "constructionLength": "17,98 m",
-      "systemWidth": "2,00 m",
-      "constructionWidth": "1,98 m",
-      "concreteGrade": "B300",
-      "permittedSteelGrades": "St A-I, St A-III, St B-IV",
-      "regularSteelGrades": "St A-I, St A-III",
-      "coverStegSide": "10 mm",
-      "coverStegBottom": "15 mm",
-      "coverPressureChord": "10 mm",
-      "concreteVolume": "2,085 m³",
-      "elementMass": "5.536 kg",
-      "rawDensity": "2,4 Mp/m³",
-      "steelDemandSta1": "234 kg",
-      "steelDemandSta3": "235 kg",
-      "variantStb4": "59 kg",
-      "variantSta1": "143 kg",
-      "variantSta3": "235 kg",
-      "variantNote": "Alternative Bewehrungsausführung; die Variantenwerte werden nicht zusätzlich zur Regelausführung addiert.",
-      "mainReinforcementNote": "Mindestens zwei Stäbe; in einem Querschnitt darf ein Stab durch Stumpfnahtverbindung gestoßen werden.",
-      "source": "Zulassung Nr. 45/70"
-};
+      id: "HP18N-BT-01",
+      file: "hp18n_betonschale.glb",
+      shellType: "HP-18-N",
+      designation: "HP-18-N Betonschale",
+      componentArea: "Betonkörper",
+      dataBasis: "Zulassung Nr. 45/70",
+      informationStatus: "geometrisch rekonstruiert",
+      executionType: "Stahlbeton",
+      structuralFunction: "tragend",
+      systemLength: "18,00 m",
+      constructionLength: "17,98 m",
+      systemWidth: "2,00 m",
+      constructionWidth: "1,98 m",
+      concreteGrade: "B300",
+      permittedSteelGrades: "St A-I, St A-III, St B-IV",
+      regularSteelGrades: "St A-I, St A-III",
+      coverStegSide: "10 mm",
+      coverStegBottom: "15 mm",
+      coverPressureChord: "10 mm",
+      concreteVolume: "2,085 m³",
+      elementMass: "5.536 kg",
+      rawDensity: "2,4 Mp/m³",
+      steelDemandSta1: "234 kg",
+      steelDemandSta3: "235 kg",
+      variantStb4: "59 kg",
+      variantSta1: "143 kg",
+      variantSta3: "235 kg",
+      source: "Zulassung Nr. 45/70"
+    };
 
     const GROUPS = [
       {
-            "id": "HP18N-DG-RL-Q-01",
-            "category": "druckgurt",
-            "listLabel": "Randleiter – Querstäbe",
-            "file": "hp18n_bewehrung_druckgurt_randleiter_querstaebe_d6p5.glb",
-            "shellType": "HP-18-N",
-            "designation": "Randleiter – Querstäbe d6,5",
-            "componentArea": "Druckgurt",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "Randzone / über die Schalendicke verteilt",
-            "area": "gesamte Länge, Längsrand des Druckgurtes",
-            "reinforcementElement": "Querstabgruppe",
-            "reinforcementFunction": "Randbewehrung",
-            "direction": "quer zur Bauteillängsrichtung",
-            "quantityRule": "2 je Kassette",
-            "nominalDiameter": "6,5 mm",
-            "spacing": "",
-            "steelGrade": "im Plan nicht angegeben",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-DG-RL-Q-01",
+        category: "druckgurt",
+        listLabel: "Randleiter – Querstäbe",
+        file: "hp18n_bewehrung_druckgurt_randleiter_querstaebe_d6p5.glb",
+        shellType: "HP-18-N",
+        designation: "Randleiter – Querstäbe d6,5",
+        componentArea: "Druckgurt",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "Randzone / über die Schalendicke verteilt",
+        area: "gesamte Länge, Längsrand des Druckgurtes",
+        reinforcementElement: "Querstabgruppe",
+        reinforcementFunction: "Randbewehrung",
+        direction: "quer zur Bauteillängsrichtung",
+        quantityRule: "2 je Kassette",
+        nominalDiameter: "6,5 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-DG-RL-L-01",
-            "category": "druckgurt",
-            "listLabel": "Randleiter – Längsstäbe",
-            "file": "hp18n_bewehrung_druckgurt_randleiter_3stk_d8_sta3.glb",
-            "shellType": "HP-18-N",
-            "designation": "Randleiter – Längsstäbe 3 Stk. d8 St A-III",
-            "componentArea": "Druckgurt",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "Randzone / über die Schalendicke verteilt",
-            "area": "gesamte Länge, Längsrand des Druckgurtes",
-            "reinforcementElement": "Längsstabgruppe",
-            "reinforcementFunction": "Randbewehrung",
-            "direction": "längs zur Bauteillängsrichtung",
-            "quantityRule": "3 je Seite",
-            "nominalDiameter": "8 mm",
-            "spacing": "",
-            "steelGrade": "St A-III",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-DG-RL-L-01",
+        category: "druckgurt",
+        listLabel: "Randleiter – Längsstäbe",
+        file: "hp18n_bewehrung_druckgurt_randleiter_3stk_d8_sta3.glb",
+        shellType: "HP-18-N",
+        designation: "Randleiter – Längsstäbe 3 Stk. d8 St A-III",
+        componentArea: "Druckgurt",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "Randzone / über die Schalendicke verteilt",
+        area: "gesamte Länge, Längsrand des Druckgurtes",
+        reinforcementElement: "Längsstabgruppe",
+        reinforcementFunction: "Randbewehrung",
+        direction: "längs zur Bauteillängsrichtung",
+        quantityRule: "3 je Seite",
+        nominalDiameter: "8 mm",
+        spacing: "",
+        steelGrade: "St A-III",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-DG-QU-KA-01",
-            "category": "druckgurt",
-            "listLabel": "Querbewehrung untere Lage – Kassettenbereich",
-            "file": "hp18n_bewehrung_druckgurt_quer_unten_kassettenbereich_2stk_pro_rippe_d6p5_sta1.glb",
-            "shellType": "HP-18-N",
-            "designation": "Querbewehrung untere Lage – Kassettenbereich",
-            "componentArea": "Druckgurt",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "untere Lage",
-            "area": "Kassettenbereich, Längsrand des Druckgurtes",
-            "reinforcementElement": "Querstabgruppe",
-            "reinforcementFunction": "Schalenquerbewehrung",
-            "direction": "quer zur Bauteillängsrichtung",
-            "quantityRule": "2 je Rippe",
-            "nominalDiameter": "6,5 mm",
-            "spacing": "",
-            "steelGrade": "St A-I",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-DG-QU-KA-01",
+        category: "druckgurt",
+        listLabel: "Querbewehrung untere Lage – Kassettenbereich",
+        file: "hp18n_bewehrung_druckgurt_quer_unten_kassettenbereich_2stk_pro_rippe_d6p5_sta1.glb",
+        shellType: "HP-18-N",
+        designation: "Querbewehrung untere Lage – Kassettenbereich",
+        componentArea: "Druckgurt",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "untere Lage",
+        area: "Kassettenbereich, Längsrand des Druckgurtes",
+        reinforcementElement: "Querstabgruppe",
+        reinforcementFunction: "Schalenquerbewehrung",
+        direction: "quer zur Bauteillängsrichtung",
+        quantityRule: "2 je Rippe",
+        nominalDiameter: "6,5 mm",
+        spacing: "",
+        steelGrade: "St A-I",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-DG-QU-EF125-01",
-            "category": "druckgurt",
-            "listLabel": "Querbewehrung untere Lage – Endfeld e125",
-            "file": "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e125_sta1.glb",
-            "shellType": "HP-18-N",
-            "designation": "Querbewehrung untere Lage – Endfeld e125",
-            "componentArea": "Druckgurt",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "untere Lage",
-            "area": "Endfeld",
-            "reinforcementElement": "Querstabgruppe",
-            "reinforcementFunction": "Schalenquerbewehrung",
-            "direction": "quer zur Bauteillängsrichtung",
-            "quantityRule": "keine Angabe",
-            "nominalDiameter": "6,5 mm",
-            "spacing": "125 mm",
-            "steelGrade": "St A-I",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-DG-QU-EF125-01",
+        category: "druckgurt",
+        listLabel: "Querbewehrung untere Lage – Endfeld e125",
+        file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e125_sta1.glb",
+        shellType: "HP-18-N",
+        designation: "Querbewehrung untere Lage – Endfeld e125",
+        componentArea: "Druckgurt",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "untere Lage",
+        area: "Endfeld",
+        reinforcementElement: "Querstabgruppe",
+        reinforcementFunction: "Schalenquerbewehrung",
+        direction: "quer zur Bauteillängsrichtung",
+        quantityRule: "keine Angabe",
+        nominalDiameter: "6,5 mm",
+        spacing: "125 mm",
+        steelGrade: "St A-I",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-DG-QU-EF075-01",
-            "category": "druckgurt",
-            "listLabel": "Querbewehrung untere Lage – Endfeld e75",
-            "file": "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e75_sta1.glb",
-            "shellType": "HP-18-N",
-            "designation": "Querbewehrung untere Lage – Endfeld e75",
-            "componentArea": "Druckgurt",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "untere Lage",
-            "area": "Endfeld",
-            "reinforcementElement": "Querstabgruppe",
-            "reinforcementFunction": "Schalenquerbewehrung",
-            "direction": "quer zur Bauteillängsrichtung",
-            "quantityRule": "keine Angabe",
-            "nominalDiameter": "6,5 mm",
-            "spacing": "75 mm",
-            "steelGrade": "St A-I",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-DG-QU-EF075-01",
+        category: "druckgurt",
+        listLabel: "Querbewehrung untere Lage – Endfeld e75",
+        file: "hp18n_bewehrung_druckgurt_quer_unten_endfeld_d6p5_e75_sta1.glb",
+        shellType: "HP-18-N",
+        designation: "Querbewehrung untere Lage – Endfeld e75",
+        componentArea: "Druckgurt",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "untere Lage",
+        area: "Endfeld",
+        reinforcementElement: "Querstabgruppe",
+        reinforcementFunction: "Schalenquerbewehrung",
+        direction: "quer zur Bauteillängsrichtung",
+        quantityRule: "keine Angabe",
+        nominalDiameter: "6,5 mm",
+        spacing: "75 mm",
+        steelGrade: "St A-I",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-DG-QO-KA-01",
-            "category": "druckgurt",
-            "listLabel": "Querbewehrung obere Lage – Kassettenbereich",
-            "file": "hp18n_bewehrung_druckgurt_quer_oben_kassettenbereich_1bzw2stk_pro_rippe_d6p5_sta1.glb",
-            "shellType": "HP-18-N",
-            "designation": "Querbewehrung obere Lage – Kassettenbereich",
-            "componentArea": "Druckgurt",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "obere Lage",
-            "area": "Kassettenbereich",
-            "reinforcementElement": "Querstabgruppe",
-            "reinforcementFunction": "Schalenquerbewehrung",
-            "direction": "quer zur Bauteillängsrichtung",
-            "quantityRule": "1 bzw. 2 je Rippe",
-            "nominalDiameter": "6,5 mm",
-            "spacing": "",
-            "steelGrade": "St A-I",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-DG-QO-KA-01",
+        category: "druckgurt",
+        listLabel: "Querbewehrung obere Lage – Kassettenbereich",
+        file: "hp18n_bewehrung_druckgurt_quer_oben_kassettenbereich_1bzw2stk_pro_rippe_d6p5_sta1.glb",
+        shellType: "HP-18-N",
+        designation: "Querbewehrung obere Lage – Kassettenbereich",
+        componentArea: "Druckgurt",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "obere Lage",
+        area: "Kassettenbereich",
+        reinforcementElement: "Querstabgruppe",
+        reinforcementFunction: "Schalenquerbewehrung",
+        direction: "quer zur Bauteillängsrichtung",
+        quantityRule: "1 bzw. 2 je Rippe",
+        nominalDiameter: "6,5 mm",
+        spacing: "",
+        steelGrade: "St A-I",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-DG-QO-EF125-01",
-            "category": "druckgurt",
-            "listLabel": "Querbewehrung obere Lage – Endfeld e125",
-            "file": "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e125_sta1.glb",
-            "shellType": "HP-18-N",
-            "designation": "Querbewehrung obere Lage – Endfeld e125",
-            "componentArea": "Druckgurt",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "obere Lage",
-            "area": "Endfeld",
-            "reinforcementElement": "Querstabgruppe",
-            "reinforcementFunction": "Schalenquerbewehrung",
-            "direction": "quer zur Bauteillängsrichtung",
-            "quantityRule": "keine Angabe",
-            "nominalDiameter": "6,5 mm",
-            "spacing": "125 mm",
-            "steelGrade": "St A-I",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-DG-QO-EF125-01",
+        category: "druckgurt",
+        listLabel: "Querbewehrung obere Lage – Endfeld e125",
+        file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e125_sta1.glb",
+        shellType: "HP-18-N",
+        designation: "Querbewehrung obere Lage – Endfeld e125",
+        componentArea: "Druckgurt",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "obere Lage",
+        area: "Endfeld",
+        reinforcementElement: "Querstabgruppe",
+        reinforcementFunction: "Schalenquerbewehrung",
+        direction: "quer zur Bauteillängsrichtung",
+        quantityRule: "keine Angabe",
+        nominalDiameter: "6,5 mm",
+        spacing: "125 mm",
+        steelGrade: "St A-I",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-DG-QO-EF075-01",
-            "category": "druckgurt",
-            "listLabel": "Querbewehrung obere Lage – Endfeld e75",
-            "file": "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e75_sta1.glb",
-            "shellType": "HP-18-N",
-            "designation": "Querbewehrung obere Lage – Endfeld e75",
-            "componentArea": "Druckgurt",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "obere Lage",
-            "area": "Endfeld",
-            "reinforcementElement": "Querstabgruppe",
-            "reinforcementFunction": "Schalenquerbewehrung",
-            "direction": "quer zur Bauteillängsrichtung",
-            "quantityRule": "keine Angabe",
-            "nominalDiameter": "6,5 mm",
-            "spacing": "75 mm",
-            "steelGrade": "St A-I",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-DG-QO-EF075-01",
+        category: "druckgurt",
+        listLabel: "Querbewehrung obere Lage – Endfeld e75",
+        file: "hp18n_bewehrung_druckgurt_quer_oben_endfeld_d6p5_e75_sta1.glb",
+        shellType: "HP-18-N",
+        designation: "Querbewehrung obere Lage – Endfeld e75",
+        componentArea: "Druckgurt",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "obere Lage",
+        area: "Endfeld",
+        reinforcementElement: "Querstabgruppe",
+        reinforcementFunction: "Schalenquerbewehrung",
+        direction: "quer zur Bauteillängsrichtung",
+        quantityRule: "keine Angabe",
+        nominalDiameter: "6,5 mm",
+        spacing: "75 mm",
+        steelGrade: "St A-I",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-DG-LM-D08-01",
-            "category": "druckgurt",
-            "listLabel": "Längsbewehrung mittlere Lage – d8",
-            "file": "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d8.glb",
-            "shellType": "HP-18-N",
-            "designation": "Längsbewehrung mittlere Lage d8 – gesamte Länge",
-            "componentArea": "Übergang Steg–Druckgurt",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "mittlere Lage",
-            "area": "obere äußere Ecken der Stegbügel, gesamte Länge",
-            "reinforcementElement": "Längsstabgruppe",
-            "reinforcementFunction": "Steglängsbewehrung",
-            "direction": "längs zur Bauteillängsrichtung",
-            "quantityRule": "insgesamt 2",
-            "nominalDiameter": "8 mm",
-            "spacing": "",
-            "steelGrade": "im Plan nicht angegeben",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-DG-LM-D08-01",
+        category: "druckgurt",
+        listLabel: "Längsbewehrung mittlere Lage – d8",
+        file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d8.glb",
+        shellType: "HP-18-N",
+        designation: "Längsbewehrung mittlere Lage d8 – gesamte Länge",
+        componentArea: "Übergang Steg–Druckgurt",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "mittlere Lage",
+        area: "obere äußere Ecken der Stegbügel, gesamte Länge",
+        reinforcementElement: "Längsstabgruppe",
+        reinforcementFunction: "Steglängsbewehrung",
+        direction: "längs zur Bauteillängsrichtung",
+        quantityRule: "insgesamt 2",
+        nominalDiameter: "8 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-DG-LM-D06P5-01",
-            "category": "druckgurt",
-            "listLabel": "Längsbewehrung mittlere Lage – d6,5",
-            "file": "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d6p5.glb",
-            "shellType": "HP-18-N",
-            "designation": "Längsbewehrung mittlere Lage d6,5 – gesamte Länge",
-            "componentArea": "Druckgurt",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "mittlere Lage",
-            "area": "zwischen Kassetten, gesamte Länge",
-            "reinforcementElement": "Längsstabgruppe",
-            "reinforcementFunction": "Schalenlängsbewehrung",
-            "direction": "längs zur Bauteillängsrichtung",
-            "quantityRule": "1 je Seite",
-            "nominalDiameter": "6,5 mm",
-            "spacing": "",
-            "steelGrade": "im Plan nicht angegeben",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-DG-LM-D06P5-01",
+        category: "druckgurt",
+        listLabel: "Längsbewehrung mittlere Lage – d6,5",
+        file: "hp18n_bewehrung_druckgurt_laengs_mittig_gesamte_laenge_d6p5.glb",
+        shellType: "HP-18-N",
+        designation: "Längsbewehrung mittlere Lage d6,5 – gesamte Länge",
+        componentArea: "Druckgurt",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "mittlere Lage",
+        area: "zwischen Kassetten, gesamte Länge",
+        reinforcementElement: "Längsstabgruppe",
+        reinforcementFunction: "Schalenlängsbewehrung",
+        direction: "längs zur Bauteillängsrichtung",
+        quantityRule: "1 je Seite",
+        nominalDiameter: "6,5 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-DG-LM-EF-01",
-            "category": "druckgurt",
-            "listLabel": "Längsbewehrung mittlere Lage – Endfeld",
-            "file": "hp18n_bewehrung_druckgurt_laengs_mittig_endfeld_5bzw4stk_d6p5.glb",
-            "shellType": "HP-18-N",
-            "designation": "Längsbewehrung mittlere Lage – Endfeld",
-            "componentArea": "Druckgurt",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "mittlere Lage",
-            "area": "Endfeld",
-            "reinforcementElement": "Längsstabgruppe",
-            "reinforcementFunction": "Schalenlängsbewehrung",
-            "direction": "längs zur Bauteillängsrichtung",
-            "quantityRule": "5 bzw. 4 je Seite",
-            "nominalDiameter": "6,5 mm",
-            "spacing": "",
-            "steelGrade": "im Plan nicht angegeben",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-DG-LM-EF-01",
+        category: "druckgurt",
+        listLabel: "Längsbewehrung mittlere Lage – Endfeld",
+        file: "hp18n_bewehrung_druckgurt_laengs_mittig_endfeld_5bzw4stk_d6p5.glb",
+        shellType: "HP-18-N",
+        designation: "Längsbewehrung mittlere Lage – Endfeld",
+        componentArea: "Druckgurt",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "mittlere Lage",
+        area: "Endfeld",
+        reinforcementElement: "Längsstabgruppe",
+        reinforcementFunction: "Schalenlängsbewehrung",
+        direction: "längs zur Bauteillängsrichtung",
+        quantityRule: "5 bzw. 4 je Seite",
+        nominalDiameter: "6,5 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-DG-HR-01",
-            "category": "druckgurt",
-            "listLabel": "Herausstehende Rundstähle",
-            "file": "hp18n_bewehrung_druckgurt_herausstehende_rundstaehle_d6p5_e600.glb",
-            "shellType": "HP-18-N",
-            "designation": "Herausstehende Rundstähle d6,5",
-            "componentArea": "Druckgurt",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "vorwiegend obere Lage",
-            "area": "Längsränder, zwischen den Kassetten herausstehend",
-            "reinforcementElement": "Anschlussstabgruppe",
-            "reinforcementFunction": "Fugen- und Verbindungsbewehrung",
-            "direction": "quer zur Bauteillängsrichtung",
-            "quantityRule": "insgesamt 29",
-            "nominalDiameter": "6,5 mm",
-            "spacing": "",
-            "steelGrade": "im Plan nicht angegeben",
-            "source": "Zulassung 45/70, Anlage 5.2; Abschnitt 1.8 „Fugenausbildung“; Anlage 10"
+        id: "HP18N-DG-HR-01",
+        category: "druckgurt",
+        listLabel: "Herausstehende Rundstähle",
+        file: "hp18n_bewehrung_druckgurt_herausstehende_rundstaehle_d6p5_e600.glb",
+        shellType: "HP-18-N",
+        designation: "Herausstehende Rundstähle d6,5",
+        componentArea: "Druckgurt",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "vorwiegend obere Lage",
+        area: "Längsränder, zwischen den Kassetten herausstehend",
+        reinforcementElement: "Anschlussstabgruppe",
+        reinforcementFunction: "Fugen- und Verbindungsbewehrung",
+        direction: "quer zur Bauteillängsrichtung",
+        quantityRule: "insgesamt 29",
+        nominalDiameter: "6,5 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        source: "Zulassung 45/70, Anlage 5.2; Abschnitt 1.8 „Fugenausbildung“; Anlage 10"
       },
       {
-            "id": "HP18N-ST-OL-01",
-            "category": "steg",
-            "listLabel": "Obere Längsbewehrung",
-            "file": "hp18n_bewehrung_steg_laengsstaebe_d8.glb",
-            "shellType": "HP-18-N",
-            "designation": "Steg – obere Längsbewehrung d8",
-            "componentArea": "Steg",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "nicht zutreffend",
-            "area": "mittlere Höhe innerhalb der Stegbügel, gesamte Länge",
-            "reinforcementElement": "Längsstabgruppe",
-            "reinforcementFunction": "Steglängsbewehrung",
-            "direction": "längs zur Bauteillängsrichtung",
-            "quantityRule": "insgesamt 2",
-            "nominalDiameter": "8 mm",
-            "spacing": "",
-            "steelGrade": "im Plan nicht angegeben",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-ST-OL-01",
+        category: "steg",
+        listLabel: "Obere Längsbewehrung",
+        file: "hp18n_bewehrung_steg_laengsstaebe_d8.glb",
+        shellType: "HP-18-N",
+        designation: "Steg – obere Längsbewehrung d8",
+        componentArea: "Steg",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "nicht zutreffend",
+        area: "mittlere Höhe innerhalb der Stegbügel, gesamte Länge",
+        reinforcementElement: "Längsstabgruppe",
+        reinforcementFunction: "Steglängsbewehrung",
+        direction: "längs zur Bauteillängsrichtung",
+        quantityRule: "insgesamt 2",
+        nominalDiameter: "8 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-ST-HZ-01",
-            "category": "steg",
-            "listLabel": "Hauptzugbewehrung",
-            "file": "hp18n_bewehrung_steg_hauptzugbewehrung_d28_sta3.glb",
-            "shellType": "HP-18-N",
-            "designation": "Hauptzugbewehrung d28 St A-III",
-            "componentArea": "Steg",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "nicht zutreffend",
-            "area": "unterer Stegbereich, untereinander angeordnet",
-            "reinforcementElement": "Längsstabgruppe",
-            "reinforcementFunction": "Hauptzugbewehrung",
-            "direction": "längs zur Bauteillängsrichtung",
-            "quantityRule": "insgesamt 2",
-            "nominalDiameter": "28 mm",
-            "spacing": "",
-            "steelGrade": "St A-III",
-            "source": "Zulassung 45/70, Anlage 5.2; Abschnitt 2.3 „Baustoffe und Bewehrungsanordnung“"
+        id: "HP18N-ST-HZ-01",
+        category: "steg",
+        listLabel: "Hauptzugbewehrung",
+        file: "hp18n_bewehrung_steg_hauptzugbewehrung_d28_sta3.glb",
+        shellType: "HP-18-N",
+        designation: "Hauptzugbewehrung d28 St A-III",
+        componentArea: "Steg",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "nicht zutreffend",
+        area: "unterer Stegbereich, untereinander angeordnet",
+        reinforcementElement: "Längsstabgruppe",
+        reinforcementFunction: "Hauptzugbewehrung",
+        direction: "längs zur Bauteillängsrichtung",
+        quantityRule: "insgesamt 2",
+        nominalDiameter: "28 mm",
+        spacing: "",
+        steelGrade: "St A-III",
+        mainReinforcementNote: "Mindestens zwei Stäbe; in einem Querschnitt darf ein Stab durch Stumpfnahtverbindung gestoßen werden.",
+        source: "Zulassung 45/70, Anlage 5.2; Abschnitt 2.3 „Baustoffe und Bewehrungsanordnung“"
       },
       {
-            "id": "HP18N-ST-BG-01",
-            "category": "steg",
-            "listLabel": "Stegbügel",
-            "file": "hp18n_bewehrung_steg_buegel_d6p5_e300_250_200_160.glb",
-            "shellType": "HP-18-N",
-            "designation": "Stegbügel d6,5",
-            "componentArea": "Steg",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "nicht zutreffend",
-            "area": "gesamte Länge",
-            "reinforcementElement": "Bügelgruppe",
-            "reinforcementFunction": "Stegbügel",
-            "direction": "quer zur Bauteillängsrichtung",
-            "quantityRule": "e = 160 / 200 / 250 / 300 mm, symmetrisch",
-            "nominalDiameter": "6,5 mm",
-            "spacing": "",
-            "steelGrade": "im Plan nicht angegeben",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-ST-BG-01",
+        category: "steg",
+        listLabel: "Stegbügel",
+        file: "hp18n_bewehrung_steg_buegel_d6p5_e300_250_200_160.glb",
+        shellType: "HP-18-N",
+        designation: "Stegbügel d6,5",
+        componentArea: "Steg",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "nicht zutreffend",
+        area: "gesamte Länge",
+        reinforcementElement: "Bügelgruppe",
+        reinforcementFunction: "Stegbügel",
+        direction: "quer zur Bauteillängsrichtung",
+        quantityRule: "e = 160 / 200 / 250 / 300 mm, symmetrisch",
+        nominalDiameter: "6,5 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-AU-UL-01",
-            "category": "auflager",
-            "listLabel": "Untere Lage",
-            "file": "hp18n_bewehrung_auflager_unten_4stk_d12.glb",
-            "shellType": "HP-18-N",
-            "designation": "Auflagerbereich – untere Lage, 4 × d12",
-            "componentArea": "Auflager",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "untere Lage des Auflagers",
-            "area": "Auflagerbereich",
-            "reinforcementElement": "Längsstabgruppe",
-            "reinforcementFunction": "Auflagerlängsbewehrung",
-            "direction": "längs zur Bauteillängsrichtung",
-            "quantityRule": "4",
-            "nominalDiameter": "12 mm",
-            "spacing": "",
-            "steelGrade": "im Plan nicht angegeben",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-AU-UL-01",
+        category: "auflager",
+        listLabel: "Untere Lage",
+        file: "hp18n_bewehrung_auflager_unten_4stk_d12.glb",
+        shellType: "HP-18-N",
+        designation: "Auflagerbereich – untere Lage, 4 × d12",
+        componentArea: "Auflager",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "untere Lage des Auflagers",
+        area: "Auflagerbereich",
+        reinforcementElement: "Längsstabgruppe",
+        reinforcementFunction: "Auflagerlängsbewehrung",
+        direction: "längs zur Bauteillängsrichtung",
+        quantityRule: "4",
+        nominalDiameter: "12 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-AU-OL-01",
-            "category": "auflager",
-            "listLabel": "Obere Lage",
-            "file": "hp18n_bewehrung_auflager_oben_4stk_d12.glb",
-            "shellType": "HP-18-N",
-            "designation": "Auflagerbereich – obere Lage, 4 × d12",
-            "componentArea": "Auflager",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "obere Lage",
-            "area": "Auflagerbereich",
-            "reinforcementElement": "Längsstabgruppe",
-            "reinforcementFunction": "Auflagerlängsbewehrung",
-            "direction": "längs zur Bauteillängsrichtung",
-            "quantityRule": "4",
-            "nominalDiameter": "12 mm",
-            "spacing": "",
-            "steelGrade": "im Plan nicht angegeben",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-AU-OL-01",
+        category: "auflager",
+        listLabel: "Obere Lage",
+        file: "hp18n_bewehrung_auflager_oben_4stk_d12.glb",
+        shellType: "HP-18-N",
+        designation: "Auflagerbereich – obere Lage, 4 × d12",
+        componentArea: "Auflager",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "obere Lage",
+        area: "Auflagerbereich",
+        reinforcementElement: "Längsstabgruppe",
+        reinforcementFunction: "Auflagerlängsbewehrung",
+        direction: "längs zur Bauteillängsrichtung",
+        quantityRule: "4",
+        nominalDiameter: "12 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-AU-MO-01",
-            "category": "auflager",
-            "listLabel": "Montageöse",
-            "file": "hp18n_bewehrung_auflager_montageoese_d20.glb",
-            "shellType": "HP-18-N",
-            "designation": "Montageöse",
-            "componentArea": "Auflager",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "Auflagerbereich",
-            "area": "mittig im Auflagerbereich",
-            "reinforcementElement": "Montageöse",
-            "reinforcementFunction": "Montage und Transport",
-            "direction": "nicht zutreffend",
-            "quantityRule": "1 je Auflagerbereich",
-            "nominalDiameter": "20 mm",
-            "spacing": "",
-            "steelGrade": "im Plan nicht angegeben",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-AU-MO-01",
+        category: "auflager",
+        listLabel: "Montageöse",
+        file: "hp18n_bewehrung_auflager_montageoese_d20.glb",
+        shellType: "HP-18-N",
+        designation: "Montageöse",
+        componentArea: "Auflager",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "Auflagerbereich",
+        area: "mittig im Auflagerbereich",
+        reinforcementElement: "Montageöse",
+        reinforcementFunction: "Montage und Transport",
+        direction: "nicht zutreffend",
+        quantityRule: "1 je Auflagerbereich",
+        nominalDiameter: "20 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        source: "Zulassung 45/70, Anlage 5.2"
       },
       {
-            "id": "HP18N-AU-BG-01",
-            "category": "auflager",
-            "listLabel": "Bügel",
-            "file": "hp18n_bewehrung_auflager_buegel_d8.glb",
-            "shellType": "HP-18-N",
-            "designation": "Auflagerbereich – Bügel d8",
-            "componentArea": "Auflager",
-            "dataBasis": "Zulassung Nr. 45/70",
-            "informationStatus": "geometrisch rekonstruiert",
-            "position": "vom Druckgurt bis in den unteren Auflagerbereich",
-            "area": "Auflager- und Übergangsbereich zum Druckgurt",
-            "reinforcementElement": "Bügelgruppe",
-            "reinforcementFunction": "Auflagerbügel",
-            "direction": "quer zur Bauteillängsrichtung",
-            "quantityRule": "6 je Seite",
-            "nominalDiameter": "8 mm",
-            "spacing": "",
-            "steelGrade": "im Plan nicht angegeben",
-            "source": "Zulassung 45/70, Anlage 5.2"
+        id: "HP18N-AU-BG-01",
+        category: "auflager",
+        listLabel: "Bügel",
+        file: "hp18n_bewehrung_auflager_buegel_d8.glb",
+        shellType: "HP-18-N",
+        designation: "Auflagerbereich – Bügel d8",
+        componentArea: "Auflager",
+        dataBasis: "Zulassung Nr. 45/70",
+        informationStatus: "geometrisch rekonstruiert",
+        position: "vom Druckgurt bis in den unteren Auflagerbereich",
+        area: "Auflager- und Übergangsbereich zum Druckgurt",
+        reinforcementElement: "Bügelgruppe",
+        reinforcementFunction: "Auflagerbügel",
+        direction: "quer zur Bauteillängsrichtung",
+        quantityRule: "6 je Seite",
+        nominalDiameter: "8 mm",
+        spacing: "",
+        steelGrade: "im Plan nicht angegeben",
+        source: "Zulassung 45/70, Anlage 5.2"
       }
-];
+    ];
 
     const REBAR_COLOR = 0x4a4a4a;
     const REBAR_HIGHLIGHT = 0xd9782f;
@@ -892,23 +950,50 @@
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xddd9d0);
 
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true
+    });
+
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000000);
+    const camera = new THREE.PerspectiveCamera(
+      45,
+      1,
+      0.1,
+      1000000
+    );
 
-    const controls = new OrbitControls(camera, renderer.domElement);
+    const controls = new OrbitControls(
+      camera,
+      renderer.domElement
+    );
+
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
 
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x777777, 1.7));
+    scene.add(
+      new THREE.HemisphereLight(
+        0xffffff,
+        0x777777,
+        1.7
+      )
+    );
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 2.0);
+    const directionalLight = new THREE.DirectionalLight(
+      0xffffff,
+      2.0
+    );
+
     directionalLight.position.set(1, 2, 1);
     scene.add(directionalLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    const fillLight = new THREE.DirectionalLight(
+      0xffffff,
+      0.8
+    );
+
     fillLight.position.set(-1, 0.5, -1);
     scene.add(fillLight);
 
@@ -957,7 +1042,12 @@
     let selectedElementType = null;
     let selectedGroupId = null;
     let framedCameraState = null;
-    let pointerDownPosition = { x: 0, y: 0 };
+
+    let pointerDownPosition = {
+      x: 0,
+      y: 0
+    };
+
     let pointerWasDragged = false;
 
     function setStatus(message, isError = false) {
@@ -969,107 +1059,174 @@
       const wrapper = canvas.parentElement;
       const width = Math.max(1, wrapper.clientWidth);
       const height = Math.max(1, wrapper.clientHeight);
+
       renderer.setSize(width, height, false);
+
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
     }
 
     function loadGlb(file) {
       return new Promise((resolve, reject) => {
-        loader.load(MODEL_PATH + file, resolve, undefined, reject);
+        loader.load(
+          MODEL_PATH + file,
+          resolve,
+          undefined,
+          reject
+        );
       });
     }
 
     function applyConcreteMaterial(object) {
       object.traverse((child) => {
-        if (!child.isMesh) return;
+        if (!child.isMesh) {
+          return;
+        }
+
         child.material = concreteMaterial;
         child.renderOrder = 0;
         child.userData.elementType = "concrete";
+
         concreteMeshes.push(child);
       });
     }
 
     function applyRebarMaterial(object, groupId) {
       object.traverse((child) => {
-        if (!child.isMesh) return;
+        if (!child.isMesh) {
+          return;
+        }
+
         child.material = rebarBaseMaterial;
         child.userData.groupId = groupId;
         child.renderOrder = 1;
+
         clickableMeshes.push(child);
       });
     }
 
     function isEffectivelyVisible(object) {
       let current = object;
+
       while (current) {
-        if (!current.visible) return false;
+        if (!current.visible) {
+          return false;
+        }
+
         current = current.parent;
       }
+
       return true;
     }
 
     function buildGroupLists() {
       GROUPS.forEach((group) => {
-        const container = document.getElementById(`groupList-${group.category}`);
+        const container = document.getElementById(
+          `groupList-${group.category}`
+        );
+
         const item = document.createElement("div");
+
         item.className = "group-item";
         item.dataset.groupId = group.id;
         item.textContent = group.listLabel;
+
         item.addEventListener("click", () => {
-          if (item.classList.contains("load-error")) return;
+          if (item.classList.contains("load-error")) {
+            return;
+          }
+
           selectGroup(group.id);
         });
+
         container.appendChild(item);
       });
     }
 
     function markGroupLoadError(groupId) {
-      const item = document.querySelector(`[data-group-id="${groupId}"]`);
-      if (!item) return;
+      const item = document.querySelector(
+        `[data-group-id="${groupId}"]`
+      );
+
+      if (!item) {
+        return;
+      }
+
       item.classList.add("load-error");
       item.title = "GLB-Datei konnte nicht geladen werden.";
     }
 
     function setGroupHighlighted(groupId, highlighted) {
       const group = loadedGroups.get(groupId);
-      if (!group) return;
+
+      if (!group) {
+        return;
+      }
+
       group.traverse((child) => {
         if (child.isMesh) {
-          child.material = highlighted ? rebarHighlightMaterial : rebarBaseMaterial;
+          child.material = highlighted
+            ? rebarHighlightMaterial
+            : rebarBaseMaterial;
         }
       });
     }
 
     function setConcreteHighlighted(highlighted) {
-      concreteMaterial.color.setHex(highlighted ? CONCRETE_HIGHLIGHT : CONCRETE_COLOR);
-      concreteMaterial.emissive.setHex(highlighted ? CONCRETE_HIGHLIGHT_EMISSIVE : 0x000000);
-      concreteMaterial.emissiveIntensity = highlighted ? 0.16 : 0;
+      concreteMaterial.color.setHex(
+        highlighted
+          ? CONCRETE_HIGHLIGHT
+          : CONCRETE_COLOR
+      );
+
+      concreteMaterial.emissive.setHex(
+        highlighted
+          ? CONCRETE_HIGHLIGHT_EMISSIVE
+          : 0x000000
+      );
+
+      concreteMaterial.emissiveIntensity = highlighted
+        ? 0.16
+        : 0;
+
       concreteMaterial.needsUpdate = true;
     }
 
     function clearSelection() {
-      if (selectedGroupId) setGroupHighlighted(selectedGroupId, false);
+      if (selectedGroupId) {
+        setGroupHighlighted(selectedGroupId, false);
+      }
+
       setConcreteHighlighted(false);
+
       selectedElementType = null;
       selectedGroupId = null;
+
       updateSelectionUI();
     }
 
     function selectGroup(groupId) {
-      if (!loadedGroups.has(groupId)) return;
+      if (!loadedGroups.has(groupId)) {
+        return;
+      }
 
-      if (selectedGroupId) setGroupHighlighted(selectedGroupId, false);
+      if (selectedGroupId) {
+        setGroupHighlighted(selectedGroupId, false);
+      }
+
       setConcreteHighlighted(false);
 
       selectedElementType = "rebar";
       selectedGroupId = groupId;
+
       setGroupHighlighted(groupId, true);
       updateSelectionUI();
     }
 
     function selectConcrete() {
-      if (selectedGroupId) setGroupHighlighted(selectedGroupId, false);
+      if (selectedGroupId) {
+        setGroupHighlighted(selectedGroupId, false);
+      }
 
       if (!concreteGroup.visible) {
         concreteGroup.visible = true;
@@ -1078,6 +1235,7 @@
 
       selectedElementType = "concrete";
       selectedGroupId = null;
+
       setConcreteHighlighted(true);
       updateSelectionUI();
     }
@@ -1092,40 +1250,77 @@
     }
 
     function propertyRow(label, value, note = false) {
-      if (value === undefined || value === null || value === "") return "";
+      if (
+        value === undefined ||
+        value === null ||
+        value === ""
+      ) {
+        return "";
+      }
+
       return `
-        <div class="info-label">${escapeHtml(label)}</div>
-        <div class="property-value${note ? " property-note" : ""}">${escapeHtml(value)}</div>
+        <div class="info-label">
+          ${escapeHtml(label)}
+        </div>
+
+        <div class="property-value${note ? " property-note" : ""}">
+          ${escapeHtml(value)}
+        </div>
+      `;
+    }
+
+    function propertySubheading(title) {
+      return `
+        <div class="property-subheading">
+          ${escapeHtml(title)}
+        </div>
       `;
     }
 
     function propertySection(title, rows) {
-      const content = rows.filter(Boolean).join("");
-      if (!content) return "";
+      const content = rows
+        .filter(Boolean)
+        .join("");
+
+      if (!content) {
+        return "";
+      }
+
       return `
         <section class="property-section">
           <h3>${escapeHtml(title)}</h3>
-          <div class="info-grid">${content}</div>
+
+          <div class="info-grid">
+            ${content}
+          </div>
         </section>
       `;
     }
 
     function updateSelectionUI() {
-      document.querySelectorAll(".group-item[data-group-id]").forEach((item) => {
-        item.classList.toggle(
-          "active",
-          selectedElementType === "rebar" && item.dataset.groupId === selectedGroupId
-        );
-      });
+      document
+        .querySelectorAll(".group-item[data-group-id]")
+        .forEach((item) => {
+          item.classList.toggle(
+            "active",
+            selectedElementType === "rebar" &&
+            item.dataset.groupId === selectedGroupId
+          );
+        });
 
-      concreteListItem.classList.toggle("active", selectedElementType === "concrete");
+      concreteListItem.classList.toggle(
+        "active",
+        selectedElementType === "concrete"
+      );
 
       if (!selectedElementType) {
         selectionInfo.className = "info-grid";
+
         selectionInfo.innerHTML = `
           <div class="info-label">Status</div>
           <div>Kein Element ausgewählt.</div>
         `;
+
         return;
       }
 
@@ -1133,94 +1328,288 @@
 
       if (selectedElementType === "concrete") {
         selectionInfo.innerHTML = [
-          propertySection("Identifikation und Datenstatus", [
-            propertyRow("Schalentyp", CONCRETE.shellType),
-            propertyRow("Bauteilbezeichnung", CONCRETE.designation),
-            propertyRow("Element-ID", CONCRETE.id),
-            propertyRow("Bauteilbereich", CONCRETE.componentArea),
-            propertyRow("Datengrundlage", CONCRETE.dataBasis),
-            propertyRow("Informationsstatus", CONCRETE.informationStatus)
-          ]),
-          propertySection("Geometrie", [
-            propertyRow("Systemlänge", CONCRETE.systemLength),
-            propertyRow("Konstruktionslänge", CONCRETE.constructionLength),
-            propertyRow("Systembreite", CONCRETE.systemWidth),
-            propertyRow("Konstruktionsbreite", CONCRETE.constructionWidth)
-          ]),
-          propertySection("Konstruktion und Material", [
-            propertyRow("Betongüte", CONCRETE.concreteGrade),
-            propertyRow("Ausführungsart", CONCRETE.executionType),
-            propertyRow("Tragfunktion", CONCRETE.structuralFunction),
-            propertyRow("Zulässige Betonstahlgüten", CONCRETE.permittedSteelGrades),
-            propertyRow("Stahlgüten der Regelausführung", CONCRETE.regularSteelGrades)
-          ]),
-          propertySection("Betondeckung", [
-            propertyRow("Stegbügel seitlich", CONCRETE.coverStegSide),
-            propertyRow("Stegbügel unten", CONCRETE.coverStegBottom),
-            propertyRow("Druckgurt oben und unten", CONCRETE.coverPressureChord)
-          ]),
-          propertySection("Mengen", [
-            propertyRow("Betonvolumen", CONCRETE.concreteVolume),
-            propertyRow("Elementmasse", CONCRETE.elementMass),
-            propertyRow("Rohwichte – historische Angabe", CONCRETE.rawDensity),
-            propertyRow("Stahlbedarf St A-I", CONCRETE.steelDemandSta1),
-            propertyRow("Stahlbedarf St A-III", CONCRETE.steelDemandSta3)
-          ]),
-          propertySection("Weitere historische Angaben", [
-            propertyRow("Bewehrungsvariante St B-IV", CONCRETE.variantStb4),
-            propertyRow("Bewehrungsvariante St A-I", CONCRETE.variantSta1),
-            propertyRow("Bewehrungsvariante St A-III", CONCRETE.variantSta3),
-            propertyRow("Hinweis zu den Varianten", CONCRETE.variantNote, true),
-            propertyRow("Haupttragbewehrung", CONCRETE.mainReinforcementNote)
-          ]),
-          propertySection("Dokumentation", [
-            propertyRow("Quelle", CONCRETE.source)
-          ])
+          propertySection(
+            "Identifikation und Datenstatus",
+            [
+              propertyRow(
+                "Schalentyp",
+                CONCRETE.shellType
+              ),
+              propertyRow(
+                "Bauteilbezeichnung",
+                CONCRETE.designation
+              ),
+              propertyRow(
+                "Element-ID",
+                CONCRETE.id
+              ),
+              propertyRow(
+                "Bauteilbereich",
+                CONCRETE.componentArea
+              ),
+              propertyRow(
+                "Datengrundlage",
+                CONCRETE.dataBasis
+              ),
+              propertyRow(
+                "Informationsstatus",
+                CONCRETE.informationStatus
+              )
+            ]
+          ),
+
+          propertySection(
+            "Geometrie",
+            [
+              propertyRow(
+                "Systemlänge",
+                CONCRETE.systemLength
+              ),
+              propertyRow(
+                "Konstruktionslänge",
+                CONCRETE.constructionLength
+              ),
+              propertyRow(
+                "Systembreite",
+                CONCRETE.systemWidth
+              ),
+              propertyRow(
+                "Konstruktionsbreite",
+                CONCRETE.constructionWidth
+              )
+            ]
+          ),
+
+          propertySection(
+            "Konstruktion und Material",
+            [
+              propertyRow(
+                "Betongüte",
+                CONCRETE.concreteGrade
+              ),
+              propertyRow(
+                "Ausführungsart",
+                CONCRETE.executionType
+              ),
+              propertyRow(
+                "Tragfunktion",
+                CONCRETE.structuralFunction
+              ),
+              propertyRow(
+                "Zulässige Betonstahlgüten",
+                CONCRETE.permittedSteelGrades
+              ),
+              propertyRow(
+                "Stahlgüten der Regelausführung",
+                CONCRETE.regularSteelGrades
+              )
+            ]
+          ),
+
+          propertySection(
+            "Betondeckung",
+            [
+              propertyRow(
+                "Stegbügel seitlich",
+                CONCRETE.coverStegSide
+              ),
+              propertyRow(
+                "Stegbügel unten",
+                CONCRETE.coverStegBottom
+              ),
+              propertyRow(
+                "Druckgurt oben und unten",
+                CONCRETE.coverPressureChord
+              )
+            ]
+          ),
+
+          propertySection(
+            "Mengen",
+            [
+              propertyRow(
+                "Betonvolumen",
+                CONCRETE.concreteVolume
+              ),
+              propertyRow(
+                "Elementmasse",
+                CONCRETE.elementMass
+              ),
+              propertyRow(
+                "Rohwichte – historische Angabe",
+                CONCRETE.rawDensity
+              ),
+              propertyRow(
+                "Stahlbedarf St A-I",
+                CONCRETE.steelDemandSta1
+              ),
+              propertyRow(
+                "Stahlbedarf St A-III",
+                CONCRETE.steelDemandSta3
+              ),
+
+              propertySubheading(
+                "Bewehrungsvarianten"
+              ),
+
+              propertyRow(
+                "Bewehrungsvariante St B-IV",
+                CONCRETE.variantStb4
+              ),
+              propertyRow(
+                "Bewehrungsvariante St A-I",
+                CONCRETE.variantSta1
+              ),
+              propertyRow(
+                "Bewehrungsvariante St A-III",
+                CONCRETE.variantSta3
+              )
+            ]
+          ),
+
+          propertySection(
+            "Dokumentation",
+            [
+              propertyRow(
+                "Quelle",
+                CONCRETE.source
+              )
+            ]
+          )
         ].join("");
+
         return;
       }
 
-      const meta = GROUPS.find((group) => group.id === selectedGroupId);
-      if (!meta) return;
+      const meta = GROUPS.find(
+        (group) => group.id === selectedGroupId
+      );
+
+      if (!meta) {
+        return;
+      }
 
       selectionInfo.innerHTML = [
-        propertySection("Identifikation und Datenstatus", [
-          propertyRow("Schalentyp", meta.shellType),
-          propertyRow("Bauteilbezeichnung", meta.designation),
-          propertyRow("Gruppen-ID", meta.id),
-          propertyRow("Bauteilbereich", meta.componentArea),
-          propertyRow("Datengrundlage", meta.dataBasis),
-          propertyRow("Informationsstatus", meta.informationStatus)
-        ]),
-        propertySection("Konstruktive Zuordnung", [
-          propertyRow("Lage", meta.position),
-          propertyRow("Bereich", meta.area),
-          propertyRow("Bewehrungselement", meta.reinforcementElement),
-          propertyRow("Bewehrungsfunktion", meta.reinforcementFunction),
-          propertyRow("Richtung", meta.direction)
-        ]),
-        propertySection("Geometrie und Material", [
-          propertyRow("Anzahl / Verlegeregel", meta.quantityRule),
-          propertyRow("Nenndurchmesser", meta.nominalDiameter),
-          propertyRow("Verlegeabstand", meta.spacing),
-          propertyRow("Stahlgüte", meta.steelGrade)
-        ]),
-        propertySection("Dokumentation", [
-          propertyRow("Quelle", meta.source)
-        ])
+        propertySection(
+          "Identifikation und Datenstatus",
+          [
+            propertyRow(
+              "Schalentyp",
+              meta.shellType
+            ),
+            propertyRow(
+              "Bauteilbezeichnung",
+              meta.designation
+            ),
+            propertyRow(
+              "Gruppen-ID",
+              meta.id
+            ),
+            propertyRow(
+              "Bauteilbereich",
+              meta.componentArea
+            ),
+            propertyRow(
+              "Datengrundlage",
+              meta.dataBasis
+            ),
+            propertyRow(
+              "Informationsstatus",
+              meta.informationStatus
+            )
+          ]
+        ),
+
+        propertySection(
+          "Konstruktive Zuordnung",
+          [
+            propertyRow(
+              "Lage",
+              meta.position
+            ),
+            propertyRow(
+              "Bereich",
+              meta.area
+            ),
+            propertyRow(
+              "Bewehrungselement",
+              meta.reinforcementElement
+            ),
+            propertyRow(
+              "Bewehrungsfunktion",
+              meta.reinforcementFunction
+            ),
+            propertyRow(
+              "Richtung",
+              meta.direction
+            )
+          ]
+        ),
+
+        propertySection(
+          "Geometrie und Material",
+          [
+            propertyRow(
+              "Anzahl / Verlegeregel",
+              meta.quantityRule
+            ),
+            propertyRow(
+              "Nenndurchmesser",
+              meta.nominalDiameter
+            ),
+            propertyRow(
+              "Verlegeabstand",
+              meta.spacing
+            ),
+            propertyRow(
+              "Stahlgüte",
+              meta.steelGrade
+            ),
+
+            meta.steelGrade === "im Plan nicht angegeben"
+              ? propertyRow(
+                  "Stahlgüten der Regelausführung",
+                  CONCRETE.regularSteelGrades
+                )
+              : "",
+
+            propertyRow(
+              "Haupttragbewehrung",
+              meta.mainReinforcementNote,
+              true
+            )
+          ]
+        ),
+
+        propertySection(
+          "Dokumentation",
+          [
+            propertyRow(
+              "Quelle",
+              meta.source
+            )
+          ]
+        )
       ].join("");
     }
 
     function updateConcreteVisibility() {
       concreteGroup.visible = toggleConcrete.checked;
-      if (!toggleConcrete.checked && selectedElementType === "concrete") {
+
+      if (
+        !toggleConcrete.checked &&
+        selectedElementType === "concrete"
+      ) {
         clearSelection();
       }
     }
 
     function updateConcreteTransparency() {
-      const transparency = Number(concreteTransparency.value) / 100;
+      const transparency =
+        Number(concreteTransparency.value) / 100;
+
       const opacity = 1 - transparency;
+
       concreteMaterial.opacity = opacity;
       concreteMaterial.transparent = opacity < 0.999;
       concreteMaterial.depthWrite = opacity >= 0.85;
@@ -1229,19 +1618,69 @@
 
     function fitCameraToScene() {
       const box = new THREE.Box3().setFromObject(root);
-      if (box.isEmpty()) return;
 
-      const size = box.getSize(new THREE.Vector3());
-      const center = box.getCenter(new THREE.Vector3());
-      const maxSize = Math.max(size.x, size.y, size.z);
-      const fitHeightDistance = maxSize / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)));
-      const fitWidthDistance = fitHeightDistance / Math.max(camera.aspect, 0.1);
-      const distance = 1.35 * Math.max(fitHeightDistance, fitWidthDistance);
+      if (box.isEmpty()) {
+        return;
+      }
 
-      const direction = new THREE.Vector3(1, 0.7, 1).normalize();
-      camera.position.copy(center).add(direction.multiplyScalar(distance));
-      camera.near = Math.max(distance / 10000, 0.1);
-      camera.far = Math.max(distance * 100, 100000);
+      const size = box.getSize(
+        new THREE.Vector3()
+      );
+
+      const center = box.getCenter(
+        new THREE.Vector3()
+      );
+
+      const maxSize = Math.max(
+        size.x,
+        size.y,
+        size.z
+      );
+
+      const fitHeightDistance =
+        maxSize /
+        (
+          2 *
+          Math.tan(
+            THREE.MathUtils.degToRad(
+              camera.fov * 0.5
+            )
+          )
+        );
+
+      const fitWidthDistance =
+        fitHeightDistance /
+        Math.max(camera.aspect, 0.1);
+
+      const distance =
+        1.35 *
+        Math.max(
+          fitHeightDistance,
+          fitWidthDistance
+        );
+
+      const direction = new THREE.Vector3(
+        1,
+        0.7,
+        1
+      ).normalize();
+
+      camera.position
+        .copy(center)
+        .add(
+          direction.multiplyScalar(distance)
+        );
+
+      camera.near = Math.max(
+        distance / 10000,
+        0.1
+      );
+
+      camera.far = Math.max(
+        distance * 100,
+        100000
+      );
+
       camera.updateProjectionMatrix();
 
       controls.target.copy(center);
@@ -1261,57 +1700,137 @@
         return;
       }
 
-      camera.position.copy(framedCameraState.position);
-      camera.near = framedCameraState.near;
-      camera.far = framedCameraState.far;
+      camera.position.copy(
+        framedCameraState.position
+      );
+
+      camera.near =
+        framedCameraState.near;
+
+      camera.far =
+        framedCameraState.far;
+
       camera.updateProjectionMatrix();
-      controls.target.copy(framedCameraState.target);
+
+      controls.target.copy(
+        framedCameraState.target
+      );
+
       controls.update();
     }
 
     function pointerCoordinates(event) {
-      const rect = canvas.getBoundingClientRect();
-      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      const rect =
+        canvas.getBoundingClientRect();
+
+      pointer.x =
+        (
+          (event.clientX - rect.left) /
+          rect.width
+        ) * 2 - 1;
+
+      pointer.y =
+        -(
+          (event.clientY - rect.top) /
+          rect.height
+        ) * 2 + 1;
     }
 
     function pickRebar(event) {
       pointerCoordinates(event);
-      raycaster.setFromCamera(pointer, camera);
 
-      const visibleMeshes = clickableMeshes.filter(isEffectivelyVisible);
-      const intersections = raycaster.intersectObjects(visibleMeshes, false);
+      raycaster.setFromCamera(
+        pointer,
+        camera
+      );
 
-      if (!intersections.length) return;
+      const visibleMeshes =
+        clickableMeshes.filter(
+          isEffectivelyVisible
+        );
 
-      const groupId = intersections[0].object.userData.groupId;
-      if (groupId) selectGroup(groupId);
+      const intersections =
+        raycaster.intersectObjects(
+          visibleMeshes,
+          false
+        );
+
+      if (!intersections.length) {
+        return;
+      }
+
+      const groupId =
+        intersections[0].object.userData.groupId;
+
+      if (groupId) {
+        selectGroup(groupId);
+      }
     }
 
-    canvas.addEventListener("pointerdown", (event) => {
-      pointerDownPosition = { x: event.clientX, y: event.clientY };
-      pointerWasDragged = false;
-    });
+    canvas.addEventListener(
+      "pointerdown",
+      (event) => {
+        pointerDownPosition = {
+          x: event.clientX,
+          y: event.clientY
+        };
 
-    canvas.addEventListener("pointermove", (event) => {
-      const distance = Math.hypot(
-        event.clientX - pointerDownPosition.x,
-        event.clientY - pointerDownPosition.y
-      );
-      if (distance > 4) pointerWasDragged = true;
-    });
+        pointerWasDragged = false;
+      }
+    );
 
-    canvas.addEventListener("pointerup", (event) => {
-      if (!pointerWasDragged) pickRebar(event);
-    });
+    canvas.addEventListener(
+      "pointermove",
+      (event) => {
+        const distance = Math.hypot(
+          event.clientX - pointerDownPosition.x,
+          event.clientY - pointerDownPosition.y
+        );
 
-    concreteListItem.addEventListener("click", selectConcrete);
-    toggleConcrete.addEventListener("change", updateConcreteVisibility);
-    concreteTransparency.addEventListener("input", updateConcreteTransparency);
-    btnClearSelection.addEventListener("click", clearSelection);
-    btnResetView.addEventListener("click", resetView);
+        if (distance > 4) {
+          pointerWasDragged = true;
+        }
+      }
+    );
 
-    window.addEventListener("resize", resizeRenderer);
+    canvas.addEventListener(
+      "pointerup",
+      (event) => {
+        if (!pointerWasDragged) {
+          pickRebar(event);
+        }
+      }
+    );
+
+    concreteListItem.addEventListener(
+      "click",
+      selectConcrete
+    );
+
+    toggleConcrete.addEventListener(
+      "change",
+      updateConcreteVisibility
+    );
+
+    concreteTransparency.addEventListener(
+      "input",
+      updateConcreteTransparency
+    );
+
+    btnClearSelection.addEventListener(
+      "click",
+      clearSelection
+    );
+
+    btnResetView.addEventListener(
+      "click",
+      resetView
+    );
+
+    window.addEventListener(
+      "resize",
+      resizeRenderer
+    );
 
     async function loadScene() {
       buildGroupLists();
@@ -1327,9 +1846,18 @@
             concreteGroup.add(gltf.scene);
           })
           .catch((error) => {
-            console.error("Betonschale konnte nicht geladen werden:", error);
-            concreteListItem.classList.add("load-error");
-            concreteListItem.title = "GLB-Datei konnte nicht geladen werden.";
+            console.error(
+              "Betonschale konnte nicht geladen werden:",
+              error
+            );
+
+            concreteListItem.classList.add(
+              "load-error"
+            );
+
+            concreteListItem.title =
+              "GLB-Datei konnte nicht geladen werden.";
+
             failedGroups.push(CONCRETE.id);
           })
       );
@@ -1338,15 +1866,30 @@
         tasks.push(
           loadGlb(meta.file)
             .then((gltf) => {
-              const group = new THREE.Group();
+              const group =
+                new THREE.Group();
+
               group.name = meta.id;
               group.add(gltf.scene);
-              applyRebarMaterial(group, meta.id);
+
+              applyRebarMaterial(
+                group,
+                meta.id
+              );
+
               root.add(group);
-              loadedGroups.set(meta.id, group);
+
+              loadedGroups.set(
+                meta.id,
+                group
+              );
             })
             .catch((error) => {
-              console.error(`Gruppe ${meta.id} konnte nicht geladen werden:`, error);
+              console.error(
+                `Gruppe ${meta.id} konnte nicht geladen werden:`,
+                error
+              );
+
               failedGroups.push(meta.id);
               markGroupLoadError(meta.id);
             })
@@ -1358,8 +1901,15 @@
       fitCameraToScene();
 
       const loadedCount =
-        (concreteGroup.children.length ? 1 : 0) + loadedGroups.size;
-      const totalCount = GROUPS.length + 1;
+        (
+          concreteGroup.children.length
+            ? 1
+            : 0
+        ) +
+        loadedGroups.size;
+
+      const totalCount =
+        GROUPS.length + 1;
 
       if (failedGroups.length) {
         setStatus(
@@ -1368,7 +1918,9 @@
           true
         );
       } else {
-        setStatus(`${totalCount} Modelle geladen. Elemente können ausgewählt werden.`);
+        setStatus(
+          `${totalCount} Modelle geladen. Elemente können ausgewählt werden.`
+        );
       }
     }
 
