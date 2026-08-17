@@ -928,8 +928,10 @@
               camera-target="0m 0m 0m"
               camera-orbit="35deg 68deg 40m"
               field-of-view="30deg"
-              min-camera-orbit="auto auto 7 m"
-              max-camera-orbit="auto auto 75 m"
+              min-camera-orbit="auto auto 7m"
+              max-camera-orbit="auto auto 75m"
+              min-field-of-view="1deg"
+              max-field-of-view="90deg"
               shadow-intensity="1"
               shadow-softness="0.8"
               exposure="1"
@@ -1037,7 +1039,7 @@
 
     const COMPARISON_THETA = 35;
     const COMPARISON_PHI = 68;
-    const COMPARISON_FIELD_OF_VIEW = 30;
+    const COMPARISON_ACTUAL_FIELD_OF_VIEW = 30;
     const COMMON_CAMERA_DISTANCE_METERS = 40;
     const SCALE_BAR_METERS = 2;
     const THREE_DEG_TO_RAD = Math.PI / 180;
@@ -1251,18 +1253,71 @@
       return `${COMPARISON_THETA}deg ${COMPARISON_PHI}deg ${COMMON_CAMERA_DISTANCE_METERS}m`;
     }
 
-    function applyComparisonView(immediate = true) {
-      if (!viewerShell.hidden) {
-        viewer.cameraTarget = "0m 0m 0m";
-        viewer.fieldOfView = `${COMPARISON_FIELD_OF_VIEW}deg`;
-        viewer.cameraOrbit = comparisonOrbitFor();
+    function framedFieldOfViewForActual(actualFieldOfViewDegrees) {
+      const viewerAspect = viewer.clientWidth / viewer.clientHeight;
+      const idealAspect =
+        typeof viewer.getIdealAspect === "function"
+          ? viewer.getIdealAspect()
+          : viewerAspect;
 
-        if (immediate && typeof viewer.jumpCameraToGoal === "function") {
-          viewer.jumpCameraToGoal();
-        }
-
-        window.requestAnimationFrame(updateScaleIndicator);
+      if (
+        !Number.isFinite(viewerAspect) ||
+        viewerAspect <= 0 ||
+        !Number.isFinite(idealAspect) ||
+        idealAspect <= 0
+      ) {
+        return actualFieldOfViewDegrees;
       }
+
+      const correctionFactor = Math.max(1, idealAspect / viewerAspect);
+      const actualRadians =
+        actualFieldOfViewDegrees * THREE_DEG_TO_RAD;
+      const framedRadians =
+        2 * Math.atan(
+          Math.tan(actualRadians / 2) / correctionFactor
+        );
+
+      return framedRadians / THREE_DEG_TO_RAD;
+    }
+
+    async function applyComparisonView(immediate = true) {
+      if (viewerShell.hidden) return;
+
+      const framedFieldOfView = framedFieldOfViewForActual(
+        COMPARISON_ACTUAL_FIELD_OF_VIEW
+      );
+
+      viewer.cameraTarget = "0m 0m 0m";
+      viewer.cameraOrbit = comparisonOrbitFor();
+      viewer.fieldOfView = `${framedFieldOfView}deg`;
+
+      if (viewer.updateComplete) {
+        await viewer.updateComplete;
+      }
+
+      if (immediate && typeof viewer.jumpCameraToGoal === "function") {
+        viewer.jumpCameraToGoal();
+
+        if (viewer.updateComplete) {
+          await viewer.updateComplete;
+        }
+      }
+
+      await new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+      viewer.cameraTarget = "0m 0m 0m";
+      viewer.cameraOrbit = comparisonOrbitFor();
+      viewer.fieldOfView = `${framedFieldOfView}deg`;
+
+      if (viewer.updateComplete) {
+        await viewer.updateComplete;
+      }
+
+      if (immediate && typeof viewer.jumpCameraToGoal === "function") {
+        viewer.jumpCameraToGoal();
+      }
+
+      window.requestAnimationFrame(updateScaleIndicator);
     }
 
     function updateScaleIndicator() {
@@ -1330,7 +1385,6 @@
         resetComparisonViewButton.hidden = false;
 
         viewer.cameraTarget = "0m 0m 0m";
-        viewer.fieldOfView = `${COMPARISON_FIELD_OF_VIEW}deg`;
         viewer.cameraOrbit = comparisonOrbitFor();
 
         viewerStatus.textContent = "3D-Modell wird geladen …";
@@ -1353,12 +1407,12 @@
       }
     }
 
-    viewer.addEventListener("load", () => {
-      applyComparisonView(true);
+    viewer.addEventListener("load", async () => {
+      await applyComparisonView(true);
       window.requestAnimationFrame(syncSidebarHeight);
 
       viewerStatus.textContent =
-        "Fester Größenvergleich · gleiche Kamera und gleiche glTF-Einheiten für alle Modelle";
+        "Fester Größenvergleich · gleicher Anfangsmaßstab für alle Modelle";
     });
 
     viewer.addEventListener("camera-change", updateScaleIndicator);
@@ -1375,8 +1429,8 @@
       });
     });
 
-    resetComparisonViewButton.addEventListener("click", () => {
-      applyComparisonView(true);
+    resetComparisonViewButton.addEventListener("click", async () => {
+      await applyComparisonView(true);
       viewerStatus.textContent =
         "Vergleichsansicht mit festem Maßstab wiederhergestellt";
     });
