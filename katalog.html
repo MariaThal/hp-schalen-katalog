@@ -384,7 +384,6 @@
       box-shadow: var(--shadow);
     }
 
-
     .viewer-heading {
       display: flex;
       align-items: flex-start;
@@ -926,8 +925,8 @@
               alt="Interaktives 3D-Modell der HP-Schale 18 m N"
               camera-controls
               touch-action="pan-y"
-              camera-target="auto auto auto"
-              camera-orbit="35deg 68deg auto"
+              camera-target="0m 0m 0m"
+              camera-orbit="35deg 68deg 40m"
               field-of-view="30deg"
               min-camera-orbit="auto auto 7 m"
               max-camera-orbit="auto auto 75 m"
@@ -1245,8 +1244,6 @@
         return;
       }
 
-      // Die linke Katalogspalte reicht immer bis zur Unterkante
-      // der gesamten rechten Spalte aus Viewer und Detailbereich.
       catalogSidebar.style.height = `${catalogMain.offsetHeight}px`;
     }
 
@@ -1256,7 +1253,7 @@
 
     function applyComparisonView(immediate = true) {
       if (!viewerShell.hidden) {
-        viewer.cameraTarget = "auto auto auto";
+        viewer.cameraTarget = "0m 0m 0m";
         viewer.fieldOfView = `${COMPARISON_FIELD_OF_VIEW}deg`;
         viewer.cameraOrbit = comparisonOrbitFor();
 
@@ -1332,6 +1329,10 @@
         viewerShell.hidden = false;
         resetComparisonViewButton.hidden = false;
 
+        viewer.cameraTarget = "0m 0m 0m";
+        viewer.fieldOfView = `${COMPARISON_FIELD_OF_VIEW}deg`;
+        viewer.cameraOrbit = comparisonOrbitFor();
+
         viewerStatus.textContent = "3D-Modell wird geladen …";
         viewer.src = item.file;
         viewer.alt = item.alt;
@@ -1353,10 +1354,6 @@
     }
 
     viewer.addEventListener("load", () => {
-      if (typeof viewer.updateFraming === "function") {
-        viewer.updateFraming();
-      }
-
       applyComparisonView(true);
       window.requestAnimationFrame(syncSidebarHeight);
 
